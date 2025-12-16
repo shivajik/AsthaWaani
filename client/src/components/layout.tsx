@@ -104,12 +104,14 @@ export function Header() {
             {language === 'en' ? 'HI' : 'EN'}
           </Button>
 
-          <Button 
-            size="lg"
-            className={cn("bg-secondary text-secondary-foreground hover:bg-secondary/90 font-serif font-bold px-6")}
-          >
-            {t('nav.join')}
-          </Button>
+          <Link href="/contact">
+            <Button 
+              size="lg"
+              className={cn("bg-secondary text-secondary-foreground hover:bg-secondary/90 font-serif font-bold px-6")}
+            >
+              {t('nav.join')}
+            </Button>
+          </Link>
         </nav>
 
         {/* Mobile Nav */}

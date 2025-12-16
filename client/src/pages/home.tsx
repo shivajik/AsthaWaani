@@ -117,13 +117,15 @@ export default function Home() {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                <Button 
-                  size="lg" 
-                  className="bg-primary hover:bg-primary/90 text-primary-foreground font-serif text-lg px-8 py-6 rounded-full shadow-lg shadow-primary/20"
-                  data-testid="button-hero-cta"
-                >
-                  {t('hero.cta')}
-                </Button>
+                <Link href="/contact">
+                  <Button 
+                    size="lg" 
+                    className="bg-primary hover:bg-primary/90 text-primary-foreground font-serif text-lg px-8 py-6 rounded-full shadow-lg shadow-primary/20"
+                    data-testid="button-hero-cta"
+                  >
+                    {t('hero.cta')}
+                  </Button>
+                </Link>
               </motion.div>
             </motion.div>
           </motion.div>
