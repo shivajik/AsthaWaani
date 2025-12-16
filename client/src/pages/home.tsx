@@ -472,18 +472,18 @@ export default function Home() {
       <section className="py-24 bg-gradient-to-r from-amber-50 via-amber-100 to-amber-50 text-center relative overflow-hidden -mt-px">
         <MandalaOrnament 
           side="left" 
-          color="#C4A052" 
-          className="left-0 top-1/2 -translate-y-1/2 w-80 h-80 md:w-96 md:h-96 -translate-x-1/3 opacity-60"
+          color="#B8860B" 
+          className="left-0 top-1/2 -translate-y-1/2 w-[300px] h-[300px] md:w-[400px] md:h-[400px] lg:w-[500px] lg:h-[500px]"
         />
         <MandalaOrnament 
           side="right" 
-          color="#C4A052" 
-          className="right-0 top-1/2 -translate-y-1/2 w-80 h-80 md:w-96 md:h-96 translate-x-1/3 opacity-60"
+          color="#B8860B" 
+          className="right-0 top-1/2 -translate-y-1/2 w-[300px] h-[300px] md:w-[400px] md:h-[400px] lg:w-[500px] lg:h-[500px]"
         />
-        <CornerOrnament position="top-left" color="#C4A052" className="top-0 left-0 w-24 h-24 md:w-32 md:h-32" />
-        <CornerOrnament position="top-right" color="#C4A052" className="top-0 right-0 w-24 h-24 md:w-32 md:h-32" />
-        <CornerOrnament position="bottom-left" color="#C4A052" className="bottom-0 left-0 w-24 h-24 md:w-32 md:h-32" />
-        <CornerOrnament position="bottom-right" color="#C4A052" className="bottom-0 right-0 w-24 h-24 md:w-32 md:h-32" />
+        <CornerOrnament position="top-left" color="#B8860B" className="top-0 left-0 w-32 h-32 md:w-48 md:h-48" />
+        <CornerOrnament position="top-right" color="#B8860B" className="top-0 right-0 w-32 h-32 md:w-48 md:h-48" />
+        <CornerOrnament position="bottom-left" color="#B8860B" className="bottom-0 left-0 w-32 h-32 md:w-48 md:h-48" />
+        <CornerOrnament position="bottom-right" color="#B8860B" className="bottom-0 right-0 w-32 h-32 md:w-48 md:h-48" />
         
         <motion.div 
           className="container mx-auto relative z-10 px-4"
