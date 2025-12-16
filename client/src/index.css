@@ -9,54 +9,55 @@
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
   
-  /* Asthawaani Brand Colors */
-  /* Saffron: 34 90% 55% */
-  /* Deep Maroon: 348 83% 25% */
-  /* Cream White: 40 30% 96% */
-  /* Soft Gold: 45 60% 60% */
+  /* Asthawaani New Brand Colors */
+  /* Extracted from Logo */
+  /* Primary Blue (from text): ~ hsl(225, 60%, 35%) */
+  /* Accent Gold (from sun/conch): ~ hsl(45, 95%, 55%) */
+  /* Tagline Green: ~ hsl(140, 50%, 30%) */
+  /* Background: Keeping Cream/White for readability */
 
-  --color-background: hsl(40 30% 96%); /* Cream White background */
-  --color-foreground: hsl(348 83% 15%); /* Very dark maroon for text */
+  --color-background: hsl(40 30% 98%); /* Very light cream/white */
+  --color-foreground: hsl(225 60% 15%); /* Very dark blue for text */
   
   --color-card: hsl(0 0% 100%);
-  --color-card-foreground: hsl(348 83% 20%);
+  --color-card-foreground: hsl(225 60% 20%);
   
   --color-popover: hsl(0 0% 100%);
-  --color-popover-foreground: hsl(348 83% 20%);
+  --color-popover-foreground: hsl(225 60% 20%);
   
-  --color-primary: hsl(34 90% 50%); /* Saffron */
-  --color-primary-foreground: hsl(348 83% 20%); /* Maroon text on Saffron */
+  --color-primary: hsl(225 55% 35%); /* Deep Royal Blue from Logo */
+  --color-primary-foreground: hsl(0 0% 100%); /* White text on Blue */
   
-  --color-secondary: hsl(348 83% 25%); /* Deep Maroon */
-  --color-secondary-foreground: hsl(40 30% 96%); /* Cream text on Maroon */
+  --color-secondary: hsl(45 95% 55%); /* Gold/Saffron from Logo */
+  --color-secondary-foreground: hsl(225 60% 15%); /* Dark Blue text on Gold */
   
-  --color-muted: hsl(40 20% 90%);
-  --color-muted-foreground: hsl(348 40% 40%);
+  --color-muted: hsl(225 20% 94%);
+  --color-muted-foreground: hsl(225 30% 40%);
   
-  --color-accent: hsl(45 60% 60%); /* Soft Gold */
-  --color-accent-foreground: hsl(348 83% 20%);
+  --color-accent: hsl(45 95% 55%); /* Gold */
+  --color-accent-foreground: hsl(225 60% 15%);
   
   --color-destructive: hsl(0 84% 60%);
   --color-destructive-foreground: hsl(0 0% 98%);
   
-  --color-border: hsl(34 30% 85%);
-  --color-input: hsl(34 30% 85%);
-  --color-ring: hsl(34 90% 55%);
+  --color-border: hsl(225 20% 85%);
+  --color-input: hsl(225 20% 85%);
+  --color-ring: hsl(225 55% 35%);
   
-  --color-chart-1: hsl(34 90% 55%);
-  --color-chart-2: hsl(348 83% 25%);
-  --color-chart-3: hsl(45 60% 60%);
+  --color-chart-1: hsl(225 55% 35%);
+  --color-chart-2: hsl(45 95% 55%);
+  --color-chart-3: hsl(140 50% 30%); /* Green from tagline */
   --color-chart-4: hsl(180 40% 50%);
   --color-chart-5: hsl(280 40% 60%);
   
-  --color-sidebar: hsl(348 83% 25%);
+  --color-sidebar: hsl(225 55% 35%);
   --color-sidebar-foreground: hsl(40 30% 96%);
-  --color-sidebar-primary: hsl(34 90% 55%);
-  --color-sidebar-primary-foreground: hsl(348 83% 20%);
-  --color-sidebar-accent: hsl(348 70% 30%);
+  --color-sidebar-primary: hsl(45 95% 55%);
+  --color-sidebar-primary-foreground: hsl(225 60% 15%);
+  --color-sidebar-accent: hsl(225 50% 30%);
   --color-sidebar-accent-foreground: hsl(40 30% 96%);
-  --color-sidebar-border: hsl(348 70% 35%);
-  --color-sidebar-ring: hsl(34 90% 55%);
+  --color-sidebar-border: hsl(225 50% 40%);
+  --color-sidebar-ring: hsl(45 95% 55%);
 
   --font-sans: 'Inter', 'Noto Sans Devanagari', sans-serif;
   --font-serif: 'Playfair Display', 'Merriweather', serif;
