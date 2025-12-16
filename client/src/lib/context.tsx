@@ -12,6 +12,7 @@ const translations: Record<string, Record<Language, string>> = {
   // Navigation
   'nav.home': { en: 'Home', hi: 'मुखपृष्ठ' },
   'nav.about': { en: 'About', hi: 'हमारे बारे में' },
+  'nav.gallery': { en: 'Gallery', hi: 'गैलरी' },
   'nav.contact': { en: 'Contact', hi: 'संपर्क' },
   'nav.join': { en: 'Join Satsang', hi: 'सत्संग से जुड़ें' },
 
