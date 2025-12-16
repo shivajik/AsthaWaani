@@ -147,6 +147,8 @@ export default function Home() {
 
       {/* About Preview */}
       <section className="py-24 bg-background relative overflow-hidden">
+        <CornerOrnament position="top-left" color="#C4A052" className="top-0 left-0 w-20 h-20 md:w-28 md:h-28 opacity-40" />
+        <CornerOrnament position="top-right" color="#C4A052" className="top-0 right-0 w-20 h-20 md:w-28 md:h-28 opacity-40" />
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-2 gap-16 items-center">
             <motion.div 
@@ -219,8 +221,18 @@ export default function Home() {
       </section>
 
       {/* Offerings */}
-      <section className="py-24 bg-secondary text-secondary-foreground relative">
+      <section className="py-24 bg-secondary text-secondary-foreground relative overflow-hidden">
         <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-5" />
+        <MandalaOrnament 
+          side="left" 
+          color="rgba(255,255,255,0.15)" 
+          className="left-0 top-1/2 -translate-y-1/2 w-64 h-64 md:w-80 md:h-80 -translate-x-1/2"
+        />
+        <MandalaOrnament 
+          side="right" 
+          color="rgba(255,255,255,0.15)" 
+          className="right-0 top-1/2 -translate-y-1/2 w-64 h-64 md:w-80 md:h-80 translate-x-1/2"
+        />
         <div className="container mx-auto px-4 relative z-10">
           <motion.div 
             className="text-center mb-16"
@@ -271,7 +283,9 @@ export default function Home() {
       </section>
 
       {/* Locations */}
-      <section className="py-24 bg-background">
+      <section className="py-24 bg-background relative overflow-hidden">
+        <CornerOrnament position="bottom-left" color="#C4A052" className="bottom-0 left-0 w-20 h-20 md:w-28 md:h-28 opacity-40" />
+        <CornerOrnament position="bottom-right" color="#C4A052" className="bottom-0 right-0 w-20 h-20 md:w-28 md:h-28 opacity-40" />
         <div className="container mx-auto px-4">
           <motion.div 
             className="text-center mb-16"
