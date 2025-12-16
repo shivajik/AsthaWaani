@@ -28,6 +28,33 @@ export class YouTubeService {
     this.apiKey = apiKey;
   }
 
+  // Resolve a YouTube handle (like @Asthawaani) to a channel ID
+  async resolveHandle(handle: string): Promise<string | null> {
+    try {
+      // Remove @ if present
+      const cleanHandle = handle.startsWith('@') ? handle.substring(1) : handle;
+      
+      // Use the search endpoint to find the channel by handle/username
+      const url = `${this.baseUrl}/channels?part=id&forHandle=${cleanHandle}&key=${this.apiKey}`;
+      const response = await fetch(url);
+      
+      if (!response.ok) {
+        throw new Error(`YouTube API error: ${response.statusText}`);
+      }
+
+      const data = await response.json();
+      
+      if (!data.items || data.items.length === 0) {
+        return null;
+      }
+
+      return data.items[0].id;
+    } catch (error) {
+      console.error("Error resolving handle:", error);
+      throw error;
+    }
+  }
+
   async getChannelInfo(channelId: string): Promise<YouTubeChannel | null> {
     try {
       const url = `${this.baseUrl}/channels?part=snippet,statistics&id=${channelId}&key=${this.apiKey}`;

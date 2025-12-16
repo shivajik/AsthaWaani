@@ -23,7 +23,7 @@ export async function registerRoutes(
   // Sync videos from YouTube channel
   app.post("/api/sync-youtube", async (req, res) => {
     try {
-      const { channelId } = req.body;
+      let { channelId } = req.body;
 
       if (!channelId) {
         return res.status(400).json({ error: "Channel ID is required" });
@@ -35,6 +35,15 @@ export async function registerRoutes(
       }
 
       const youtubeService = new YouTubeService(apiKey);
+
+      // If it's a handle (starts with @), resolve it to a channel ID
+      if (channelId.startsWith('@') || !channelId.startsWith('UC')) {
+        const resolvedId = await youtubeService.resolveHandle(channelId);
+        if (!resolvedId) {
+          return res.status(404).json({ error: "Could not find YouTube channel for this handle" });
+        }
+        channelId = resolvedId;
+      }
 
       // Check if channel exists in database
       let dbChannel = await storage.getChannelByYoutubeId(channelId);
