@@ -454,7 +454,7 @@ export default function Home() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-24 bg-secondary text-white text-center relative overflow-hidden">
+      <section className="py-24 bg-secondary text-white text-center relative overflow-hidden -mt-px">
         <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/diagmonds-light.png')] opacity-10" />
         <motion.div 
           className="container relative z-10 px-4"
