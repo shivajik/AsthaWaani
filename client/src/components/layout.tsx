@@ -36,12 +36,6 @@ export function Header() {
   ];
 
   // Determine header style
-  // We use a dark background (Primary Blue) when scrolled or on internal pages to match the logo's intensity
-  // OR we use white if we want a clean look. 
-  // Given the logo might have a black background (based on preview), let's try a dark header to blend it, 
-  // or just use white if it's transparent. Assuming transparent or white-friendly for now based on standard web practices.
-  // If the logo has a black background, we might need to adjust.
-  
   const isTransparent = isHome && !isScrolled;
   
   return (
@@ -49,14 +43,35 @@ export function Header() {
       className={cn(
         "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
         isTransparent
-          ? "bg-transparent py-4 text-white"
-          : "bg-white/95 backdrop-blur-md shadow-sm py-2 text-foreground"
+          ? "bg-transparent py-6 text-white"
+          : "bg-white/95 backdrop-blur-md shadow-sm py-4 text-foreground"
       )}
     >
       <div className="container mx-auto px-4 flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-2">
-          {/* Using Horizontal Logo for Header */}
-          <img src={logoHorizontal} alt="Asthawaani Logo" className="h-12 w-auto object-contain" />
+        <Link href="/" className="flex items-center gap-3 group">
+          {/* 
+             Logic for Logo Visibility:
+             1. When Transparent (Dark BG): Show Square Logo (Icon) + White Text
+             2. When Scrolled (White BG): Show Horizontal Logo (Full Image) 
+          */}
+          {isTransparent ? (
+            <>
+              <img 
+                src={logoSquare} 
+                alt="Asthawaani Logo" 
+                className="h-16 w-auto object-contain drop-shadow-lg transition-transform group-hover:scale-105" 
+              />
+              <span className="text-3xl font-serif font-bold tracking-tight text-white drop-shadow-md">
+                Asthawaani
+              </span>
+            </>
+          ) : (
+            <img 
+              src={logoHorizontal} 
+              alt="Asthawaani Logo" 
+              className="h-16 w-auto object-contain transition-transform group-hover:scale-105" 
+            />
+          )}
         </Link>
 
         {/* Desktop Nav */}
@@ -66,10 +81,10 @@ export function Header() {
               key={link.href} 
               href={link.href}
               className={cn(
-                "text-sm font-medium transition-colors hover:text-secondary",
+                "text-base font-medium transition-colors hover:text-secondary",
                 location === link.href 
                   ? "text-secondary font-bold" 
-                  : (isTransparent ? "text-white/90" : "text-foreground/80")
+                  : (isTransparent ? "text-white/90 hover:text-white" : "text-foreground/80")
               )}
             >
                 {link.label}
@@ -81,18 +96,19 @@ export function Header() {
             size="sm" 
             onClick={toggleLanguage}
             className={cn(
-              "gap-2", 
+              "gap-2 text-base", 
               isTransparent 
                 ? "text-white hover:text-white hover:bg-white/20" 
                 : "text-foreground hover:text-primary hover:bg-primary/10"
             )}
           >
-            <Globe className="h-4 w-4" />
+            <Globe className="h-5 w-5" />
             {language === 'en' ? 'HI' : 'EN'}
           </Button>
 
           <Button 
-            className={cn("bg-secondary text-secondary-foreground hover:bg-secondary/90 font-serif font-bold")}
+            size="lg"
+            className={cn("bg-secondary text-secondary-foreground hover:bg-secondary/90 font-serif font-bold px-6")}
           >
             {t('nav.join')}
           </Button>
@@ -105,34 +121,34 @@ export function Header() {
               variant="ghost" 
               size="icon" 
               className={cn(
-                "md:hidden", 
+                "md:hidden h-10 w-10", 
                 isTransparent 
                   ? "text-white hover:bg-white/20" 
                   : "text-foreground hover:bg-foreground/10"
               )}
             >
-              <Menu className="h-6 w-6" />
+              <Menu className="h-8 w-8" />
             </Button>
           </SheetTrigger>
           <SheetContent side="right" className="bg-background/95 backdrop-blur-xl border-l-primary/20">
             <div className="flex flex-col gap-8 mt-8">
               <Link href="/" className="flex items-center gap-2">
-                <img src={logoHorizontal} alt="Asthawaani" className="h-10 w-auto" />
+                <img src={logoHorizontal} alt="Asthawaani" className="h-14 w-auto" />
               </Link>
-              <nav className="flex flex-col gap-4">
+              <nav className="flex flex-col gap-6">
                 {navLinks.map((link) => (
                   <Link 
                     key={link.href} 
                     href={link.href}
-                    className="text-lg font-medium hover:text-primary transition-colors"
+                    className="text-xl font-medium hover:text-primary transition-colors"
                   >
                       {link.label}
                   </Link>
                 ))}
               </nav>
               <div className="flex items-center gap-4 mt-4">
-                <Button variant="outline" onClick={toggleLanguage} className="w-full">
-                  <Globe className="mr-2 h-4 w-4" />
+                <Button variant="outline" onClick={toggleLanguage} className="w-full text-lg py-6">
+                  <Globe className="mr-2 h-5 w-5" />
                   {language === 'en' ? 'Hindi' : 'English'}
                 </Button>
               </div>
@@ -148,15 +164,19 @@ export function Footer() {
   const { t } = useLanguage();
   
   return (
-    <footer className="bg-primary text-primary-foreground py-16">
+    <footer className="bg-primary text-primary-foreground py-20">
       <div className="container mx-auto px-4">
-        <div className="grid md:grid-cols-3 gap-12">
-          <div>
-            <div className="flex items-center gap-3 mb-6">
-              {/* Using Square Logo for Footer */}
-              <img src={logoSquare} alt="Asthawaani" className="h-20 w-auto rounded-lg bg-white/5 p-2" />
+        <div className="grid md:grid-cols-3 gap-16">
+          <div className="flex flex-col items-start">
+            <div className="mb-8">
+              {/* Increased Footer Logo Size and Visibility */}
+              <img 
+                src={logoSquare} 
+                alt="Asthawaani" 
+                className="h-32 w-auto rounded-xl shadow-2xl bg-white/10 p-2 backdrop-blur-sm border border-white/10" 
+              />
             </div>
-            <p className="opacity-90 max-w-xs mb-6 leading-relaxed">
+            <p className="opacity-90 max-w-sm mb-8 leading-relaxed text-lg">
               {t('hero.mission')}
             </p>
             <div className="flex gap-4">
