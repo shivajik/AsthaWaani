@@ -1,13 +1,13 @@
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { useLanguage } from "@/lib/context";
 import { assets, offerings, locations } from "@/lib/data";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { ArrowRight, Play, MapPin, Youtube } from "lucide-react";
+import { ArrowRight, Play, MapPin, Youtube, Sparkles } from "lucide-react";
 import { Link } from "wouter";
 import { cn } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 
 interface Video {
   id: string;
@@ -54,6 +54,75 @@ const scaleIn = {
   },
 };
 
+const floatingOrbs = [
+  { size: 300, x: "10%", y: "20%", duration: 20, delay: 0, color: "rgba(212, 175, 55, 0.15)" },
+  { size: 200, x: "80%", y: "60%", duration: 25, delay: 2, color: "rgba(139, 69, 19, 0.1)" },
+  { size: 150, x: "60%", y: "10%", duration: 18, delay: 1, color: "rgba(212, 175, 55, 0.12)" },
+  { size: 250, x: "20%", y: "70%", duration: 22, delay: 3, color: "rgba(255, 215, 0, 0.1)" },
+  { size: 180, x: "90%", y: "30%", duration: 28, delay: 4, color: "rgba(184, 134, 11, 0.08)" },
+];
+
+const FloatingParticle = ({ delay, size }: { delay: number; size: number }) => (
+  <motion.div
+    className="absolute rounded-full bg-gradient-to-br from-amber-200/30 to-amber-400/20"
+    style={{
+      width: size,
+      height: size,
+      left: `${Math.random() * 100}%`,
+      top: `${Math.random() * 100}%`,
+    }}
+    animate={{
+      y: [-20, 20, -20],
+      x: [-10, 10, -10],
+      opacity: [0.3, 0.6, 0.3],
+      scale: [1, 1.1, 1],
+    }}
+    transition={{
+      duration: 6 + Math.random() * 4,
+      repeat: Infinity,
+      delay: delay,
+      ease: "easeInOut",
+    }}
+  />
+);
+
+const GlowingOrb = ({ orb }: { orb: typeof floatingOrbs[0] }) => (
+  <motion.div
+    className="absolute rounded-full blur-3xl"
+    style={{
+      width: orb.size,
+      height: orb.size,
+      left: orb.x,
+      top: orb.y,
+      background: orb.color,
+    }}
+    animate={{
+      x: [0, 50, -30, 0],
+      y: [0, -40, 30, 0],
+      scale: [1, 1.2, 0.9, 1],
+    }}
+    transition={{
+      duration: orb.duration,
+      repeat: Infinity,
+      delay: orb.delay,
+      ease: "easeInOut",
+    }}
+  />
+);
+
+const letterAnimation = {
+  hidden: { opacity: 0, y: 50 },
+  visible: (i: number) => ({
+    opacity: 1,
+    y: 0,
+    transition: {
+      delay: i * 0.05,
+      duration: 0.5,
+      ease: [0.6, -0.05, 0.01, 0.99] as const,
+    },
+  }),
+};
+
 export default function Home() {
   const { t, language } = useLanguage();
   const heroRef = useRef<HTMLDivElement>(null);
@@ -78,17 +147,47 @@ export default function Home() {
 
   return (
     <div className="flex flex-col w-full overflow-hidden">
-      {/* Hero Section with Parallax */}
+      {/* Hero Section with Enhanced Animations */}
       <section ref={heroRef} className="relative h-screen w-full flex items-center justify-center overflow-hidden" style={{ position: 'relative' }}>
+        {/* Animated Background */}
         <motion.div 
-          className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat transform scale-105"
+          className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat transform scale-110"
           style={{ 
             backgroundImage: `url(${assets.hero})`,
             y: heroY,
           }}
+          animate={{ scale: [1.1, 1.15, 1.1] }}
+          transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
         >
-          <div className="absolute inset-0 bg-black/40 bg-gradient-to-b from-black/50 via-transparent to-black/60" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/30 to-black/70" />
         </motion.div>
+        
+        {/* Floating Orbs Background */}
+        <div className="absolute inset-0 z-[1] overflow-hidden pointer-events-none">
+          {floatingOrbs.map((orb, i) => (
+            <GlowingOrb key={i} orb={orb} />
+          ))}
+        </div>
+        
+        {/* Floating Particles */}
+        <div className="absolute inset-0 z-[2] overflow-hidden pointer-events-none">
+          {[...Array(12)].map((_, i) => (
+            <FloatingParticle key={i} delay={i * 0.5} size={8 + Math.random() * 16} />
+          ))}
+        </div>
+        
+        {/* Radial Glow Effect */}
+        <motion.div
+          className="absolute inset-0 z-[3] pointer-events-none"
+          style={{
+            background: "radial-gradient(circle at 50% 50%, rgba(212, 175, 55, 0.15) 0%, transparent 50%)",
+          }}
+          animate={{
+            opacity: [0.5, 0.8, 0.5],
+            scale: [1, 1.1, 1],
+          }}
+          transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+        />
         
         <motion.div 
           className="relative z-10 container mx-auto px-4 text-center text-white"
@@ -100,29 +199,100 @@ export default function Home() {
             animate="visible"
             className="flex flex-col items-center gap-6"
           >
-            <motion.h1 
-              variants={fadeUpItem}
-              className="text-5xl md:text-7xl lg:text-8xl font-serif font-bold tracking-tight text-white drop-shadow-lg"
+            {/* Decorative Element Above Title */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.2, duration: 0.8, type: "spring" }}
+              className="relative"
             >
-              Asthawaani
-            </motion.h1>
+              <motion.div
+                animate={{ rotate: 360 }}
+                transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
+                className="w-24 h-24 border border-amber-400/30 rounded-full absolute -top-12 left-1/2 -translate-x-1/2"
+              />
+              <Sparkles className="w-8 h-8 text-amber-400" />
+            </motion.div>
+            
+            {/* Animated Title with Letter-by-Letter Animation */}
+            <motion.div className="relative">
+              <motion.h1 
+                className="text-5xl md:text-7xl lg:text-8xl font-serif font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-white to-amber-200 drop-shadow-2xl"
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3, duration: 0.8, type: "spring" }}
+              >
+                {"Asthawaani".split("").map((letter, i) => (
+                  <motion.span
+                    key={i}
+                    custom={i}
+                    variants={letterAnimation}
+                    initial="hidden"
+                    animate="visible"
+                    className="inline-block"
+                    whileHover={{ 
+                      scale: 1.2, 
+                      color: "#d4af37",
+                      transition: { duration: 0.2 } 
+                    }}
+                  >
+                    {letter}
+                  </motion.span>
+                ))}
+              </motion.h1>
+              
+              {/* Glowing underline */}
+              <motion.div
+                className="h-1 bg-gradient-to-r from-transparent via-amber-400 to-transparent mx-auto mt-4"
+                initial={{ width: 0, opacity: 0 }}
+                animate={{ width: "80%", opacity: 1 }}
+                transition={{ delay: 1, duration: 0.8 }}
+              />
+            </motion.div>
+            
+            {/* Subtitle with Typewriter Effect Feel */}
             <motion.p 
-              variants={fadeUpItem}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.8, duration: 0.6 }}
               className="text-xl md:text-2xl font-light max-w-2xl text-white/90 drop-shadow-md leading-relaxed"
             >
-              {t('hero.mission')}
+              <motion.span
+                animate={{ opacity: [0.7, 1, 0.7] }}
+                transition={{ duration: 3, repeat: Infinity }}
+              >
+                {t('hero.mission')}
+              </motion.span>
             </motion.p>
-            <motion.div variants={fadeUpItem} className="mt-8">
+            
+            {/* CTA Button with Glow Effect */}
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 1.2, duration: 0.6 }}
+              className="mt-8"
+            >
               <motion.div
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
+                className="relative group"
               >
+                {/* Button Glow */}
+                <motion.div
+                  className="absolute -inset-1 bg-gradient-to-r from-amber-400 via-amber-500 to-amber-400 rounded-full opacity-50 blur-lg group-hover:opacity-75 transition-opacity"
+                  animate={{
+                    scale: [1, 1.05, 1],
+                    opacity: [0.5, 0.7, 0.5],
+                  }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                />
                 <Link href="/contact">
                   <Button 
                     size="lg" 
-                    className="bg-primary hover:bg-primary/90 text-primary-foreground font-serif text-lg px-8 py-6 rounded-full shadow-lg shadow-primary/20"
+                    className="relative bg-gradient-to-r from-amber-500 via-amber-600 to-amber-500 hover:from-amber-600 hover:via-amber-700 hover:to-amber-600 text-white font-serif text-lg px-10 py-6 rounded-full shadow-2xl shadow-amber-500/30 border border-amber-400/30"
                     data-testid="button-hero-cta"
                   >
+                    <Sparkles className="w-5 h-5 mr-2" />
                     {t('hero.cta')}
                   </Button>
                 </Link>
@@ -131,18 +301,32 @@ export default function Home() {
           </motion.div>
         </motion.div>
         
+        {/* Enhanced Scroll Indicator */}
         <motion.div 
-          className="absolute bottom-10 w-full flex justify-center"
-          animate={{ y: [0, 10, 0] }}
-          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute bottom-10 w-full flex flex-col items-center gap-2"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 2 }}
         >
-          <div className="w-6 h-10 border-2 border-white/50 rounded-full flex justify-center pt-2">
-            <motion.div 
-              className="w-1 h-2 bg-white rounded-full"
-              animate={{ y: [0, 12, 0] }}
-              transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-            />
-          </div>
+          <motion.span
+            className="text-white/50 text-sm tracking-widest uppercase"
+            animate={{ opacity: [0.5, 1, 0.5] }}
+            transition={{ duration: 2, repeat: Infinity }}
+          >
+            Scroll
+          </motion.span>
+          <motion.div
+            animate={{ y: [0, 10, 0] }}
+            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+          >
+            <div className="w-6 h-10 border-2 border-white/40 rounded-full flex justify-center pt-2 backdrop-blur-sm">
+              <motion.div 
+                className="w-1.5 h-3 bg-gradient-to-b from-amber-400 to-white rounded-full"
+                animate={{ y: [0, 12, 0], opacity: [1, 0.5, 1] }}
+                transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+              />
+            </div>
+          </motion.div>
         </motion.div>
       </section>
 
