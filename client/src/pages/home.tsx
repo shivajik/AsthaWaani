@@ -404,8 +404,15 @@ export default function Home() {
       </section>
 
       {/* Offerings */}
-      <section className="py-24 bg-secondary text-secondary-foreground relative overflow-hidden">
-        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-5" />
+      <section className="py-24 bg-gradient-to-br from-stone-900 via-stone-800 to-stone-900 text-white relative overflow-hidden">
+        {/* Decorative Background Elements */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute top-0 left-1/4 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl" />
+          <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-amber-600/10 rounded-full blur-3xl" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] border border-amber-500/10 rounded-full" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] border border-amber-500/5 rounded-full" />
+        </div>
+        
         <div className="container mx-auto px-4 relative z-10">
           <motion.div 
             className="text-center mb-16"
@@ -413,9 +420,17 @@ export default function Home() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <h2 className="text-4xl font-serif font-bold text-white mb-4">{t('offerings.title')}</h2>
+            <motion.span 
+              className="inline-block text-amber-400 text-sm font-semibold tracking-widest uppercase mb-4"
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+            >
+              {language === 'en' ? 'What We Offer' : 'हम क्या प्रदान करते हैं'}
+            </motion.span>
+            <h2 className="text-4xl md:text-5xl font-serif font-bold text-white mb-6">{t('offerings.title')}</h2>
             <motion.div 
-              className="w-24 h-1 bg-primary mx-auto rounded-full"
+              className="w-24 h-1 bg-gradient-to-r from-amber-400 to-amber-600 mx-auto rounded-full"
               initial={{ width: 0 }}
               whileInView={{ width: 96 }}
               viewport={{ once: true }}
@@ -435,18 +450,38 @@ export default function Home() {
                 key={index}
                 variants={scaleIn}
                 whileHover={{ y: -10, transition: { duration: 0.3 } }}
+                className="group"
               >
-                <Card className="bg-white/5 border-white/10 hover:bg-white/10 transition-colors duration-300 h-full group">
-                  <CardContent className="p-8 flex flex-col items-center text-center h-full">
+                <Card className="relative bg-white/5 backdrop-blur-sm border border-white/10 hover:border-amber-500/30 transition-all duration-500 h-full overflow-hidden">
+                  {/* Gradient overlay on hover */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-amber-500/0 to-amber-600/0 group-hover:from-amber-500/10 group-hover:to-amber-600/5 transition-all duration-500" />
+                  
+                  {/* Top accent line */}
+                  <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-amber-500/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                  
+                  <CardContent className="relative p-8 flex flex-col items-center text-center h-full">
                     <motion.div 
-                      className="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center mb-6 text-primary"
-                      whileHover={{ rotate: 360 }}
-                      transition={{ duration: 0.6 }}
+                      className="relative w-20 h-20 rounded-2xl bg-gradient-to-br from-amber-500/20 to-amber-600/10 flex items-center justify-center mb-6 border border-amber-500/20 group-hover:border-amber-500/40 transition-colors duration-300"
+                      whileHover={{ rotate: 10, scale: 1.1 }}
+                      transition={{ duration: 0.3 }}
                     >
-                      <item.icon className="w-8 h-8" />
+                      <item.icon className="w-9 h-9 text-amber-400" />
+                      {/* Glow effect */}
+                      <div className="absolute inset-0 rounded-2xl bg-amber-500/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                     </motion.div>
-                    <h3 className="text-xl font-bold text-white mb-3">{item.title[language]}</h3>
-                    <p className="text-white/70">{item.desc[language]}</p>
+                    <h3 className="text-xl font-bold text-white mb-3 group-hover:text-amber-300 transition-colors duration-300">{item.title[language]}</h3>
+                    <p className="text-white/60 group-hover:text-white/80 transition-colors duration-300 leading-relaxed">{item.desc[language]}</p>
+                    
+                    {/* Learn more link */}
+                    <motion.div 
+                      className="mt-6 flex items-center gap-2 text-amber-400/70 group-hover:text-amber-400 transition-colors duration-300"
+                      initial={{ opacity: 0 }}
+                      whileInView={{ opacity: 1 }}
+                      viewport={{ once: true }}
+                    >
+                      <span className="text-sm font-medium">{language === 'en' ? 'Learn more' : 'और जानें'}</span>
+                      <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
+                    </motion.div>
                   </CardContent>
                 </Card>
               </motion.div>
