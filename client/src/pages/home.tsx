@@ -9,6 +9,9 @@ import { cn } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import { useRef } from "react";
 
+import mandalaHalf from "@assets/1_1765891053824.jpg";
+import mandalaFull from "@assets/4_1765891053824.jpg";
+
 interface Video {
   id: string;
   videoId: string;
@@ -147,13 +150,13 @@ export default function Home() {
       {/* About Preview */}
       <section className="py-24 bg-background relative overflow-hidden">
         <img 
-          src="/attached_assets/4_1765891053824.jpg" 
+          src={mandalaFull} 
           alt="" 
           className="absolute -left-20 -top-20 w-[200px] h-auto md:w-[280px] opacity-30 pointer-events-none"
           style={{ filter: 'sepia(100%) saturate(300%) brightness(90%) hue-rotate(5deg)' }}
         />
         <img 
-          src="/attached_assets/4_1765891053824.jpg" 
+          src={mandalaFull} 
           alt="" 
           className="absolute -right-20 -top-20 w-[200px] h-auto md:w-[280px] opacity-30 pointer-events-none scale-x-[-1]"
           style={{ filter: 'sepia(100%) saturate(300%) brightness(90%) hue-rotate(5deg)' }}
@@ -233,13 +236,13 @@ export default function Home() {
       <section className="py-24 bg-secondary text-secondary-foreground relative overflow-hidden">
         <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-5" />
         <img 
-          src="/attached_assets/1_1765891053824.jpg" 
+          src={mandalaHalf} 
           alt="" 
           className="absolute left-0 top-1/2 -translate-y-1/2 w-[200px] h-auto md:w-[300px] opacity-20 pointer-events-none"
           style={{ filter: 'brightness(2) contrast(0.8)' }}
         />
         <img 
-          src="/attached_assets/1_1765891053824.jpg" 
+          src={mandalaHalf} 
           alt="" 
           className="absolute right-0 top-1/2 -translate-y-1/2 w-[200px] h-auto md:w-[300px] opacity-20 pointer-events-none scale-x-[-1]"
           style={{ filter: 'brightness(2) contrast(0.8)' }}
@@ -296,13 +299,13 @@ export default function Home() {
       {/* Locations */}
       <section className="py-24 bg-background relative overflow-hidden">
         <img 
-          src="/attached_assets/4_1765891053824.jpg" 
+          src={mandalaFull} 
           alt="" 
           className="absolute -left-20 -bottom-20 w-[200px] h-auto md:w-[280px] opacity-30 pointer-events-none rotate-180"
           style={{ filter: 'sepia(100%) saturate(300%) brightness(90%) hue-rotate(5deg)' }}
         />
         <img 
-          src="/attached_assets/4_1765891053824.jpg" 
+          src={mandalaFull} 
           alt="" 
           className="absolute -right-20 -bottom-20 w-[200px] h-auto md:w-[280px] opacity-30 pointer-events-none rotate-180 scale-x-[-1]"
           style={{ filter: 'sepia(100%) saturate(300%) brightness(90%) hue-rotate(5deg)' }}
@@ -492,13 +495,13 @@ export default function Home() {
       {/* CTA Section */}
       <section className="py-24 bg-gradient-to-r from-amber-50 via-amber-100 to-amber-50 text-center relative overflow-hidden -mt-px">
         <img 
-          src="/attached_assets/1_1765891053824.jpg" 
+          src={mandalaHalf} 
           alt="" 
           className="absolute left-0 top-1/2 -translate-y-1/2 w-[250px] h-auto md:w-[350px] lg:w-[450px] opacity-50 pointer-events-none"
           style={{ filter: 'sepia(100%) saturate(300%) brightness(90%) hue-rotate(5deg)' }}
         />
         <img 
-          src="/attached_assets/1_1765891053824.jpg" 
+          src={mandalaHalf} 
           alt="" 
           className="absolute right-0 top-1/2 -translate-y-1/2 w-[250px] h-auto md:w-[350px] lg:w-[450px] opacity-50 pointer-events-none scale-x-[-1]"
           style={{ filter: 'sepia(100%) saturate(300%) brightness(90%) hue-rotate(5deg)' }}
