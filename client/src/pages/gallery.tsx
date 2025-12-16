@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { useLanguage } from "@/lib/context";
 import { assets } from "@/lib/data";
 import { Button } from "@/components/ui/button";
-import { Play, Filter } from "lucide-react";
+import { Play, Filter, Youtube, ExternalLink } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 
@@ -17,12 +17,12 @@ const categories = [
 ];
 
 const videos = [
-  { id: 1, category: 'satsang', title: { en: "Morning Satsang from Vrindavan", hi: "वृंदावन से प्रातः सत्संग" }, duration: "45:20", thumb: assets.guru },
-  { id: 2, category: 'bhajan', title: { en: "Divine Yamuna Aarti", hi: "दिव्य यमुना आरती" }, duration: "12:15", thumb: assets.bhajan },
-  { id: 3, category: 'pravachan', title: { en: "Wisdom of Geeta", hi: "गीता का ज्ञान" }, duration: "28:40", thumb: assets.meditation },
-  { id: 4, category: 'katha', title: { en: "Krishna Leela Part 1", hi: "कृष्ण लीला भाग १" }, duration: "1:15:00", thumb: assets.hero },
-  { id: 5, category: 'mantra', title: { en: "Om Namah Shivaya Chanting", hi: "ओम नमः शिवाय जाप" }, duration: "1:00:00", thumb: assets.meditation },
-  { id: 6, category: 'festivals', title: { en: "Holi in Braj", hi: "ब्रज की होली" }, duration: "15:30", thumb: assets.bhajan },
+  { id: 1, category: 'satsang', title: { en: "Morning Satsang from Vrindavan", hi: "वृंदावन से प्रातः सत्संग" }, duration: "45:20", views: "1.2K", time: "2 days ago", thumb: assets.guru },
+  { id: 2, category: 'bhajan', title: { en: "Divine Yamuna Aarti", hi: "दिव्य यमुना आरती" }, duration: "12:15", views: "3.5K", time: "5 days ago", thumb: assets.bhajan },
+  { id: 3, category: 'pravachan', title: { en: "Wisdom of Geeta", hi: "गीता का ज्ञान" }, duration: "28:40", views: "856", time: "1 week ago", thumb: assets.meditation },
+  { id: 4, category: 'katha', title: { en: "Krishna Leela Part 1", hi: "कृष्ण लीला भाग १" }, duration: "1:15:00", views: "5.4K", time: "2 weeks ago", thumb: assets.hero },
+  { id: 5, category: 'mantra', title: { en: "Om Namah Shivaya Chanting", hi: "ओम नमः शिवाय जाप" }, duration: "1:00:00", views: "12K", time: "1 month ago", thumb: assets.meditation },
+  { id: 6, category: 'festivals', title: { en: "Holi in Braj", hi: "ब्रज की होली" }, duration: "15:30", views: "2.1K", time: "1 month ago", thumb: assets.bhajan },
 ];
 
 export default function Gallery() {
@@ -35,14 +35,29 @@ export default function Gallery() {
 
   return (
     <div className="min-h-screen pt-20">
-      <div className="bg-secondary py-20 text-white text-center">
-        <h1 className="text-5xl font-serif font-bold mb-4">{t('gallery.title')}</h1>
-        <p className="text-white/80 max-w-xl mx-auto px-4">
-          {language === 'en' 
-            ? "Immerse yourself in the divine visuals and sounds of Braj."
-            : "ब्रज के दिव्य दृश्यों और ध्वनियों में डूब जाएं।"
-          }
-        </p>
+      <div className="bg-secondary py-16 text-white text-center relative overflow-hidden">
+        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10" />
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="flex flex-col items-center justify-center gap-4">
+            <div className="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center text-white shadow-xl">
+              <Youtube className="w-8 h-8 fill-current" />
+            </div>
+            <h1 className="text-4xl md:text-5xl font-serif font-bold">{t('gallery.title')}</h1>
+            <p className="text-white/80 max-w-xl mx-auto">
+              {language === 'en' 
+                ? "Watch our latest spiritual discourses and bhajans directly from our YouTube channel."
+                : "हमारे YouTube चैनल से सीधे नवीनतम आध्यात्मिक प्रवचन और भजन देखें।"
+              }
+            </p>
+            <Button 
+              className="mt-4 bg-white text-red-600 hover:bg-stone-100 font-bold gap-2"
+              onClick={() => window.open('https://youtube.com', '_blank')}
+            >
+              <Youtube className="w-4 h-4" />
+              {language === 'en' ? "Subscribe to Channel" : "चैनल सब्सक्राइब करें"}
+            </Button>
+          </div>
+        </div>
       </div>
 
       <div className="container mx-auto px-4 py-12">
@@ -75,7 +90,7 @@ export default function Gallery() {
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.9 }}
               key={video.id}
-              className="group bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-stone-100"
+              className="group bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-stone-100 cursor-pointer"
             >
               <div className="relative aspect-video bg-black overflow-hidden">
                 <img 
@@ -91,14 +106,16 @@ export default function Gallery() {
                 <div className="absolute bottom-2 right-2 bg-black/80 text-white text-xs px-2 py-1 rounded font-mono">
                   {video.duration}
                 </div>
-                <div className="absolute top-2 left-2 bg-primary text-primary-foreground text-xs font-bold px-2 py-1 rounded uppercase tracking-wider">
-                  {categories.find(c => c.id === video.category)?.[language]}
-                </div>
               </div>
-              <div className="p-5">
-                <h3 className="font-bold text-lg text-secondary line-clamp-2 font-serif group-hover:text-primary transition-colors">
+              <div className="p-4">
+                <h3 className="font-bold text-lg text-secondary line-clamp-2 font-serif group-hover:text-primary transition-colors mb-2">
                   {video.title[language]}
                 </h3>
+                <div className="flex items-center justify-between text-xs text-muted-foreground">
+                  <span>{video.views} views</span>
+                  <span className="w-1 h-1 bg-muted-foreground/30 rounded-full" />
+                  <span>{video.time}</span>
+                </div>
               </div>
             </motion.div>
           ))}
