@@ -1,0 +1,291 @@
+Project Name: Asthawaani – Spiritual CMS Website (App-Ready)
+
+OBJECTIVE
+
+Build a production-ready, CMS-based spiritual website for Asthawaani, born in Mathura–Vrindavan, designed to scale later into a full web & mobile application.
+
+The website must be:
+
+SEO + AEO + GEO optimized
+
+Bilingual (English + Hindi)
+
+Server-side rendered
+
+CMS driven
+
+Future-app ready
+
+Spiritually calm, devotional, non-commercial
+
+TECH STACK (STRICT)
+
+Next.js (App Router)
+
+React 18
+
+TypeScript
+
+Tailwind CSS
+
+Server Components (default)
+
+Headless CMS (simple, extendable collections)
+
+YouTube API (for gallery auto-sync)
+
+CORE SEO / AEO / GEO REQUIREMENTS
+
+Semantic HTML5
+
+Clean URL structure
+
+Schema.org:
+
+Organization
+
+Place
+
+Event
+
+VideoObject
+
+FAQ
+
+AI-answer-friendly headings
+
+Location SEO targeting:
+
+Mathura
+
+Vrindavan
+
+Gokul
+
+Govardhan
+
+Mahavan
+
+Fast Core Web Vitals
+
+Human-written content tone (avoid AI footprint)
+
+DESIGN DIRECTION
+
+Theme: Spiritual • Calm • Devotional • Trustworthy
+
+Colors:
+Saffron, deep maroon, cream white, soft gold
+
+UI Feel:
+Temple-inspired • Minimal • Soft animations • Emotion-driven
+
+WEBSITE STRUCTURE (MANDATORY)
+HOME PAGE
+
+Sections:
+
+Hero (Vrindavan spiritual imagery)
+
+One-line mission
+
+What is Asthawaani
+
+Who it is for (Seekers & Speakers)
+
+Daily offerings
+
+YouTube preview gallery
+
+Locations & trust section
+
+CTA: “Join the Digital Satsang”
+
+ABOUT ASTHAWAANI (Bilingual)
+
+English & Hindi toggle
+
+English content:
+Asthawaani is a spiritual platform born from the sacred land of Mathura–Vrindavan.
+Its purpose is simple — to bring India’s purest voices of wisdom to every home.
+
+Across India, many gifted Katha Vachaks, Pravaktas, Spiritual Speakers, Bhajan Singers, and Astrologers carry deep knowledge and devotion, yet they remain unseen on larger platforms.
+
+Asthawaani opens a doorway for them.
+It connects these divine voices with seekers across India and the world —
+so that no true teacher remains unheard,
+and no true seeker remains unguided.
+
+Asthawaani is not just a channel.
+It is a digital satsang mandir,
+a healing space,
+a spiritual family.
+
+Hindi content:
+आस्थावाणी मथुरा–वृंदावन की पवित्र भूमि से जन्मा एक आध्यात्मिक मंच है।
+इसका उद्देश्य बहुत सरल है —
+भारत की सच्ची ज्ञान-वाणी को हर घर तक पहुँचाना।
+
+भारत भर में कई विद्वान कथा-वाचक, प्रवक्ता, भजन गायक, आध्यात्मिक वक्ता और ज्योतिषाचार्य हैं जिनके पास अद्भुत ज्ञान है, पर वे अभी बड़ी दुनिया के सामने नहीं आ पाए हैं।
+
+आस्थावाणी उनके लिए वह द्वार खोलता है।
+यह इन सभी दैवीय वाणियों को भारत और विश्व के भक्तों से जोड़ता है —
+ताकि कोई सच्चा गुरु अनसुना न रहे,
+और कोई सच्चा भक्त बिना मार्गदर्शन न रहे।
+
+आस्थावाणी केवल एक चैनल नहीं…
+यह डिजिटल सत्संग का मंदिर है,
+यह healing का स्थान है,
+यह भक्ति का परिवार है।
+
+OUR OBJECTIVE
+
+English & Hindi sections with bullets:
+
+Wisdom flows freely
+
+Devotion reaches every home
+
+Unrecognized speakers get respect
+
+Seekers receive guidance anywhere
+
+Spiritual healing becomes accessible
+
+Include FAQ schema.
+
+OUR MISSION & VISION
+
+Mission:
+“To take the light of wisdom to every home,
+and give every true voice the place it deserves.”
+
+Vision:
+India’s most trusted spiritual platform —
+modern in technology, ancient in soul.
+
+Include AI-answer headings.
+
+WHO IS ASTHAWAANI FOR?
+
+Split into:
+
+Seekers
+Peace, clarity, bhakti, guidance, healing, positivity
+
+Speakers & Guides
+Knowledgeable, devoted teachers seeking dignified visibility
+
+Include emotional trust messaging.
+
+OUR VALUES
+
+Cards:
+
+Truth (सत्य)
+
+Respect (सम्मान)
+
+Simplicity (सरलता)
+
+Compassion (करुणा)
+
+Unity (एकता)
+
+GALLERY
+
+Auto-sync from Asthawaani YouTube channel
+
+Categories:
+
+Satsang
+
+Pravachan
+
+Katha
+
+Bhajan
+
+Mantra
+
+Festivals
+
+Use VideoObject schema
+
+CONTACT
+
+English & Hindi:
+
+Asthawaani Kendra
+c/o Ashirwad Palace, Swej Farm, Yamunapar, Laxminagar, Mathura, Uttar Pradesh
+
+Ashram Locations:
+Mathura • Vrindavan • Mahavan • Gokul • Govardhan
+
+WhatsApp: +91 76684 09246
+
+Include:
+
+Click-to-WhatsApp
+
+Google Map embed
+
+Place schema
+
+CMS COLLECTIONS
+
+Pages
+
+Speakers
+
+Videos
+
+Locations
+
+Settings (contact, social, SEO)
+
+IMAGE GENERATION (AUTO PROMPTS)
+
+Generate devotional AI image prompts for:
+
+Vrindavan sunrise
+
+Satsang gatherings
+
+Indian sages speaking
+
+Bhajan kirtan
+
+Meditation & peace visuals
+
+Avoid commercial stock-photo style.
+
+FUTURE-READY (DO NOT IMPLEMENT)
+
+Prepare architecture for:
+
+User accounts
+
+Live satsang
+
+Events
+
+Donations
+
+Mobile app APIs
+
+FINAL REQUIREMENT
+
+Clean production code
+
+Extendable CMS structure
+
+SEO-first rendering
+
+Spiritual authenticity
+
+No unnecessary features
+
+No breaking changes later
+
+Build with devotion, simplicity, and clarity.
