@@ -8,6 +8,7 @@ import { Link } from "wouter";
 import { cn } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import { useRef } from "react";
+import { MandalaOrnament, CornerOrnament } from "@/components/mandala-ornament";
 
 interface Video {
   id: string;
@@ -454,8 +455,22 @@ export default function Home() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-24 bg-secondary text-white text-center relative overflow-hidden -mt-px">
-        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/diagmonds-light.png')] opacity-10" />
+      <section className="py-24 bg-gradient-to-r from-amber-50 via-amber-100 to-amber-50 text-center relative overflow-hidden -mt-px">
+        <MandalaOrnament 
+          side="left" 
+          color="#C4A052" 
+          className="left-0 top-1/2 -translate-y-1/2 w-80 h-80 md:w-96 md:h-96 -translate-x-1/3 opacity-60"
+        />
+        <MandalaOrnament 
+          side="right" 
+          color="#C4A052" 
+          className="right-0 top-1/2 -translate-y-1/2 w-80 h-80 md:w-96 md:h-96 translate-x-1/3 opacity-60"
+        />
+        <CornerOrnament position="top-left" color="#C4A052" className="top-0 left-0 w-24 h-24 md:w-32 md:h-32" />
+        <CornerOrnament position="top-right" color="#C4A052" className="top-0 right-0 w-24 h-24 md:w-32 md:h-32" />
+        <CornerOrnament position="bottom-left" color="#C4A052" className="bottom-0 left-0 w-24 h-24 md:w-32 md:h-32" />
+        <CornerOrnament position="bottom-right" color="#C4A052" className="bottom-0 right-0 w-24 h-24 md:w-32 md:h-32" />
+        
         <motion.div 
           className="container mx-auto relative z-10 px-4"
           initial={{ opacity: 0, y: 30 }}
@@ -463,7 +478,7 @@ export default function Home() {
           viewport={{ once: true }}
         >
           <motion.h2 
-            className="text-4xl md:text-5xl font-serif font-bold mb-8"
+            className="text-4xl md:text-5xl font-serif font-bold mb-8 text-primary"
             initial={{ opacity: 0, scale: 0.9 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
@@ -482,7 +497,7 @@ export default function Home() {
                 href="https://www.youtube.com/@Asthawaani" 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white font-bold px-8 py-4 rounded-lg transition-colors"
+                className="inline-flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white font-bold px-8 py-4 rounded-lg transition-colors shadow-lg"
               >
                 <Youtube className="w-5 h-5" />
                 {language === 'en' ? "Subscribe on YouTube" : "YouTube पर सब्सक्राइब करें"}
@@ -490,7 +505,7 @@ export default function Home() {
             </motion.div>
             <motion.div variants={fadeUpItem} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
               <Link href="/contact">
-                <Button size="lg" variant="outline" className="border-white/20 text-white hover:bg-white/10">
+                <Button size="lg" variant="outline" className="border-primary/30 text-primary hover:bg-primary/10 shadow-md">
                   {language === 'en' ? "Contact Us" : "संपर्क करें"}
                 </Button>
               </Link>
