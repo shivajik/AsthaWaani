@@ -79,7 +79,7 @@ export default function Home() {
   return (
     <div className="flex flex-col w-full overflow-hidden">
       {/* Hero Section with Parallax */}
-      <section ref={heroRef} className="relative h-screen w-full flex items-center justify-center overflow-hidden">
+      <section ref={heroRef} className="relative h-screen w-full flex items-center justify-center overflow-hidden" style={{ position: 'relative' }}>
         <motion.div 
           className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat transform scale-105"
           style={{ 
