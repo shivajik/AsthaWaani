@@ -51,7 +51,7 @@ export default function Gallery() {
             </p>
             <Button 
               className="mt-4 bg-white text-red-600 hover:bg-stone-100 font-bold gap-2"
-              onClick={() => window.open('https://youtube.com', '_blank')}
+              onClick={() => window.open('https://www.youtube.com/@Asthawaani', '_blank')}
             >
               <Youtube className="w-4 h-4" />
               {language === 'en' ? "Subscribe to Channel" : "चैनल सब्सक्राइब करें"}
