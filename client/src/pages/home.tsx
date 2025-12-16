@@ -667,7 +667,7 @@ export default function Home() {
                 href="https://www.youtube.com/@Asthawaani" 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white font-bold px-8 py-4 rounded-lg transition-colors shadow-lg"
+                className="inline-flex items-center justify-center gap-2 bg-red-600 hover:bg-red-700 text-white font-bold h-12 px-8 rounded-lg transition-colors shadow-lg"
               >
                 <Youtube className="w-5 h-5" />
                 {language === 'en' ? "Subscribe on YouTube" : "YouTube पर सब्सक्राइब करें"}
@@ -675,7 +675,7 @@ export default function Home() {
             </motion.div>
             <motion.div variants={fadeUpItem} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
               <Link href="/contact">
-                <Button size="lg" variant="outline" className="border-primary/30 text-primary hover:bg-primary/10 shadow-md">
+                <Button size="lg" variant="outline" className="h-12 px-8 border-primary/30 text-primary hover:bg-primary/10 shadow-md">
                   {language === 'en' ? "Contact Us" : "संपर्क करें"}
                 </Button>
               </Link>
