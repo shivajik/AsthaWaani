@@ -9,8 +9,7 @@ import { cn } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import { useRef } from "react";
 
-import mandalaHalf from "@assets/1_1765891053824.jpg";
-import mandalaFull from "@assets/4_1765891053824.jpg";
+import mandalaPattern from "@assets/Asthawaani-–-ornamental_mandala_design_patterns_1765890463103.png";
 
 interface Video {
   id: string;
@@ -150,16 +149,14 @@ export default function Home() {
       {/* About Preview */}
       <section className="py-24 bg-background relative overflow-hidden">
         <img 
-          src={mandalaFull} 
+          src={mandalaPattern} 
           alt="" 
-          className="absolute -left-20 -top-20 w-[200px] h-auto md:w-[280px] opacity-30 pointer-events-none"
-          style={{ filter: 'sepia(100%) saturate(300%) brightness(90%) hue-rotate(5deg)' }}
+          className="absolute -left-32 -top-32 w-[280px] h-auto md:w-[400px] opacity-25 pointer-events-none"
         />
         <img 
-          src={mandalaFull} 
+          src={mandalaPattern} 
           alt="" 
-          className="absolute -right-20 -top-20 w-[200px] h-auto md:w-[280px] opacity-30 pointer-events-none scale-x-[-1]"
-          style={{ filter: 'sepia(100%) saturate(300%) brightness(90%) hue-rotate(5deg)' }}
+          className="absolute -right-32 -top-32 w-[280px] h-auto md:w-[400px] opacity-25 pointer-events-none scale-x-[-1]"
         />
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-2 gap-16 items-center">
@@ -236,16 +233,16 @@ export default function Home() {
       <section className="py-24 bg-secondary text-secondary-foreground relative overflow-hidden">
         <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-5" />
         <img 
-          src={mandalaHalf} 
+          src={mandalaPattern} 
           alt="" 
-          className="absolute left-0 top-1/2 -translate-y-1/2 w-[200px] h-auto md:w-[300px] opacity-20 pointer-events-none"
-          style={{ filter: 'brightness(2) contrast(0.8)' }}
+          className="absolute -left-40 top-1/2 -translate-y-1/2 w-[280px] h-auto md:w-[400px] opacity-15 pointer-events-none"
+          style={{ filter: 'brightness(1.5) invert(1)' }}
         />
         <img 
-          src={mandalaHalf} 
+          src={mandalaPattern} 
           alt="" 
-          className="absolute right-0 top-1/2 -translate-y-1/2 w-[200px] h-auto md:w-[300px] opacity-20 pointer-events-none scale-x-[-1]"
-          style={{ filter: 'brightness(2) contrast(0.8)' }}
+          className="absolute -right-40 top-1/2 -translate-y-1/2 w-[280px] h-auto md:w-[400px] opacity-15 pointer-events-none scale-x-[-1]"
+          style={{ filter: 'brightness(1.5) invert(1)' }}
         />
         <div className="container mx-auto px-4 relative z-10">
           <motion.div 
@@ -299,16 +296,14 @@ export default function Home() {
       {/* Locations */}
       <section className="py-24 bg-background relative overflow-hidden">
         <img 
-          src={mandalaFull} 
+          src={mandalaPattern} 
           alt="" 
-          className="absolute -left-20 -bottom-20 w-[200px] h-auto md:w-[280px] opacity-30 pointer-events-none rotate-180"
-          style={{ filter: 'sepia(100%) saturate(300%) brightness(90%) hue-rotate(5deg)' }}
+          className="absolute -left-32 -bottom-32 w-[280px] h-auto md:w-[400px] opacity-25 pointer-events-none rotate-180"
         />
         <img 
-          src={mandalaFull} 
+          src={mandalaPattern} 
           alt="" 
-          className="absolute -right-20 -bottom-20 w-[200px] h-auto md:w-[280px] opacity-30 pointer-events-none rotate-180 scale-x-[-1]"
-          style={{ filter: 'sepia(100%) saturate(300%) brightness(90%) hue-rotate(5deg)' }}
+          className="absolute -right-32 -bottom-32 w-[280px] h-auto md:w-[400px] opacity-25 pointer-events-none rotate-180 scale-x-[-1]"
         />
         <div className="container mx-auto px-4">
           <motion.div 
@@ -495,16 +490,14 @@ export default function Home() {
       {/* CTA Section */}
       <section className="py-24 bg-gradient-to-r from-amber-50 via-amber-100 to-amber-50 text-center relative overflow-hidden -mt-px">
         <img 
-          src={mandalaHalf} 
+          src={mandalaPattern} 
           alt="" 
-          className="absolute left-0 top-1/2 -translate-y-1/2 w-[250px] h-auto md:w-[350px] lg:w-[450px] opacity-50 pointer-events-none"
-          style={{ filter: 'sepia(100%) saturate(300%) brightness(90%) hue-rotate(5deg)' }}
+          className="absolute -left-40 top-1/2 -translate-y-1/2 w-[300px] h-auto md:w-[400px] lg:w-[500px] opacity-40 pointer-events-none"
         />
         <img 
-          src={mandalaHalf} 
+          src={mandalaPattern} 
           alt="" 
-          className="absolute right-0 top-1/2 -translate-y-1/2 w-[250px] h-auto md:w-[350px] lg:w-[450px] opacity-50 pointer-events-none scale-x-[-1]"
-          style={{ filter: 'sepia(100%) saturate(300%) brightness(90%) hue-rotate(5deg)' }}
+          className="absolute -right-40 top-1/2 -translate-y-1/2 w-[300px] h-auto md:w-[400px] lg:w-[500px] opacity-40 pointer-events-none scale-x-[-1]"
         />
         
         <motion.div 
