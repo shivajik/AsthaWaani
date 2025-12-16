@@ -8,6 +8,8 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 // Using the provided logo files
 import logoHorizontal from "@assets/Asthawani-logo-h_1765886539362.png";
 import logoSquare from "@assets/Asthawani-logo_1765886539362.png";
+import logoHorizontalWhite from "@assets/Asthawani-logo-h-w_1765886987919.png";
+import logoSquareWhite from "@assets/Asthawani-logo-w_1765886987919.png";
 
 export function Header() {
   const { language, setLanguage, t } = useLanguage();
@@ -51,20 +53,15 @@ export function Header() {
         <Link href="/" className="flex items-center gap-3 group">
           {/* 
              Logic for Logo Visibility:
-             1. When Transparent (Dark BG): Show Square Logo (Icon) + White Text
-             2. When Scrolled (White BG): Show Horizontal Logo (Full Image) 
+             1. When Transparent (Dark BG): Use Horizontal White Logo
+             2. When Scrolled (White BG): Use Horizontal Dark Logo
           */}
           {isTransparent ? (
-            <>
-              <img 
-                src={logoSquare} 
-                alt="Asthawaani Logo" 
-                className="h-16 w-auto object-contain drop-shadow-lg transition-transform group-hover:scale-105" 
-              />
-              <span className="text-3xl font-serif font-bold tracking-tight text-white drop-shadow-md">
-                Asthawaani
-              </span>
-            </>
+            <img 
+              src={logoHorizontalWhite} 
+              alt="Asthawaani Logo" 
+              className="h-16 w-auto object-contain drop-shadow-lg transition-transform group-hover:scale-105" 
+            />
           ) : (
             <img 
               src={logoHorizontal} 
@@ -171,9 +168,9 @@ export function Footer() {
             <div className="mb-8">
               {/* Increased Footer Logo Size and Visibility */}
               <img 
-                src={logoSquare} 
+                src={logoSquareWhite} 
                 alt="Asthawaani" 
-                className="h-32 w-auto rounded-xl shadow-2xl bg-white/10 p-2 backdrop-blur-sm border border-white/10" 
+                className="h-32 w-auto rounded-xl p-2" 
               />
             </div>
             <p className="opacity-90 max-w-sm mb-8 leading-relaxed text-lg">
