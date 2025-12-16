@@ -3,6 +3,11 @@ import vrindavanSunrise from "@assets/generated_images/vrindavan_sunrise_temple_
 import guruTeaching from "@assets/generated_images/spiritual_guru_teaching.png";
 import bhajanKirtan from "@assets/generated_images/devotional_bhajan_kirtan.png";
 import meditation from "@assets/generated_images/peaceful_river_ghat_meditation.png";
+import mathuraImage from "@assets/stock_images/mathura_krishna_temp_7bc0ac85.jpg";
+import vrindavanImage from "@assets/stock_images/vrindavan_temple_kri_0d98bbe2.jpg";
+import gokulImage from "@assets/stock_images/gokul_krishna_birthp_14f078c6.jpg";
+import govardhanImage from "@assets/stock_images/govardhan_hill_templ_59e90b12.jpg";
+import mahavanImage from "@assets/stock_images/mahavan_krishna_temp_347c2a20.jpg";
 
 export const assets = {
   hero: vrindavanSunrise,
@@ -43,7 +48,11 @@ export const values = [
 ];
 
 export const locations = [
-  "Mathura", "Vrindavan", "Gokul", "Govardhan", "Mahavan"
+  { name: "Mathura", image: mathuraImage },
+  { name: "Vrindavan", image: vrindavanImage },
+  { name: "Gokul", image: gokulImage },
+  { name: "Govardhan", image: govardhanImage },
+  { name: "Mahavan", image: mahavanImage },
 ];
 
 export const aboutContent = {

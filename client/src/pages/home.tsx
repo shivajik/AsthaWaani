@@ -523,8 +523,8 @@ export default function Home() {
                 whileHover={{ scale: 1.03 }}
               >
                 <motion.img 
-                  src={i % 2 === 0 ? assets.hero : assets.meditation} 
-                  alt={loc}
+                  src={loc.image} 
+                  alt={loc.name}
                   className="w-full h-full object-cover"
                   whileHover={{ scale: 1.1 }}
                   transition={{ duration: 0.7 }}
@@ -541,7 +541,7 @@ export default function Home() {
                       <MapPin className="w-4 h-4" />
                       <span className="text-xs font-bold uppercase tracking-wider">Ashram</span>
                     </div>
-                    <h3 className="text-2xl font-serif font-bold">{loc}</h3>
+                    <h3 className="text-2xl font-serif font-bold">{loc.name}</h3>
                   </motion.div>
                 </div>
               </motion.div>
