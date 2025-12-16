@@ -8,7 +8,6 @@ import { Link } from "wouter";
 import { cn } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import { useRef } from "react";
-import { MandalaOrnament, CornerOrnament } from "@/components/mandala-ornament";
 
 interface Video {
   id: string;
@@ -147,8 +146,18 @@ export default function Home() {
 
       {/* About Preview */}
       <section className="py-24 bg-background relative overflow-hidden">
-        <CornerOrnament position="top-left" color="#C4A052" className="top-0 left-0 w-20 h-20 md:w-28 md:h-28 opacity-40" />
-        <CornerOrnament position="top-right" color="#C4A052" className="top-0 right-0 w-20 h-20 md:w-28 md:h-28 opacity-40" />
+        <img 
+          src="/attached_assets/4_1765891053824.jpg" 
+          alt="" 
+          className="absolute -left-20 -top-20 w-[200px] h-auto md:w-[280px] opacity-30 pointer-events-none"
+          style={{ filter: 'sepia(100%) saturate(300%) brightness(90%) hue-rotate(5deg)' }}
+        />
+        <img 
+          src="/attached_assets/4_1765891053824.jpg" 
+          alt="" 
+          className="absolute -right-20 -top-20 w-[200px] h-auto md:w-[280px] opacity-30 pointer-events-none scale-x-[-1]"
+          style={{ filter: 'sepia(100%) saturate(300%) brightness(90%) hue-rotate(5deg)' }}
+        />
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-2 gap-16 items-center">
             <motion.div 
@@ -223,15 +232,17 @@ export default function Home() {
       {/* Offerings */}
       <section className="py-24 bg-secondary text-secondary-foreground relative overflow-hidden">
         <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-5" />
-        <MandalaOrnament 
-          side="left" 
-          color="rgba(255,255,255,0.15)" 
-          className="left-0 top-1/2 -translate-y-1/2 w-64 h-64 md:w-80 md:h-80 -translate-x-1/2"
+        <img 
+          src="/attached_assets/1_1765891053824.jpg" 
+          alt="" 
+          className="absolute left-0 top-1/2 -translate-y-1/2 w-[200px] h-auto md:w-[300px] opacity-20 pointer-events-none"
+          style={{ filter: 'brightness(2) contrast(0.8)' }}
         />
-        <MandalaOrnament 
-          side="right" 
-          color="rgba(255,255,255,0.15)" 
-          className="right-0 top-1/2 -translate-y-1/2 w-64 h-64 md:w-80 md:h-80 translate-x-1/2"
+        <img 
+          src="/attached_assets/1_1765891053824.jpg" 
+          alt="" 
+          className="absolute right-0 top-1/2 -translate-y-1/2 w-[200px] h-auto md:w-[300px] opacity-20 pointer-events-none scale-x-[-1]"
+          style={{ filter: 'brightness(2) contrast(0.8)' }}
         />
         <div className="container mx-auto px-4 relative z-10">
           <motion.div 
@@ -284,8 +295,18 @@ export default function Home() {
 
       {/* Locations */}
       <section className="py-24 bg-background relative overflow-hidden">
-        <CornerOrnament position="bottom-left" color="#C4A052" className="bottom-0 left-0 w-20 h-20 md:w-28 md:h-28 opacity-40" />
-        <CornerOrnament position="bottom-right" color="#C4A052" className="bottom-0 right-0 w-20 h-20 md:w-28 md:h-28 opacity-40" />
+        <img 
+          src="/attached_assets/4_1765891053824.jpg" 
+          alt="" 
+          className="absolute -left-20 -bottom-20 w-[200px] h-auto md:w-[280px] opacity-30 pointer-events-none rotate-180"
+          style={{ filter: 'sepia(100%) saturate(300%) brightness(90%) hue-rotate(5deg)' }}
+        />
+        <img 
+          src="/attached_assets/4_1765891053824.jpg" 
+          alt="" 
+          className="absolute -right-20 -bottom-20 w-[200px] h-auto md:w-[280px] opacity-30 pointer-events-none rotate-180 scale-x-[-1]"
+          style={{ filter: 'sepia(100%) saturate(300%) brightness(90%) hue-rotate(5deg)' }}
+        />
         <div className="container mx-auto px-4">
           <motion.div 
             className="text-center mb-16"
@@ -470,20 +491,18 @@ export default function Home() {
 
       {/* CTA Section */}
       <section className="py-24 bg-gradient-to-r from-amber-50 via-amber-100 to-amber-50 text-center relative overflow-hidden -mt-px">
-        <MandalaOrnament 
-          side="left" 
-          color="#B8860B" 
-          className="left-0 top-1/2 -translate-y-1/2 w-[300px] h-[300px] md:w-[400px] md:h-[400px] lg:w-[500px] lg:h-[500px]"
+        <img 
+          src="/attached_assets/1_1765891053824.jpg" 
+          alt="" 
+          className="absolute left-0 top-1/2 -translate-y-1/2 w-[250px] h-auto md:w-[350px] lg:w-[450px] opacity-50 pointer-events-none"
+          style={{ filter: 'sepia(100%) saturate(300%) brightness(90%) hue-rotate(5deg)' }}
         />
-        <MandalaOrnament 
-          side="right" 
-          color="#B8860B" 
-          className="right-0 top-1/2 -translate-y-1/2 w-[300px] h-[300px] md:w-[400px] md:h-[400px] lg:w-[500px] lg:h-[500px]"
+        <img 
+          src="/attached_assets/1_1765891053824.jpg" 
+          alt="" 
+          className="absolute right-0 top-1/2 -translate-y-1/2 w-[250px] h-auto md:w-[350px] lg:w-[450px] opacity-50 pointer-events-none scale-x-[-1]"
+          style={{ filter: 'sepia(100%) saturate(300%) brightness(90%) hue-rotate(5deg)' }}
         />
-        <CornerOrnament position="top-left" color="#B8860B" className="top-0 left-0 w-32 h-32 md:w-48 md:h-48" />
-        <CornerOrnament position="top-right" color="#B8860B" className="top-0 right-0 w-32 h-32 md:w-48 md:h-48" />
-        <CornerOrnament position="bottom-left" color="#B8860B" className="bottom-0 left-0 w-32 h-32 md:w-48 md:h-48" />
-        <CornerOrnament position="bottom-right" color="#B8860B" className="bottom-0 right-0 w-32 h-32 md:w-48 md:h-48" />
         
         <motion.div 
           className="container mx-auto relative z-10 px-4"
