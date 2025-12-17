@@ -41,8 +41,26 @@ Preferred communication style: Simple, everyday language.
 - **Path Aliases**: `@/` for client code, `@shared/` for shared modules
 - **Build Strategy**: Vite for frontend, esbuild for server bundling with selective dependency bundling for cold start optimization
 
-### Content Management
-- **Video Content**: YouTube API integration for fetching and caching channel videos
+### Content Management System (CMS)
+- **Admin Panel**: Available at `/admin` with secure authentication
+- **Default Admin**: admin@asthawaani.com / admin123 (change password after first login)
+- **Features**:
+  - Page Management: Create and edit static pages with bilingual content (English/Hindi)
+  - Blog Posts: Full blog system with draft/publish workflow, SEO fields
+  - Media Library: Cloudinary-powered image upload with optimization
+  - YouTube Sync: Integration for fetching and caching channel videos
+  - SEO Controls: Meta tags, OpenGraph, Twitter cards per page/post
+
+### CMS Database Tables
+- `admins` - CMS administrator accounts with hashed passwords
+- `pages` - Static page content with bilingual support
+- `posts` - Blog posts with status, SEO fields, featured images
+- `media` - Cloudinary media assets with metadata
+- `seo_meta` - SEO metadata for pages and posts
+- `site_settings` - Global site configuration
+- `session` - PostgreSQL session store for admin authentication
+
+### Video Content
 - **Sync Mechanism**: Manual sync endpoint (`POST /api/sync-youtube`) that fetches latest videos from configured YouTube channels
 - **Static Assets**: Images served from `/attached_assets` directory
 
@@ -52,6 +70,9 @@ Preferred communication style: Simple, everyday language.
 - **YouTube Data API v3**: Used for fetching channel information and video metadata
   - Requires `YOUTUBE_API_KEY` environment variable
   - Service class: `server/youtube.service.ts`
+- **Cloudinary**: Cloud-based image and media management
+  - Requires `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET` environment variables
+  - Service class: `server/cloudinary.ts`
 
 ### Database
 - **PostgreSQL**: Primary data store

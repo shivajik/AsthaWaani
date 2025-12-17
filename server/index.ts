@@ -2,6 +2,8 @@ import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { serveStatic } from "./static";
 import { createServer } from "http";
+import { getSessionConfig } from "./auth";
+import cmsRoutes from "./cms-routes";
 
 const app = express();
 const httpServer = createServer(app);
@@ -21,6 +23,9 @@ app.use(
 );
 
 app.use(express.urlencoded({ extended: false }));
+
+// Session middleware for CMS authentication
+app.use(getSessionConfig());
 
 export function log(message: string, source = "express") {
   const formattedTime = new Date().toLocaleTimeString("en-US", {
@@ -58,6 +63,9 @@ app.use((req, res, next) => {
 
   next();
 });
+
+// CMS API routes
+app.use("/api/cms", cmsRoutes);
 
 (async () => {
   await registerRoutes(httpServer, app);
