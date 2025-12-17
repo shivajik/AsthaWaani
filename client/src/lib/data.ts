@@ -48,11 +48,11 @@ export const values = [
 ];
 
 export const locations = [
-  { name: "Mathura", image: mathuraImage },
-  { name: "Vrindavan", image: vrindavanImage },
-  { name: "Gokul", image: gokulImage },
-  { name: "Govardhan", image: govardhanImage },
-  { name: "Mahavan", image: mahavanImage },
+  { id: "mathura", name: "Mathura", image: mathuraImage },
+  { id: "vrindavan", name: "Vrindavan", image: vrindavanImage },
+  { id: "gokul", name: "Gokul", image: gokulImage },
+  { id: "govardhan", name: "Govardhan", image: govardhanImage },
+  { id: "mahavan", name: "Mahavan", image: mahavanImage },
 ];
 
 export const aboutContent = {

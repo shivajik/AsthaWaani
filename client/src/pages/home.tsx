@@ -517,11 +517,12 @@ export default function Home() {
             viewport={{ once: true, margin: "-50px" }}
           >
             {locations.map((loc, i) => (
-              <Link key={i} href="/brajbhoomi">
+              <Link key={i} href={`/brajbhoomi?location=${loc.id}`}>
                 <motion.div 
                   variants={fadeUpItem}
                   className="group relative overflow-hidden rounded-xl aspect-[3/4] bg-muted cursor-pointer"
                   whileHover={{ scale: 1.03 }}
+                  data-testid={`location-card-${loc.id}`}
                 >
                   <motion.img 
                     src={loc.image} 

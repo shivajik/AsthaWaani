@@ -3,8 +3,9 @@ import { useLanguage } from "@/lib/context";
 import { Card, CardContent } from "@/components/ui/card";
 import { 
   Video, Music, Sun, Users, BookOpen, Heart, 
-  Sparkles, Mic, Moon, HandHeart, ArrowRight 
+  Sparkles, Mic, Moon, HandHeart
 } from "lucide-react";
+import { useEffect } from "react";
 import bhajanKirtan from "@assets/generated_images/devotional_bhajan_kirtan.png";
 
 const offeringsData = [
@@ -129,6 +130,10 @@ const fadeUpItem = {
 export default function Offerings() {
   const { language } = useLanguage();
 
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
+
   const pageTitle = language === 'en' 
     ? "Daily Offerings - Spiritual Services | Asthawaani" 
     : "दैनिक प्रसाद - आध्यात्मिक सेवाएं | आस्थावाणी";
@@ -219,16 +224,9 @@ export default function Offerings() {
                         </div>
                       </div>
                       
-                      <p className="text-stone-600 leading-relaxed mb-6">
+                      <p className="text-stone-600 leading-relaxed">
                         {offering.description[language]}
                       </p>
-                      
-                      <div className="flex items-center gap-2 text-amber-600 group-hover:text-amber-700 transition-colors cursor-pointer">
-                        <span className="text-sm font-semibold">
-                          {language === 'en' ? 'Learn More' : 'और जानें'}
-                        </span>
-                        <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                      </div>
                     </CardContent>
                   </Card>
                 </motion.div>

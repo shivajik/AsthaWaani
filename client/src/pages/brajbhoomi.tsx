@@ -2,8 +2,9 @@ import { motion } from "framer-motion";
 import { useLanguage } from "@/lib/context";
 import { Card, CardContent } from "@/components/ui/card";
 import { MapPin, Sparkles, ArrowRight } from "lucide-react";
-import { Link } from "wouter";
+import { Link, useSearch } from "wouter";
 import { Button } from "@/components/ui/button";
+import { useEffect, useState } from "react";
 import mathuraImage from "@assets/stock_images/mathura_temple_ghat__d4f9531c.jpg";
 import vrindavanImage from "@assets/stock_images/vrindavan_temple_arc_5815b304.jpg";
 import gokulImage from "@assets/stock_images/gokul_krishna_birthp_14f078c6.jpg";
@@ -105,6 +106,29 @@ const fadeUpItem = {
 
 export default function Brajbhoomi() {
   const { language } = useLanguage();
+  const searchString = useSearch();
+  const params = new URLSearchParams(searchString);
+  const locationParam = params.get('location');
+  
+  const [selectedLocation, setSelectedLocation] = useState(() => {
+    const found = locationsData.find(loc => loc.id === locationParam);
+    return found || locationsData[0];
+  });
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
+
+  useEffect(() => {
+    if (locationParam) {
+      const found = locationsData.find(loc => loc.id === locationParam);
+      if (found) {
+        setSelectedLocation(found);
+      }
+    }
+  }, [locationParam]);
+
+  const otherLocations = locationsData.filter(loc => loc.id !== selectedLocation.id);
 
   const pageTitle = language === 'en' 
     ? "Brajbhoomi Darshan - Sacred Places of Lord Krishna | Asthawaani" 
@@ -113,6 +137,11 @@ export default function Brajbhoomi() {
   const pageDescription = language === 'en'
     ? "Explore the sacred Brajbhoomi - Mathura, Vrindavan, Gokul, Govardhan, Mahavan, and Barsana. Experience divine temples and spiritual heritage of Lord Krishna's land."
     : "पवित्र ब्रजभूमि का अन्वेषण करें - मथुरा, वृंदावन, गोकुल, गोवर्धन, महावन और बरसाना। भगवान कृष्ण की भूमि के दिव्य मंदिरों और आध्यात्मिक विरासत का अनुभव करें।";
+
+  const handleLocationClick = (location: typeof locationsData[0]) => {
+    setSelectedLocation(location);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   return (
     <>
@@ -126,71 +155,91 @@ export default function Brajbhoomi() {
       <meta name="twitter:description" content={pageDescription} />
 
       <div className="flex flex-col w-full">
-        {/* Hero Section */}
-        <section className="relative min-h-[70vh] flex items-center justify-center overflow-hidden">
-          <div 
-            className="absolute inset-0 bg-cover bg-center"
-            style={{ backgroundImage: `url(${vrindavanSunrise})` }}
-          >
-            <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/80" />
-          </div>
-          
-          <motion.div 
-            className="relative z-10 container mx-auto px-4 text-center text-white py-32"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-          >
-            <motion.div
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              transition={{ delay: 0.2, type: "spring" }}
-              className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full mb-6"
-            >
-              <MapPin className="w-5 h-5 text-amber-400" />
-              <span className="text-sm font-medium text-amber-200">
-                {language === 'en' ? 'Sacred Pilgrimage' : 'पवित्र तीर्थयात्रा'}
-              </span>
-            </motion.div>
-            
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-serif font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-amber-200 via-white to-amber-200" data-testid="brajbhoomi-page-title">
-              {language === 'en' ? 'Brajbhoomi Darshan' : 'ब्रजभूमि दर्शन'}
-            </h1>
-            <p className="text-xl md:text-2xl text-white/80 max-w-3xl mx-auto leading-relaxed mb-8">
-              {language === 'en' 
-                ? 'Journey through the sacred lands where Lord Krishna performed divine leelas'
-                : 'उन पवित्र भूमियों की यात्रा करें जहां भगवान कृष्ण ने दिव्य लीलाएं कीं'}
-            </p>
-            
+        {/* Selected Location Hero Section */}
+        <section className="py-16 md:py-24 bg-gradient-to-b from-stone-50 to-white">
+          <div className="container mx-auto px-4">
             <motion.div 
-              className="flex flex-wrap justify-center gap-4"
-              initial={{ opacity: 0, y: 20 }}
+              className="grid md:grid-cols-2 gap-12 items-start"
+              initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5 }}
+              transition={{ duration: 0.6 }}
+              key={selectedLocation.id}
             >
-              {locationsData.slice(0, 5).map((loc) => (
-                <span 
-                  key={loc.id}
-                  className="px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full text-sm font-medium text-amber-200 border border-amber-400/30"
-                >
-                  {loc.name[language]}
-                </span>
-              ))}
+              {/* Large Image on Left */}
+              <motion.div
+                className="relative rounded-2xl overflow-hidden shadow-2xl"
+                initial={{ opacity: 0, x: -30 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+              >
+                <img 
+                  src={selectedLocation.image} 
+                  alt={selectedLocation.name[language]}
+                  className="w-full h-[400px] md:h-[500px] lg:h-[600px] object-cover"
+                  data-testid={`selected-location-image-${selectedLocation.id}`}
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                <div className="absolute bottom-6 left-6 right-6">
+                  <div className="flex items-center gap-2 text-amber-400 mb-2">
+                    <MapPin className="w-5 h-5" />
+                    <span className="text-sm font-medium uppercase tracking-wider">
+                      {language === 'en' ? 'Sacred Site' : 'पवित्र स्थल'}
+                    </span>
+                  </div>
+                  <h1 className="text-3xl md:text-4xl lg:text-5xl font-serif font-bold text-white" data-testid="selected-location-name">
+                    {selectedLocation.name[language]}
+                  </h1>
+                </div>
+              </motion.div>
+
+              {/* Text Content on Right */}
+              <motion.div
+                className="flex flex-col justify-center"
+                initial={{ opacity: 0, x: 30 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.6, delay: 0.3 }}
+              >
+                <div className="inline-flex items-center gap-2 text-amber-600 mb-4">
+                  <Sparkles className="w-5 h-5" />
+                  <span className="text-sm font-semibold uppercase tracking-wider">
+                    {selectedLocation.specialization[language]}
+                  </span>
+                </div>
+                
+                <h2 className="text-2xl md:text-3xl lg:text-4xl font-serif font-bold text-stone-800 mb-6">
+                  {selectedLocation.title[language]}
+                </h2>
+                
+                <p className="text-stone-600 leading-relaxed text-lg mb-8">
+                  {selectedLocation.description[language]}
+                </p>
+                
+                <Link href="/contact">
+                  <Button 
+                    variant="outline" 
+                    className="border-amber-600 text-amber-600 hover:bg-amber-600 hover:text-white group w-fit"
+                    data-testid={`location-cta-${selectedLocation.id}`}
+                  >
+                    {language === 'en' ? 'Experience Satsang' : 'सत्संग का अनुभव करें'}
+                    <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                  </Button>
+                </Link>
+              </motion.div>
             </motion.div>
-          </motion.div>
+          </div>
         </section>
 
-        {/* Locations Grid */}
-        <section className="py-24 bg-gradient-to-b from-stone-50 to-white">
+        {/* Other Locations Section */}
+        <section className="py-16 md:py-24 bg-stone-100">
           <div className="container mx-auto px-4">
             <motion.div
-              className="text-center mb-16"
+              className="text-center mb-12"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
             >
               <h2 className="text-3xl md:text-4xl font-serif font-bold text-stone-800 mb-4">
-                {language === 'en' ? 'Sacred Destinations' : 'पवित्र गंतव्य'}
+                {language === 'en' ? 'Explore Other Sacred Places' : 'अन्य पवित्र स्थानों का अन्वेषण करें'}
               </h2>
               <p className="text-lg text-stone-600 max-w-2xl mx-auto">
                 {language === 'en' 
@@ -204,68 +253,33 @@ export default function Brajbhoomi() {
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true, margin: "-50px" }}
-              className="space-y-16"
+              className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6"
             >
-              {locationsData.map((location, index) => (
+              {otherLocations.map((location) => (
                 <motion.div
                   key={location.id}
                   variants={fadeUpItem}
-                  className={`grid md:grid-cols-2 gap-12 items-center ${
-                    index % 2 === 1 ? 'md:flex-row-reverse' : ''
-                  }`}
+                  className="group cursor-pointer"
+                  onClick={() => handleLocationClick(location)}
+                  data-testid={`other-location-card-${location.id}`}
                 >
-                  <div className={`${index % 2 === 1 ? 'md:order-2' : ''}`}>
-                    <motion.div
-                      className="relative rounded-2xl overflow-hidden shadow-2xl group"
-                      whileHover={{ scale: 1.02 }}
-                      transition={{ duration: 0.5 }}
-                    >
-                      <img 
-                        src={location.image} 
-                        alt={location.name[language]}
-                        className="w-full h-80 md:h-96 object-cover group-hover:scale-110 transition-transform duration-700"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                      <div className="absolute bottom-6 left-6 right-6">
-                        <div className="flex items-center gap-2 text-amber-400 mb-2">
+                  <div className="relative rounded-xl overflow-hidden shadow-lg aspect-[3/4] bg-muted">
+                    <img 
+                      src={location.image} 
+                      alt={location.name[language]}
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex items-end p-5">
+                      <div className="text-white">
+                        <div className="flex items-center gap-2 mb-2 text-amber-400">
                           <MapPin className="w-4 h-4" />
-                          <span className="text-sm font-medium uppercase tracking-wider">
-                            {language === 'en' ? 'Sacred Site' : 'पवित्र स्थल'}
+                          <span className="text-xs font-bold uppercase tracking-wider">
+                            {language === 'en' ? 'Ashram' : 'आश्रम'}
                           </span>
                         </div>
-                        <h3 className="text-2xl md:text-3xl font-serif font-bold text-white">
-                          {location.name[language]}
-                        </h3>
+                        <h3 className="text-xl font-serif font-bold">{location.name[language]}</h3>
                       </div>
-                    </motion.div>
-                  </div>
-                  
-                  <div className={`${index % 2 === 1 ? 'md:order-1' : ''}`}>
-                    <div className="inline-flex items-center gap-2 text-amber-600 mb-4">
-                      <Sparkles className="w-5 h-5" />
-                      <span className="text-sm font-semibold uppercase tracking-wider">
-                        {location.specialization[language]}
-                      </span>
                     </div>
-                    
-                    <h3 className="text-2xl md:text-3xl font-serif font-bold text-stone-800 mb-4">
-                      {location.title[language]}
-                    </h3>
-                    
-                    <p className="text-stone-600 leading-relaxed mb-6 text-lg">
-                      {location.description[language]}
-                    </p>
-                    
-                    <Link href="/contact">
-                      <Button 
-                        variant="outline" 
-                        className="border-amber-600 text-amber-600 hover:bg-amber-600 hover:text-white group"
-                        data-testid={`location-cta-${location.id}`}
-                      >
-                        {language === 'en' ? 'Experience Satsang' : 'सत्संग का अनुभव करें'}
-                        <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
-                      </Button>
-                    </Link>
                   </div>
                 </motion.div>
               ))}
