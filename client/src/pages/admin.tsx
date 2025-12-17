@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { RichTextEditor } from "@/components/ui/rich-text-editor";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -323,19 +324,17 @@ function PageManager() {
             </div>
             <div className="space-y-2">
               <Label>Content (English)</Label>
-              <Textarea
-                value={page.content || ""}
-                onChange={(e) => editingPage && setEditingPage({ ...editingPage, content: e.target.value })}
-                rows={8}
+              <RichTextEditor
+                content={page.content || ""}
+                onChange={(content) => editingPage && setEditingPage({ ...editingPage, content })}
                 placeholder="Page content..."
               />
             </div>
             <div className="space-y-2">
               <Label>Content (Hindi)</Label>
-              <Textarea
-                value={page.contentHi || ""}
-                onChange={(e) => editingPage && setEditingPage({ ...editingPage, contentHi: e.target.value })}
-                rows={8}
+              <RichTextEditor
+                content={page.contentHi || ""}
+                onChange={(content) => editingPage && setEditingPage({ ...editingPage, contentHi: content })}
                 placeholder="पृष्ठ सामग्री..."
               />
             </div>
@@ -567,19 +566,17 @@ function PostManager() {
             </div>
             <div className="space-y-2">
               <Label>Content (English)</Label>
-              <Textarea
-                value={post.content || ""}
-                onChange={(e) => updateField("content", e.target.value)}
-                rows={10}
+              <RichTextEditor
+                content={post.content || ""}
+                onChange={(content) => updateField("content", content)}
                 placeholder="Post content..."
               />
             </div>
             <div className="space-y-2">
               <Label>Content (Hindi)</Label>
-              <Textarea
-                value={post.contentHi || ""}
-                onChange={(e) => updateField("contentHi", e.target.value)}
-                rows={10}
+              <RichTextEditor
+                content={post.contentHi || ""}
+                onChange={(content) => updateField("contentHi", content)}
                 placeholder="पोस्ट सामग्री..."
               />
             </div>
