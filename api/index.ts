@@ -325,6 +325,9 @@ function sanitizeContent(content: string): string {
 }
 
 const app = express();
+
+app.set('trust proxy', 1);
+
 app.use(express.json());
 
 const sessionSecret = process.env.SESSION_SECRET || "fallback-secret-for-dev";
@@ -339,11 +342,13 @@ app.use(session({
   secret: sessionSecret,
   resave: false,
   saveUninitialized: false,
+  name: 'asthawaani.sid',
   cookie: {
-    secure: process.env.NODE_ENV === "production",
+    secure: true,
     httpOnly: true,
     maxAge: 24 * 60 * 60 * 1000,
-    sameSite: "lax",
+    sameSite: "none",
+    path: "/",
   },
 }));
 
@@ -448,9 +453,16 @@ app.post("/api/cms/auth/login", loginLimiter, async (req: Request, res: Response
     req.session.adminEmail = admin.email;
     req.session.adminName = admin.name;
     req.session.adminRole = admin.role;
-    res.json({
-      success: true,
-      admin: { id: admin.id, email: admin.email, name: admin.name, role: admin.role },
+    
+    req.session.save((err) => {
+      if (err) {
+        console.error("Session save error:", err);
+        return res.status(500).json({ error: "Login failed - session error" });
+      }
+      res.json({
+        success: true,
+        admin: { id: admin.id, email: admin.email, name: admin.name, role: admin.role },
+      });
     });
   } catch (error) {
     console.error("Login error:", error);

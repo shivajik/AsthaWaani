@@ -40,6 +40,7 @@ export function getSessionConfig() {
   }
 
   const PgSession = connectPgSimple(session);
+  const isProduction = process.env.NODE_ENV === "production";
 
   return session({
     store: new PgSession({
@@ -50,11 +51,13 @@ export function getSessionConfig() {
     secret: sessionSecret,
     resave: false,
     saveUninitialized: false,
+    name: 'asthawaani.sid',
     cookie: {
-      secure: process.env.NODE_ENV === "production",
+      secure: isProduction,
       httpOnly: true,
       maxAge: 24 * 60 * 60 * 1000,
-      sameSite: "strict",
+      sameSite: isProduction ? "none" : "lax",
+      path: "/",
     },
   });
 }
