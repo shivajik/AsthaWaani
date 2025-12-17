@@ -446,45 +446,46 @@ export default function Home() {
             viewport={{ once: true, margin: "-50px" }}
           >
             {offerings.map((item, index) => (
-              <motion.div
-                key={index}
-                variants={scaleIn}
-                whileHover={{ y: -10, transition: { duration: 0.3 } }}
-                className="group"
-              >
-                <Card className="relative bg-white/5 backdrop-blur-sm border border-white/10 hover:border-amber-500/30 transition-all duration-500 h-full overflow-hidden">
-                  {/* Gradient overlay on hover */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-amber-500/0 to-amber-600/0 group-hover:from-amber-500/10 group-hover:to-amber-600/5 transition-all duration-500" />
-                  
-                  {/* Top accent line */}
-                  <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-amber-500/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                  
-                  <CardContent className="relative p-8 flex flex-col items-center text-center h-full">
-                    <motion.div 
-                      className="relative w-20 h-20 rounded-2xl bg-gradient-to-br from-amber-500/20 to-amber-600/10 flex items-center justify-center mb-6 border border-amber-500/20 group-hover:border-amber-500/40 transition-colors duration-300"
-                      whileHover={{ rotate: 10, scale: 1.1 }}
-                      transition={{ duration: 0.3 }}
-                    >
-                      <item.icon className="w-9 h-9 text-amber-400" />
-                      {/* Glow effect */}
-                      <div className="absolute inset-0 rounded-2xl bg-amber-500/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                    </motion.div>
-                    <h3 className="text-xl font-bold text-white mb-3 group-hover:text-amber-300 transition-colors duration-300">{item.title[language]}</h3>
-                    <p className="text-white/60 group-hover:text-white/80 transition-colors duration-300 leading-relaxed">{item.desc[language]}</p>
+              <Link key={index} href="/offerings">
+                <motion.div
+                  variants={scaleIn}
+                  whileHover={{ y: -10, transition: { duration: 0.3 } }}
+                  className="group cursor-pointer h-full"
+                >
+                  <Card className="relative bg-white/5 backdrop-blur-sm border border-white/10 hover:border-amber-500/30 transition-all duration-500 h-full overflow-hidden">
+                    {/* Gradient overlay on hover */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-amber-500/0 to-amber-600/0 group-hover:from-amber-500/10 group-hover:to-amber-600/5 transition-all duration-500" />
                     
-                    {/* Learn more link */}
-                    <motion.div 
-                      className="mt-6 flex items-center gap-2 text-amber-400/70 group-hover:text-amber-400 transition-colors duration-300"
-                      initial={{ opacity: 0 }}
-                      whileInView={{ opacity: 1 }}
-                      viewport={{ once: true }}
-                    >
-                      <span className="text-sm font-medium">{language === 'en' ? 'Learn more' : 'और जानें'}</span>
-                      <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
-                    </motion.div>
-                  </CardContent>
-                </Card>
-              </motion.div>
+                    {/* Top accent line */}
+                    <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-amber-500/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                    
+                    <CardContent className="relative p-8 flex flex-col items-center text-center h-full">
+                      <motion.div 
+                        className="relative w-20 h-20 rounded-2xl bg-gradient-to-br from-amber-500/20 to-amber-600/10 flex items-center justify-center mb-6 border border-amber-500/20 group-hover:border-amber-500/40 transition-colors duration-300"
+                        whileHover={{ rotate: 10, scale: 1.1 }}
+                        transition={{ duration: 0.3 }}
+                      >
+                        <item.icon className="w-9 h-9 text-amber-400" />
+                        {/* Glow effect */}
+                        <div className="absolute inset-0 rounded-2xl bg-amber-500/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                      </motion.div>
+                      <h3 className="text-xl font-bold text-white mb-3 group-hover:text-amber-300 transition-colors duration-300">{item.title[language]}</h3>
+                      <p className="text-white/60 group-hover:text-white/80 transition-colors duration-300 leading-relaxed">{item.desc[language]}</p>
+                      
+                      {/* Learn more link */}
+                      <motion.div 
+                        className="mt-6 flex items-center gap-2 text-amber-400/70 group-hover:text-amber-400 transition-colors duration-300"
+                        initial={{ opacity: 0 }}
+                        whileInView={{ opacity: 1 }}
+                        viewport={{ once: true }}
+                      >
+                        <span className="text-sm font-medium">{language === 'en' ? 'Learn more' : 'और जानें'}</span>
+                        <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
+                      </motion.div>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              </Link>
             ))}
           </motion.div>
         </div>
@@ -516,35 +517,36 @@ export default function Home() {
             viewport={{ once: true, margin: "-50px" }}
           >
             {locations.map((loc, i) => (
-              <motion.div 
-                key={i} 
-                variants={fadeUpItem}
-                className="group relative overflow-hidden rounded-xl aspect-[3/4] bg-muted cursor-pointer"
-                whileHover={{ scale: 1.03 }}
-              >
-                <motion.img 
-                  src={loc.image} 
-                  alt={loc.name}
-                  className="w-full h-full object-cover"
-                  whileHover={{ scale: 1.1 }}
-                  transition={{ duration: 0.7 }}
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex items-end p-6">
-                  <motion.div 
-                    className="text-white"
-                    initial={{ y: 20, opacity: 0 }}
-                    whileInView={{ y: 0, opacity: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: i * 0.1 }}
-                  >
-                    <div className="flex items-center gap-2 mb-2 text-primary">
-                      <MapPin className="w-4 h-4" />
-                      <span className="text-xs font-bold uppercase tracking-wider">Ashram</span>
-                    </div>
-                    <h3 className="text-2xl font-serif font-bold">{loc.name}</h3>
-                  </motion.div>
-                </div>
-              </motion.div>
+              <Link key={i} href="/brajbhoomi">
+                <motion.div 
+                  variants={fadeUpItem}
+                  className="group relative overflow-hidden rounded-xl aspect-[3/4] bg-muted cursor-pointer"
+                  whileHover={{ scale: 1.03 }}
+                >
+                  <motion.img 
+                    src={loc.image} 
+                    alt={loc.name}
+                    className="w-full h-full object-cover"
+                    whileHover={{ scale: 1.1 }}
+                    transition={{ duration: 0.7 }}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex items-end p-6">
+                    <motion.div 
+                      className="text-white"
+                      initial={{ y: 20, opacity: 0 }}
+                      whileInView={{ y: 0, opacity: 1 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: i * 0.1 }}
+                    >
+                      <div className="flex items-center gap-2 mb-2 text-primary">
+                        <MapPin className="w-4 h-4" />
+                        <span className="text-xs font-bold uppercase tracking-wider">Ashram</span>
+                      </div>
+                      <h3 className="text-2xl font-serif font-bold">{loc.name}</h3>
+                    </motion.div>
+                  </div>
+                </motion.div>
+              </Link>
             ))}
           </motion.div>
         </div>
