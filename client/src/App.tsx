@@ -11,6 +11,8 @@ import Gallery from "@/pages/gallery";
 import Contact from "@/pages/contact";
 import Videos from "@/pages/videos";
 import Admin from "@/pages/admin";
+import Offerings from "@/pages/offerings";
+import Brajbhoomi from "@/pages/brajbhoomi";
 
 function Router() {
   return (
@@ -19,6 +21,8 @@ function Router() {
       <Route path="/about" component={About} />
       <Route path="/videos" component={Videos} />
       <Route path="/gallery" component={Gallery} />
+      <Route path="/offerings" component={Offerings} />
+      <Route path="/brajbhoomi" component={Brajbhoomi} />
       <Route path="/contact" component={Contact} />
       <Route path="/admin" component={Admin} />
       <Route component={NotFound} />

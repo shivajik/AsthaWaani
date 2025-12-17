@@ -33,6 +33,8 @@ export function Header() {
   const navLinks = [
     { href: "/", label: t('nav.home') },
     { href: "/about", label: t('nav.about') },
+    { href: "/offerings", label: language === 'en' ? 'Offerings' : 'प्रसाद' },
+    { href: "/brajbhoomi", label: language === 'en' ? 'Brajbhoomi' : 'ब्रजभूमि' },
     { href: "/videos", label: t('nav.videos') || "Videos" },
     { href: "/gallery", label: t('nav.gallery') },
     { href: "/contact", label: t('nav.contact') },
