@@ -13,7 +13,7 @@ import {
 } from 'lucide-react';
 import { Button } from './button';
 import { cn } from '@/lib/utils';
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 
 interface RichTextEditorProps {
   content: string;
@@ -23,6 +23,9 @@ interface RichTextEditorProps {
 }
 
 export function RichTextEditor({ content, onChange, placeholder = 'Start writing...', className }: RichTextEditorProps) {
+  const isInternalUpdate = useRef(false);
+  const lastExternalContent = useRef(content);
+
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
@@ -50,13 +53,23 @@ export function RichTextEditor({ content, onChange, placeholder = 'Start writing
     ],
     content: content || '',
     onUpdate: ({ editor }) => {
+      isInternalUpdate.current = true;
       onChange(editor.getHTML());
     },
   });
 
   useEffect(() => {
-    if (editor && content !== editor.getHTML()) {
-      editor.commands.setContent(content || '');
+    if (!editor) return;
+    
+    if (isInternalUpdate.current) {
+      isInternalUpdate.current = false;
+      lastExternalContent.current = content;
+      return;
+    }
+    
+    if (content !== lastExternalContent.current) {
+      lastExternalContent.current = content;
+      editor.commands.setContent(content || '', { emitUpdate: false });
     }
   }, [content, editor]);
 
