@@ -150,7 +150,7 @@ function DashboardOverview() {
   const { data: pages } = useQuery<Page[]>({
     queryKey: ["/api/cms/pages"],
     queryFn: async () => {
-      const res = await fetch("/api/cms/pages");
+      const res = await fetch("/api/cms/pages", { credentials: "include" });
       if (!res.ok) return [];
       return res.json();
     },
@@ -159,7 +159,7 @@ function DashboardOverview() {
   const { data: posts } = useQuery<Post[]>({
     queryKey: ["/api/cms/posts"],
     queryFn: async () => {
-      const res = await fetch("/api/cms/posts");
+      const res = await fetch("/api/cms/posts", { credentials: "include" });
       if (!res.ok) return [];
       return res.json();
     },
@@ -168,7 +168,7 @@ function DashboardOverview() {
   const { data: media } = useQuery<MediaItem[]>({
     queryKey: ["/api/cms/media"],
     queryFn: async () => {
-      const res = await fetch("/api/cms/media");
+      const res = await fetch("/api/cms/media", { credentials: "include" });
       if (!res.ok) return [];
       return res.json();
     },
@@ -225,7 +225,7 @@ function PageManager() {
   const { data: pages, isLoading } = useQuery<Page[]>({
     queryKey: ["/api/cms/pages"],
     queryFn: async () => {
-      const res = await fetch("/api/cms/pages");
+      const res = await fetch("/api/cms/pages", { credentials: "include" });
       if (!res.ok) return [];
       return res.json();
     },
@@ -239,6 +239,7 @@ function PageManager() {
         method,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(page),
+        credentials: "include",
       });
       if (!res.ok) throw new Error("Failed to save page");
       return res.json();
@@ -256,7 +257,7 @@ function PageManager() {
 
   const deleteMutation = useMutation({
     mutationFn: async (id: string) => {
-      const res = await fetch(`/api/cms/pages/${id}`, { method: "DELETE" });
+      const res = await fetch(`/api/cms/pages/${id}`, { method: "DELETE", credentials: "include" });
       if (!res.ok) throw new Error("Failed to delete page");
     },
     onSuccess: () => {
@@ -442,7 +443,7 @@ function PostManager() {
   const { data: posts, isLoading } = useQuery<Post[]>({
     queryKey: ["/api/cms/posts"],
     queryFn: async () => {
-      const res = await fetch("/api/cms/posts");
+      const res = await fetch("/api/cms/posts", { credentials: "include" });
       if (!res.ok) return [];
       return res.json();
     },
@@ -456,6 +457,7 @@ function PostManager() {
         method,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(post),
+        credentials: "include",
       });
       if (!res.ok) throw new Error("Failed to save post");
       return res.json();
@@ -477,7 +479,7 @@ function PostManager() {
 
   const deleteMutation = useMutation({
     mutationFn: async (id: string) => {
-      const res = await fetch(`/api/cms/posts/${id}`, { method: "DELETE" });
+      const res = await fetch(`/api/cms/posts/${id}`, { method: "DELETE", credentials: "include" });
       if (!res.ok) throw new Error("Failed to delete post");
     },
     onSuccess: () => {
@@ -671,7 +673,7 @@ function MediaManager() {
   const { data: media, isLoading } = useQuery<MediaItem[]>({
     queryKey: ["/api/cms/media"],
     queryFn: async () => {
-      const res = await fetch("/api/cms/media");
+      const res = await fetch("/api/cms/media", { credentials: "include" });
       if (!res.ok) return [];
       return res.json();
     },
@@ -689,6 +691,7 @@ function MediaManager() {
       const res = await fetch("/api/cms/media/upload", {
         method: "POST",
         body: formData,
+        credentials: "include",
       });
       if (!res.ok) {
         const error = await res.json();
@@ -705,7 +708,7 @@ function MediaManager() {
 
   const deleteMutation = useMutation({
     mutationFn: async (id: string) => {
-      const res = await fetch(`/api/cms/media/${id}`, { method: "DELETE" });
+      const res = await fetch(`/api/cms/media/${id}`, { method: "DELETE", credentials: "include" });
       if (!res.ok) throw new Error("Failed to delete");
     },
     onSuccess: () => {
@@ -879,7 +882,7 @@ export default function Admin() {
   const { data: authData, isLoading } = useQuery({
     queryKey: ["/api/cms/auth/me"],
     queryFn: async () => {
-      const res = await fetch("/api/cms/auth/me");
+      const res = await fetch("/api/cms/auth/me", { credentials: "include" });
       if (!res.ok) return null;
       return res.json();
     },
@@ -894,7 +897,7 @@ export default function Admin() {
   }, [authData]);
 
   const handleLogout = async () => {
-    await fetch("/api/cms/auth/logout", { method: "POST" });
+    await fetch("/api/cms/auth/logout", { method: "POST", credentials: "include" });
     setIsAuthenticated(false);
     setAdmin(null);
     toast({ title: "Logged out successfully" });
