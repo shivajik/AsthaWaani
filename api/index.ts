@@ -142,9 +142,25 @@ const siteSettings = pgTable("site_settings", {
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
+const contactInfo = pgTable("contact_info", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  email: text("email"),
+  phone: text("phone"),
+  address: text("address"),
+  whatsapp: text("whatsapp"),
+  telegram: text("telegram"),
+  instagram: text("instagram"),
+  youtube: text("youtube"),
+  facebook: text("facebook"),
+  twitter: text("twitter"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
 const insertPageSchema = createInsertSchema(pages).omit({ id: true, createdAt: true, updatedAt: true });
 const insertPostSchema = createInsertSchema(posts).omit({ id: true, createdAt: true, updatedAt: true });
 const insertSeoMetaSchema = createInsertSchema(seoMeta).omit({ id: true, createdAt: true, updatedAt: true });
+const insertContactInfoSchema = createInsertSchema(contactInfo).omit({ id: true, createdAt: true, updatedAt: true });
 
 class DatabaseStorage {
   async getAllVideos() {
@@ -286,6 +302,21 @@ class DatabaseStorage {
     }
     const [newSetting] = await db.insert(siteSettings).values(setting).returning();
     return newSetting;
+  }
+
+  async getContactInfo() {
+    const [info] = await db.select().from(contactInfo);
+    return info || undefined;
+  }
+
+  async createContactInfo(info: any) {
+    const [newInfo] = await db.insert(contactInfo).values(info).returning();
+    return newInfo;
+  }
+
+  async updateContactInfo(id: string, info: any) {
+    const [updatedInfo] = await db.update(contactInfo).set({ ...info, updatedAt: new Date() }).where(eq(contactInfo.id, id)).returning();
+    return updatedInfo;
   }
 }
 
@@ -772,6 +803,47 @@ app.get("/api/cms/public/pages/:slug", async (req: Request, res: Response) => {
   } catch (error) {
     console.error("Error fetching page:", error);
     res.status(500).json({ error: "Failed to fetch page" });
+  }
+});
+
+app.get("/api/cms/contact-info", isAuthenticated, async (req: Request, res: Response) => {
+  try {
+    const info = await storage.getContactInfo();
+    res.json(info || null);
+  } catch (error) {
+    console.error("Error fetching contact info:", error);
+    res.status(500).json({ error: "Failed to fetch contact info" });
+  }
+});
+
+app.post("/api/cms/contact-info", isAuthenticated, async (req: Request, res: Response) => {
+  try {
+    const data = insertContactInfoSchema.parse(req.body);
+    const existing = await storage.getContactInfo();
+    
+    if (existing) {
+      const updated = await storage.updateContactInfo(existing.id, data);
+      return res.json(updated);
+    }
+    
+    const info = await storage.createContactInfo(data);
+    res.status(201).json(info);
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return res.status(400).json({ error: "Validation error", details: error.errors });
+    }
+    console.error("Error saving contact info:", error);
+    res.status(500).json({ error: "Failed to save contact info" });
+  }
+});
+
+app.get("/api/cms/public/contact-info", async (req: Request, res: Response) => {
+  try {
+    const info = await storage.getContactInfo();
+    res.json(info || null);
+  } catch (error) {
+    console.error("Error fetching contact info:", error);
+    res.status(500).json({ error: "Failed to fetch contact info" });
   }
 });
 
