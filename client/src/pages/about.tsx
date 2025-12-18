@@ -40,7 +40,7 @@ export default function About() {
               </h2>
               {pageData && pageData.content && (
                 <div 
-                  className="text-muted-foreground leading-relaxed mb-6"
+                  className="text-muted-foreground leading-relaxed mb-6 preserve-whitespace"
                   dangerouslySetInnerHTML={{ __html: language === 'hi' ? (pageData.contentHi || pageData.content) : pageData.content }}
                 />
               )}

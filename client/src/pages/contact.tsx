@@ -34,7 +34,7 @@ export default function Contact() {
             </h2>
             <p className="text-muted-foreground mb-12 text-lg">
               {pageData && pageData.content && (
-                <div dangerouslySetInnerHTML={{ __html: language === 'hi' ? (pageData.contentHi || pageData.content) : pageData.content }} />
+                <div className="preserve-whitespace" dangerouslySetInnerHTML={{ __html: language === 'hi' ? (pageData.contentHi || pageData.content) : pageData.content }} />
               )}
               {!pageData && (
                 <>

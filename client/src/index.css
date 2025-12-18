@@ -76,3 +76,10 @@
     @apply font-serif;
   }
 }
+
+@layer utilities {
+  .preserve-whitespace {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
+}

@@ -47,7 +47,7 @@ export default function Gallery() {
             <h1 className="text-4xl md:text-5xl font-serif font-bold">{pageData?.title || t('gallery.title')}</h1>
             <p className="text-white/80 max-w-xl mx-auto">
               {pageData && pageData.content ? (
-                <div dangerouslySetInnerHTML={{ __html: language === 'hi' ? (pageData.contentHi || pageData.content) : pageData.content }} />
+                <div className="preserve-whitespace" dangerouslySetInnerHTML={{ __html: language === 'hi' ? (pageData.contentHi || pageData.content) : pageData.content }} />
               ) : (
                 <>
                   {language === 'en' 
