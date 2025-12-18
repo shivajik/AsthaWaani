@@ -175,7 +175,7 @@ export default function Brajbhoomi() {
                 <img 
                   src={selectedLocation.image} 
                   alt={selectedLocation.name[language]}
-                  className="w-full h-[400px] md:h-[500px] lg:h-[600px] object-cover"
+                  className="w-full h-[280px] md:h-[350px] lg:h-[420px] object-contain"
                   data-testid={`selected-location-image-${selectedLocation.id}`}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
