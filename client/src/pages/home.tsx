@@ -8,6 +8,7 @@ import { Link } from "wouter";
 import { cn } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import { useRef, useState, useEffect } from "react";
+import { useCmsPage } from "@/lib/useCmsPage";
 
 interface Video {
   id: string;
@@ -125,6 +126,7 @@ const letterAnimation = {
 
 export default function Home() {
   const { t, language } = useLanguage();
+  const { data: homeData } = useCmsPage("home");
   const heroRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: heroRef,

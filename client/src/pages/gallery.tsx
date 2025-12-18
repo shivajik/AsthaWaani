@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Play, Filter, Youtube, ExternalLink } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
+import { useCmsPage } from "@/lib/useCmsPage";
 
 const categories = [
   { id: 'all', en: 'All', hi: 'सभी' },
@@ -27,6 +28,7 @@ const videos = [
 
 export default function Gallery() {
   const { language, t } = useLanguage();
+  const { data: pageData } = useCmsPage("gallery");
   const [activeCategory, setActiveCategory] = useState('all');
 
   const filteredVideos = activeCategory === 'all' 
@@ -42,12 +44,18 @@ export default function Gallery() {
             <div className="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center text-white shadow-xl">
               <Youtube className="w-8 h-8 fill-current" />
             </div>
-            <h1 className="text-4xl md:text-5xl font-serif font-bold">{t('gallery.title')}</h1>
+            <h1 className="text-4xl md:text-5xl font-serif font-bold">{pageData?.title || t('gallery.title')}</h1>
             <p className="text-white/80 max-w-xl mx-auto">
-              {language === 'en' 
-                ? "Watch our latest spiritual discourses and bhajans directly from our YouTube channel."
-                : "हमारे YouTube चैनल से सीधे नवीनतम आध्यात्मिक प्रवचन और भजन देखें।"
-              }
+              {pageData && pageData.content ? (
+                <div dangerouslySetInnerHTML={{ __html: language === 'hi' ? (pageData.contentHi || pageData.content) : pageData.content }} />
+              ) : (
+                <>
+                  {language === 'en' 
+                    ? "Watch our latest spiritual discourses and bhajans directly from our YouTube channel."
+                    : "हमारे YouTube चैनल से सीधे नवीनतम आध्यात्मिक प्रवचन और भजन देखें।"
+                  }
+                </>
+              )}
             </p>
             <Button 
               className="mt-4 bg-white text-red-600 hover:bg-stone-100 font-bold gap-2"

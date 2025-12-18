@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useCmsPage } from "@/lib/useCmsPage";
 
 interface Video {
   id: string;
@@ -79,6 +80,7 @@ function VideoSkeleton() {
 
 export default function Videos() {
   const { t, language } = useLanguage();
+  const { data: videoPageData } = useCmsPage("videos");
 
   const { data: videos, isLoading, error } = useQuery<Video[]>({
     queryKey: ["/api/videos"],

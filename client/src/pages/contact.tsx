@@ -3,9 +3,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { MapPin, Phone, Mail } from "lucide-react";
+import { useCmsPage } from "@/lib/useCmsPage";
 
 export default function Contact() {
   const { language, t } = useLanguage();
+  const { data: pageData } = useCmsPage("contact");
 
   return (
     <div className="min-h-screen pt-20">
@@ -18,13 +20,20 @@ export default function Contact() {
           {/* Info */}
           <div>
             <h2 className="text-3xl font-serif font-bold text-secondary mb-8">
-              {language === 'en' ? "Get in Touch" : "संपर्क करें"}
+              {pageData?.title || (language === 'en' ? "Get in Touch" : "संपर्क करें")}
             </h2>
             <p className="text-muted-foreground mb-12 text-lg">
-              {language === 'en' 
-                ? "Whether you are a seeker looking for guidance or a speaker wishing to join our platform, we are here for you."
-                : "चाहे आप मार्गदर्शन की तलाश में एक साधक हों या हमारे मंच से जुड़ने की इच्छा रखने वाले वक्ता, हम आपके लिए यहां हैं।"
-              }
+              {pageData && pageData.content && (
+                <div dangerouslySetInnerHTML={{ __html: language === 'hi' ? (pageData.contentHi || pageData.content) : pageData.content }} />
+              )}
+              {!pageData && (
+                <>
+                  {language === 'en' 
+                    ? "Whether you are a seeker looking for guidance or a speaker wishing to join our platform, we are here for you."
+                    : "चाहे आप मार्गदर्शन की तलाश में एक साधक हों या हमारे मंच से जुड़ने की इच्छा रखने वाले वक्ता, हम आपके लिए यहां हैं।"
+                  }
+                </>
+              )}
             </p>
             
             <div className="space-y-8">
