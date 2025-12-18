@@ -498,10 +498,7 @@ router.get("/public/pages/:slug", async (req: Request, res: Response) => {
 router.get("/contact-info", isAuthenticated, async (req: Request, res: Response) => {
   try {
     const info = await storage.getContactInfo();
-    if (!info) {
-      return res.status(404).json({ error: "Contact info not found" });
-    }
-    res.json(info);
+    res.json(info || null);
   } catch (error) {
     console.error("Error fetching contact info:", error);
     res.status(500).json({ error: "Failed to fetch contact info" });
@@ -533,10 +530,7 @@ router.post("/contact-info", isAuthenticated, async (req: Request, res: Response
 router.get("/public/contact-info", async (req: Request, res: Response) => {
   try {
     const info = await storage.getContactInfo();
-    if (!info) {
-      return res.status(404).json({ error: "Contact info not found" });
-    }
-    res.json(info);
+    res.json(info || null);
   } catch (error) {
     console.error("Error fetching contact info:", error);
     res.status(500).json({ error: "Failed to fetch contact info" });
