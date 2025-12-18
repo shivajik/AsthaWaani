@@ -47,6 +47,9 @@ function sanitizeContent(content: string): string {
       "*": ["class", "id", "style"],
     },
     allowedSchemes: ["http", "https", "data"],
+    disallowedTagsMode: 'discard',
+    textFilter: (text) => text,
+    nonTextTags: ['style', 'script', 'textarea', 'noscript', 'pre'],
   });
 }
 
