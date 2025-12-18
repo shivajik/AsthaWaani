@@ -144,17 +144,20 @@ const siteSettings = pgTable("site_settings", {
 
 const contactInfo = pgTable("contact_info", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
-  email: text("email"),
-  phone: text("phone"),
-  address: text("address"),
+  name: text("name").notNull(),
+  address: text("address").notNull(),
+  city: text("city"),
+  state: text("state"),
+  country: text("country"),
+  postalCode: text("postal_code"),
+  phone: text("phone").notNull(),
+  email: text("email").notNull(),
   whatsapp: text("whatsapp"),
-  telegram: text("telegram"),
-  instagram: text("instagram"),
-  youtube: text("youtube"),
-  facebook: text("facebook"),
-  twitter: text("twitter"),
-  createdAt: timestamp("created_at").defaultNow(),
-  updatedAt: timestamp("updated_at").defaultNow(),
+  nameHi: text("name_hi"),
+  addressHi: text("address_hi"),
+  cityHi: text("city_hi"),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
 
 const insertPageSchema = createInsertSchema(pages).omit({ id: true, createdAt: true, updatedAt: true });
