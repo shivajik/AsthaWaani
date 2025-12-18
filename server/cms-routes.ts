@@ -50,6 +50,7 @@ function sanitizeContent(content: string): string {
     disallowedTagsMode: 'discard',
     textFilter: (text) => text,
     nonTextTags: ['style', 'script', 'textarea', 'noscript', 'pre'],
+    preserveNewlines: true,
   });
 }
 

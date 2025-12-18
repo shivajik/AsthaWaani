@@ -81,5 +81,22 @@
   .preserve-whitespace {
     white-space: pre-wrap;
     word-wrap: break-word;
+    word-break: break-word;
+  }
+  
+  .preserve-whitespace p {
+    margin: 1em 0;
+    line-height: 1.6;
+  }
+  
+  .preserve-whitespace p:empty {
+    margin: 0.5em 0;
+    min-height: 1em;
+    display: block;
+  }
+  
+  .preserve-whitespace br {
+    display: block;
+    content: '';
   }
 }
