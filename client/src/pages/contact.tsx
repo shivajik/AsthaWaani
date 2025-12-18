@@ -30,7 +30,7 @@ export default function Contact() {
           {/* Info */}
           <div>
             <h2 className="text-3xl font-serif font-bold text-secondary mb-8">
-              {pageData?.title || (language === 'en' ? "Get in Touch" : "संपर्क करें")}
+               {language === 'hi' ? (pageData?.titleHi || pageData?.title) : pageData?.title || (language === 'en' ? "Get in Touch" : "संपर्क करें")}
             </h2>
             <p className="text-muted-foreground mb-12 text-lg">
               {pageData && pageData.content && (
