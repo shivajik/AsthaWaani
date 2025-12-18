@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { useLanguage } from "@/lib/context";
 import { Card, CardContent } from "@/components/ui/card";
+import { useCmsPage } from "@/lib/useCmsPage";
 import { MapPin, Sparkles, ArrowRight } from "lucide-react";
 import { Link, useSearch } from "wouter";
 import { Button } from "@/components/ui/button";
@@ -106,6 +107,7 @@ const fadeUpItem = {
 
 export default function Brajbhoomi() {
   const { language } = useLanguage();
+  const { data: pageData } = useCmsPage("brajbhoomi");
   const searchString = useSearch();
   const params = new URLSearchParams(searchString);
   const locationParam = params.get('location');

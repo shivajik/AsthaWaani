@@ -1,10 +1,12 @@
 import { motion } from "framer-motion";
 import { useLanguage } from "@/lib/context";
-import { assets, aboutContent, values } from "@/lib/data";
+import { assets, values } from "@/lib/data";
 import { Card, CardContent } from "@/components/ui/card";
+import { useCmsPage } from "@/lib/useCmsPage";
 
 export default function About() {
   const { language, t } = useLanguage();
+  const { data: pageData } = useCmsPage("about");
 
   return (
     <div className="min-h-screen pt-20">
@@ -34,13 +36,14 @@ export default function About() {
           <div className="max-w-4xl mx-auto">
             <div className="prose prose-lg prose-stone mx-auto text-center mb-16">
               <h2 className="text-3xl font-serif font-bold text-secondary mb-8">
-                {t('about.subtitle')}
+                {pageData?.title || t('about.subtitle')}
               </h2>
-              {aboutContent[language].map((paragraph, i) => (
-                <p key={i} className="text-muted-foreground leading-relaxed mb-6">
-                  {paragraph}
-                </p>
-              ))}
+              {pageData && pageData.content && (
+                <div 
+                  className="text-muted-foreground leading-relaxed mb-6"
+                  dangerouslySetInnerHTML={{ __html: language === 'hi' ? (pageData.contentHi || pageData.content) : pageData.content }}
+                />
+              )}
             </div>
           </div>
 

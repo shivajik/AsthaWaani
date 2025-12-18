@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { useLanguage } from "@/lib/context";
 import { Card, CardContent } from "@/components/ui/card";
+import { useCmsPage } from "@/lib/useCmsPage";
 import { 
   Video, Music, Sun, Users, BookOpen, Heart, 
   Sparkles, Mic, Moon, HandHeart
@@ -129,6 +130,7 @@ const fadeUpItem = {
 
 export default function Offerings() {
   const { language } = useLanguage();
+  const { data: pageData } = useCmsPage("offerings");
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
