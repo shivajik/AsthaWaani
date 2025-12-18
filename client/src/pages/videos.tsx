@@ -98,7 +98,7 @@ export default function Videos() {
   };
 
   return (
-    <div className="pt-24 pb-16 min-h-screen bg-background">
+    <div className="pt-40 md:pt-48 pb-16 min-h-screen bg-background">
       <div className="container mx-auto px-4">
         
         {/* Header Section with Animation */}

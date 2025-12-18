@@ -158,7 +158,7 @@ export default function Brajbhoomi() {
 
       <div className="flex flex-col w-full">
         {/* Selected Location Hero Section */}
-        <section className="py-28 md:py-30 bg-gradient-to-b from-stone-50 to-white">
+        <section className="pt-40 md:pt-48 pb-28 bg-gradient-to-b from-stone-50 to-white">
           <div className="container mx-auto px-4">
             <motion.div 
               className="grid md:grid-cols-2 gap-12 items-start"
