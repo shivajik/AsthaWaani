@@ -32,11 +32,6 @@ export function RichTextEditor({ content, onChange, placeholder = 'Start writing
         heading: {
           levels: [1, 2, 3],
         },
-        paragraph: {
-          HTMLAttributes: {
-            class: 'preserve-whitespace',
-          },
-        },
       }),
       Link.configure({
         openOnClick: false,
