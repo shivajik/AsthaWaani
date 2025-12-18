@@ -1,5 +1,5 @@
 import { db } from "../server/db";
-import { admins } from "../shared/schema";
+import { admins, contactInfo } from "../shared/schema";
 import bcrypt from "bcryptjs";
 
 async function seedAdmin() {
@@ -28,8 +28,34 @@ async function seedAdmin() {
     } else {
       console.log(`Admin user already exists: ${email}`);
     }
+
+    console.log("Seeding contact information...");
+    const [contact] = await db
+      .insert(contactInfo)
+      .values({
+        name: "Asthawaani Kendra",
+        nameHi: "आस्थावाणी केंद्र",
+        address: "c/o Ashirwad Palace, Swej Farm, Yamunapar, Laxminagar",
+        addressHi: "सी/ओ आशीर्वाद पैलेस, स्वेज फार्म, यमुनापार, लक्ष्मीनगर",
+        city: "Mathura",
+        cityHi: "मथुरा",
+        state: "Uttar Pradesh",
+        country: "India",
+        postalCode: "281001",
+        phone: "+91 76684 09246",
+        whatsapp: "+91 76684 09246",
+        email: "contact@asthawaani.com",
+      })
+      .onConflictDoNothing()
+      .returning();
+
+    if (contact) {
+      console.log("Contact information created");
+    } else {
+      console.log("Contact information already exists");
+    }
   } catch (error) {
-    console.error("Error seeding admin:", error);
+    console.error("Error seeding:", error);
     process.exit(1);
   }
 

@@ -2,7 +2,8 @@ import {
   type User, type InsertUser, type Video, type InsertVideo, type YoutubeChannel, type InsertYoutubeChannel,
   type Admin, type InsertAdmin, type Page, type InsertPage, type Post, type InsertPost,
   type Media, type InsertMedia, type SeoMeta, type InsertSeoMeta, type SiteSettings, type InsertSiteSettings,
-  videos, youtubeChannels, users, admins, pages, posts, media, seoMeta, siteSettings
+  type ContactInfo, type InsertContactInfo,
+  videos, youtubeChannels, users, admins, pages, posts, media, seoMeta, siteSettings, contactInfo
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, desc, and } from "drizzle-orm";
@@ -66,6 +67,11 @@ export interface IStorage {
   getSetting(key: string): Promise<SiteSettings | undefined>;
   getAllSettings(): Promise<SiteSettings[]>;
   upsertSetting(setting: InsertSiteSettings): Promise<SiteSettings>;
+
+  // Contact Info operations
+  getContactInfo(): Promise<ContactInfo | undefined>;
+  createContactInfo(info: InsertContactInfo): Promise<ContactInfo>;
+  updateContactInfo(id: string, info: Partial<InsertContactInfo>): Promise<ContactInfo>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -342,6 +348,29 @@ export class DatabaseStorage implements IStorage {
       .values(setting)
       .returning();
     return newSetting;
+  }
+
+  // Contact Info operations
+  async getContactInfo(): Promise<ContactInfo | undefined> {
+    const [info] = await db.select().from(contactInfo);
+    return info || undefined;
+  }
+
+  async createContactInfo(info: InsertContactInfo): Promise<ContactInfo> {
+    const [newInfo] = await db
+      .insert(contactInfo)
+      .values(info)
+      .returning();
+    return newInfo;
+  }
+
+  async updateContactInfo(id: string, info: Partial<InsertContactInfo>): Promise<ContactInfo> {
+    const [updated] = await db
+      .update(contactInfo)
+      .set({ ...info, updatedAt: new Date() })
+      .where(eq(contactInfo.id, id))
+      .returning();
+    return updated;
   }
 }
 

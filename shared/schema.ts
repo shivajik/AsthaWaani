@@ -209,3 +209,31 @@ export const insertSiteSettingsSchema = createInsertSchema(siteSettings).omit({
 
 export type InsertSiteSettings = z.infer<typeof insertSiteSettingsSchema>;
 export type SiteSettings = typeof siteSettings.$inferSelect;
+
+// Contact Information
+export const contactInfo = pgTable("contact_info", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  name: text("name").notNull(),
+  address: text("address").notNull(),
+  city: text("city"),
+  state: text("state"),
+  country: text("country"),
+  postalCode: text("postal_code"),
+  phone: text("phone").notNull(),
+  email: text("email").notNull(),
+  whatsapp: text("whatsapp"),
+  nameHi: text("name_hi"),
+  addressHi: text("address_hi"),
+  cityHi: text("city_hi"),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
+
+export const insertContactInfoSchema = createInsertSchema(contactInfo).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export type InsertContactInfo = z.infer<typeof insertContactInfoSchema>;
+export type ContactInfo = typeof contactInfo.$inferSelect;

@@ -4,10 +4,20 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { MapPin, Phone, Mail } from "lucide-react";
 import { useCmsPage } from "@/lib/useCmsPage";
+import { useQuery } from "@tanstack/react-query";
+import { type ContactInfo } from "@shared/schema";
 
 export default function Contact() {
   const { language, t } = useLanguage();
   const { data: pageData } = useCmsPage("contact");
+  const { data: contactData } = useQuery<ContactInfo | null>({
+    queryKey: ["/api/cms/public/contact-info"],
+    queryFn: async () => {
+      const res = await fetch("/api/cms/public/contact-info");
+      if (!res.ok) return null;
+      return res.json();
+    },
+  });
 
   return (
     <div className="min-h-screen pt-20">
@@ -37,29 +47,35 @@ export default function Contact() {
             </p>
             
             <div className="space-y-8">
-              <div className="flex gap-4">
-                <div className="w-12 h-12 bg-primary/10 text-primary rounded-lg flex items-center justify-center shrink-0">
-                  <MapPin className="w-6 h-6" />
-                </div>
-                <div>
-                  <h3 className="font-bold text-lg mb-1">Asthawaani Kendra</h3>
-                  <p className="text-muted-foreground">
-                    c/o Ashirwad Palace, Swej Farm,<br/>
-                    Yamunapar, Laxminagar,<br/>
-                    Mathura, Uttar Pradesh
-                  </p>
-                </div>
-              </div>
-              
-              <div className="flex gap-4">
-                <div className="w-12 h-12 bg-primary/10 text-primary rounded-lg flex items-center justify-center shrink-0">
-                  <Phone className="w-6 h-6" />
-                </div>
-                <div>
-                  <h3 className="font-bold text-lg mb-1">WhatsApp / Call</h3>
-                  <p className="text-muted-foreground">+91 76684 09246</p>
-                </div>
-              </div>
+              {contactData && (
+                <>
+                  <div className="flex gap-4">
+                    <div className="w-12 h-12 bg-primary/10 text-primary rounded-lg flex items-center justify-center shrink-0">
+                      <MapPin className="w-6 h-6" />
+                    </div>
+                    <div>
+                      <h3 className="font-bold text-lg mb-1">
+                        {language === 'hi' ? (contactData.nameHi || contactData.name) : contactData.name}
+                      </h3>
+                      <p className="text-muted-foreground">
+                        {language === 'hi' ? (contactData.addressHi || contactData.address) : contactData.address}<br/>
+                        {contactData.city && <>{language === 'hi' ? (contactData.cityHi || contactData.city) : contactData.city}, </>}
+                        {contactData.state}
+                      </p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex gap-4">
+                    <div className="w-12 h-12 bg-primary/10 text-primary rounded-lg flex items-center justify-center shrink-0">
+                      <Phone className="w-6 h-6" />
+                    </div>
+                    <div>
+                      <h3 className="font-bold text-lg mb-1">WhatsApp / Call</h3>
+                      <p className="text-muted-foreground">{contactData.whatsapp || contactData.phone}</p>
+                    </div>
+                  </div>
+                </>
+              )}
             </div>
           </div>
 

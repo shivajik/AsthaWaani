@@ -6,7 +6,7 @@ import rateLimit from "express-rate-limit";
 import { storage } from "./storage";
 import { isAuthenticated, loginAdmin } from "./auth";
 import { uploadImage, deleteImage } from "./cloudinary";
-import { insertPageSchema, insertPostSchema, insertSeoMetaSchema } from "@shared/schema";
+import { insertPageSchema, insertPostSchema, insertSeoMetaSchema, insertContactInfoSchema } from "@shared/schema";
 
 const router = Router();
 
@@ -488,6 +488,55 @@ router.get("/public/pages/:slug", async (req: Request, res: Response) => {
   } catch (error) {
     console.error("Error fetching page:", error);
     res.status(500).json({ error: "Failed to fetch page" });
+  }
+});
+
+// Contact Info endpoints
+router.get("/contact-info", isAuthenticated, async (req: Request, res: Response) => {
+  try {
+    const info = await storage.getContactInfo();
+    if (!info) {
+      return res.status(404).json({ error: "Contact info not found" });
+    }
+    res.json(info);
+  } catch (error) {
+    console.error("Error fetching contact info:", error);
+    res.status(500).json({ error: "Failed to fetch contact info" });
+  }
+});
+
+router.post("/contact-info", isAuthenticated, async (req: Request, res: Response) => {
+  try {
+    const data = insertContactInfoSchema.parse(req.body);
+    const existing = await storage.getContactInfo();
+    
+    if (existing) {
+      const updated = await storage.updateContactInfo(existing.id, data);
+      return res.json(updated);
+    }
+    
+    const info = await storage.createContactInfo(data);
+    res.status(201).json(info);
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return res.status(400).json({ error: "Validation error", details: error.errors });
+    }
+    console.error("Error saving contact info:", error);
+    res.status(500).json({ error: "Failed to save contact info" });
+  }
+});
+
+// Public endpoint to get contact info
+router.get("/public/contact-info", async (req: Request, res: Response) => {
+  try {
+    const info = await storage.getContactInfo();
+    if (!info) {
+      return res.status(404).json({ error: "Contact info not found" });
+    }
+    res.json(info);
+  } catch (error) {
+    console.error("Error fetching contact info:", error);
+    res.status(500).json({ error: "Failed to fetch contact info" });
   }
 });
 
