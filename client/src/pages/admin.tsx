@@ -10,10 +10,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Switch } from "@/components/ui/switch";
 import { 
   RefreshCw, Youtube, LogOut, FileText, 
-  Image, Settings, LayoutDashboard, PenSquare, Trash2, Plus, Save
+  Image, Settings, LayoutDashboard, PenSquare, Trash2, Plus, Save, Phone
 } from "lucide-react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
+import { type ContactInfo } from "@shared/schema";
 
 interface Admin {
   id: string;
@@ -777,6 +778,239 @@ function MediaManager() {
   );
 }
 
+function ContactInfoManager() {
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+  const [editing, setEditing] = useState(false);
+
+  const { data: contactInfo, isLoading } = useQuery<ContactInfo | null>({
+    queryKey: ["/api/cms/contact-info"],
+    queryFn: async () => {
+      const res = await fetch("/api/cms/contact-info", { credentials: "include" });
+      if (!res.ok) return null;
+      return res.json();
+    },
+  });
+
+  const [formData, setFormData] = useState<Partial<ContactInfo>>({
+    name: "",
+    nameHi: "",
+    address: "",
+    addressHi: "",
+    city: "",
+    cityHi: "",
+    state: "",
+    country: "",
+    postalCode: "",
+    phone: "",
+    whatsapp: "",
+    email: "",
+  });
+
+  useEffect(() => {
+    if (contactInfo) {
+      setFormData(contactInfo);
+    }
+  }, [contactInfo]);
+
+  const saveMutation = useMutation({
+    mutationFn: async (data: Partial<ContactInfo>) => {
+      const res = await fetch("/api/cms/contact-info", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+        credentials: "include",
+      });
+      if (!res.ok) throw new Error("Failed to save contact info");
+      return res.json();
+    },
+    onSuccess: () => {
+      toast({ title: "Contact information saved successfully" });
+      queryClient.invalidateQueries({ queryKey: ["/api/cms/contact-info"] });
+      setEditing(false);
+    },
+    onError: () => {
+      toast({ title: "Failed to save contact information", variant: "destructive" });
+    },
+  });
+
+  if (isLoading) return <p>Loading...</p>;
+
+  if (editing) {
+    return (
+      <div className="space-y-4">
+        <div className="flex justify-between items-center">
+          <h2 className="text-2xl font-bold">Edit Contact Information</h2>
+          <Button variant="outline" onClick={() => setEditing(false)}>Cancel</Button>
+        </div>
+        <Card>
+          <CardContent className="pt-6 space-y-4">
+            <div className="grid md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label>Name (English)</Label>
+                <Input
+                  value={formData.name || ""}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  placeholder="Organization Name"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>Name (Hindi)</Label>
+                <Input
+                  value={formData.nameHi || ""}
+                  onChange={(e) => setFormData({ ...formData, nameHi: e.target.value })}
+                  placeholder="संस्था का नाम"
+                />
+              </div>
+            </div>
+            <div className="space-y-2">
+              <Label>Address (English)</Label>
+              <Textarea
+                value={formData.address || ""}
+                onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+                placeholder="Street Address"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>Address (Hindi)</Label>
+              <Textarea
+                value={formData.addressHi || ""}
+                onChange={(e) => setFormData({ ...formData, addressHi: e.target.value })}
+                placeholder="पता"
+              />
+            </div>
+            <div className="grid md:grid-cols-3 gap-4">
+              <div className="space-y-2">
+                <Label>City (English)</Label>
+                <Input
+                  value={formData.city || ""}
+                  onChange={(e) => setFormData({ ...formData, city: e.target.value })}
+                  placeholder="City"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>City (Hindi)</Label>
+                <Input
+                  value={formData.cityHi || ""}
+                  onChange={(e) => setFormData({ ...formData, cityHi: e.target.value })}
+                  placeholder="शहर"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>State</Label>
+                <Input
+                  value={formData.state || ""}
+                  onChange={(e) => setFormData({ ...formData, state: e.target.value })}
+                  placeholder="State"
+                />
+              </div>
+            </div>
+            <div className="grid md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label>Country</Label>
+                <Input
+                  value={formData.country || ""}
+                  onChange={(e) => setFormData({ ...formData, country: e.target.value })}
+                  placeholder="Country"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>Postal Code</Label>
+                <Input
+                  value={formData.postalCode || ""}
+                  onChange={(e) => setFormData({ ...formData, postalCode: e.target.value })}
+                  placeholder="Postal Code"
+                />
+              </div>
+            </div>
+            <div className="grid md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label>Phone</Label>
+                <Input
+                  value={formData.phone || ""}
+                  onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                  placeholder="+91 XXXXX XXXXX"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>WhatsApp</Label>
+                <Input
+                  value={formData.whatsapp || ""}
+                  onChange={(e) => setFormData({ ...formData, whatsapp: e.target.value })}
+                  placeholder="+91 XXXXX XXXXX"
+                />
+              </div>
+            </div>
+            <div className="space-y-2">
+              <Label>Email</Label>
+              <Input
+                type="email"
+                value={formData.email || ""}
+                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                placeholder="contact@example.com"
+              />
+            </div>
+            <Button
+              onClick={() => saveMutation.mutate(formData)}
+              disabled={saveMutation.isPending}
+              className="gap-2"
+            >
+              <Save className="w-4 h-4" />
+              {saveMutation.isPending ? "Saving..." : "Save Contact Information"}
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-4">
+      <div className="flex justify-between items-center">
+        <h2 className="text-2xl font-bold">Contact Information</h2>
+        <Button onClick={() => setEditing(true)} className="gap-2">
+          <PenSquare className="w-4 h-4" /> Edit
+        </Button>
+      </div>
+      {contactInfo && (
+        <Card>
+          <CardContent className="pt-6 space-y-4">
+            <div className="grid md:grid-cols-2 gap-4">
+              <div>
+                <p className="text-sm text-muted-foreground">Name (English)</p>
+                <p className="font-medium">{contactInfo.name}</p>
+              </div>
+              <div>
+                <p className="text-sm text-muted-foreground">Name (Hindi)</p>
+                <p className="font-medium">{contactInfo.nameHi || "-"}</p>
+              </div>
+            </div>
+            <div>
+              <p className="text-sm text-muted-foreground">Address</p>
+              <p className="font-medium">{contactInfo.address}</p>
+              {contactInfo.city && <p>{contactInfo.city}, {contactInfo.state} {contactInfo.postalCode}</p>}
+            </div>
+            <div className="grid md:grid-cols-2 gap-4">
+              <div>
+                <p className="text-sm text-muted-foreground">Phone</p>
+                <p className="font-medium">{contactInfo.phone}</p>
+              </div>
+              <div>
+                <p className="text-sm text-muted-foreground">WhatsApp</p>
+                <p className="font-medium">{contactInfo.whatsapp || "-"}</p>
+              </div>
+            </div>
+            <div>
+              <p className="text-sm text-muted-foreground">Email</p>
+              <p className="font-medium">{contactInfo.email}</p>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+    </div>
+  );
+}
+
 function YouTubeSync() {
   const [channelId, setChannelId] = useState("");
   const { toast } = useToast();
@@ -917,6 +1151,7 @@ export default function Admin() {
     { id: "pages", label: "Pages", icon: FileText },
     { id: "posts", label: "Blog Posts", icon: PenSquare },
     { id: "media", label: "Media", icon: Image },
+    { id: "contact", label: "Contact Info", icon: Phone },
     { id: "youtube", label: "YouTube", icon: Youtube },
     { id: "settings", label: "Settings", icon: Settings },
   ];
@@ -964,6 +1199,7 @@ export default function Admin() {
           {activeTab === "pages" && <PageManager />}
           {activeTab === "posts" && <PostManager />}
           {activeTab === "media" && <MediaManager />}
+          {activeTab === "contact" && <ContactInfoManager />}
           {activeTab === "youtube" && <YouTubeSync />}
           {activeTab === "settings" && (
             <div className="space-y-4">
