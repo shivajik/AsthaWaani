@@ -89,7 +89,7 @@ const locationsData = [
 ];
 
 const staggerContainer = {
-  hidden: { opacity: 0 },
+  hidden: { opacity: 1 },
   visible: {
     opacity: 1,
     transition: { staggerChildren: 0.15, delayChildren: 0.2 },
@@ -97,7 +97,7 @@ const staggerContainer = {
 };
 
 const fadeUpItem = {
-  hidden: { opacity: 0, y: 40 },
+  hidden: { opacity: 1, y: 0 },
   visible: {
     opacity: 1,
     y: 0,
@@ -236,7 +236,7 @@ export default function Brajbhoomi() {
           <div className="container mx-auto px-4">
             <motion.div
               className="text-center mb-12"
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 1, y: 0 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
             >
@@ -252,7 +252,7 @@ export default function Brajbhoomi() {
 
             <motion.div
               variants={staggerContainer}
-              initial="hidden"
+              initial="visible"
               whileInView="visible"
               viewport={{ once: true, margin: "-50px" }}
               className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6"
