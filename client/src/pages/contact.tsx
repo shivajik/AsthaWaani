@@ -60,7 +60,7 @@ export default function Contact() {
                       <p className="text-muted-foreground">
                         {language === 'hi' ? (contactData.addressHi || contactData.address) : contactData.address}<br/>
                         {contactData.city && <>{language === 'hi' ? (contactData.cityHi || contactData.city) : contactData.city}, </>}
-                        {contactData.state}
+                        {contactData.state} {contactData.postalCode}
                       </p>
                     </div>
                   </div>

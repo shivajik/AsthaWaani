@@ -804,7 +804,6 @@ function ContactInfoManager() {
     postalCode: "",
     phone: "",
     whatsapp: "",
-    email: "",
   });
 
   useEffect(() => {
@@ -923,31 +922,12 @@ function ContactInfoManager() {
                 />
               </div>
             </div>
-            <div className="grid md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label>Phone</Label>
-                <Input
-                  value={formData.phone || ""}
-                  onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                  placeholder="+91 XXXXX XXXXX"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label>WhatsApp</Label>
-                <Input
-                  value={formData.whatsapp || ""}
-                  onChange={(e) => setFormData({ ...formData, whatsapp: e.target.value })}
-                  placeholder="+91 XXXXX XXXXX"
-                />
-              </div>
-            </div>
             <div className="space-y-2">
-              <Label>Email</Label>
+              <Label>WhatsApp Number</Label>
               <Input
-                type="email"
-                value={formData.email || ""}
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                placeholder="contact@example.com"
+                value={formData.whatsapp || ""}
+                onChange={(e) => setFormData({ ...formData, whatsapp: e.target.value })}
+                placeholder="+91 XXXXX XXXXX"
               />
             </div>
             <Button
@@ -990,19 +970,9 @@ function ContactInfoManager() {
               <p className="font-medium">{contactInfo.address}</p>
               {contactInfo.city && <p>{contactInfo.city}, {contactInfo.state} {contactInfo.postalCode}</p>}
             </div>
-            <div className="grid md:grid-cols-2 gap-4">
-              <div>
-                <p className="text-sm text-muted-foreground">Phone</p>
-                <p className="font-medium">{contactInfo.phone}</p>
-              </div>
-              <div>
-                <p className="text-sm text-muted-foreground">WhatsApp</p>
-                <p className="font-medium">{contactInfo.whatsapp || "-"}</p>
-              </div>
-            </div>
             <div>
-              <p className="text-sm text-muted-foreground">Email</p>
-              <p className="font-medium">{contactInfo.email}</p>
+              <p className="text-sm text-muted-foreground">WhatsApp Number</p>
+              <p className="font-medium">{contactInfo.whatsapp || "-"}</p>
             </div>
           </CardContent>
         </Card>
