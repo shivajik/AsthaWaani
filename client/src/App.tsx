@@ -16,6 +16,8 @@ import Offerings from "@/pages/offerings";
 import Brajbhoomi from "@/pages/brajbhoomi";
 import Blog from "@/pages/blog";
 import BlogPostDetail from "@/pages/blog-post";
+import TermsOfService from "@/pages/terms-of-service";
+import PrivacyPolicy from "@/pages/privacy-policy";
 
 function Router() {
   return (
@@ -29,6 +31,8 @@ function Router() {
       <Route path="/blog" component={Blog} />
       <Route path="/blog/:slug" component={BlogPostDetail} />
       <Route path="/contact" component={Contact} />
+      <Route path="/terms-of-service" component={TermsOfService} />
+      <Route path="/privacy-policy" component={PrivacyPolicy} />
       <Route path="/admin" component={Admin} />
       <Route component={NotFound} />
     </Switch>

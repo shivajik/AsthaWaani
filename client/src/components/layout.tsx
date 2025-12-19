@@ -249,8 +249,25 @@ export function Footer() {
           </div>
         </div>
         
-        <div className="border-t border-white/10 mt-12 pt-8 text-center text-sm opacity-60">
-          <p>&copy; {new Date().getFullYear()} Asthawaani. All rights reserved.</p>
+        <div className="border-t border-white/10 mt-12 pt-8">
+          <div className="flex flex-col md:flex-row justify-center items-center gap-6 mb-6 text-sm opacity-90">
+            <Link 
+              href="/terms-of-service"
+              className="hover:text-secondary transition-colors"
+              data-testid="link-terms-of-service"
+            >
+              {t('footer.terms') || 'Terms of Service'}
+            </Link>
+            <span className="hidden md:inline text-white/20">•</span>
+            <Link 
+              href="/privacy-policy"
+              className="hover:text-secondary transition-colors"
+              data-testid="link-privacy-policy"
+            >
+              {t('footer.privacy') || 'Privacy Policy'}
+            </Link>
+          </div>
+          <p className="text-center text-sm opacity-60">&copy; {new Date().getFullYear()} Asthawaani. All rights reserved.</p>
         </div>
       </div>
     </footer>
