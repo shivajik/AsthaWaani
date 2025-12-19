@@ -6,7 +6,7 @@ import rateLimit from "express-rate-limit";
 import { storage } from "./storage";
 import { isAuthenticated, loginAdmin } from "./auth";
 import { uploadImage, deleteImage } from "./cloudinary";
-import { insertPageSchema, insertPostSchema, insertSeoMetaSchema, insertContactInfoSchema } from "@shared/schema";
+import { insertPageSchema, insertPostSchema, insertSeoMetaSchema, insertContactInfoSchema, insertOfferingSchema } from "@shared/schema";
 
 const router = Router();
 
@@ -535,6 +535,78 @@ router.get("/public/contact-info", async (req: Request, res: Response) => {
   } catch (error) {
     console.error("Error fetching contact info:", error);
     res.status(500).json({ error: "Failed to fetch contact info" });
+  }
+});
+
+// ============================================
+// OFFERINGS ROUTES
+// ============================================
+
+// Admin: Get all offerings (including unpublished)
+router.get("/offerings", async (req: Request, res: Response) => {
+  try {
+    const offerings = await storage.getAllOfferings();
+    res.json(offerings);
+  } catch (error) {
+    console.error("Error fetching offerings:", error);
+    res.status(500).json({ error: "Failed to fetch offerings" });
+  }
+});
+
+// Admin: Create offering
+router.post("/offerings", async (req: Request, res: Response) => {
+  try {
+    const validation = insertOfferingSchema.safeParse(req.body);
+    if (!validation.success) {
+      return res.status(400).json({ error: validation.error.errors });
+    }
+    const offering = await storage.createOffering(validation.data);
+    res.status(201).json(offering);
+  } catch (error) {
+    console.error("Error creating offering:", error);
+    res.status(500).json({ error: "Failed to create offering" });
+  }
+});
+
+// Admin: Update offering
+router.put("/offerings/:id", async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    console.log("🔵 [Backend] PUT /api/cms/offerings/:id received");
+    console.log("📥 [Backend] Offering ID:", id);
+    console.log("📥 [Backend] Request body:", JSON.stringify(req.body, null, 2));
+    console.log("📥 [Backend] Request body keys:", Object.keys(req.body));
+    
+    const validation = insertOfferingSchema.partial().safeParse(req.body);
+    console.log("🔍 [Backend] Validation success:", validation.success);
+    
+    if (!validation.success) {
+      console.error("❌ [Backend] Validation failed:", validation.error.errors);
+      return res.status(400).json({ error: validation.error.errors });
+    }
+    
+    console.log("✅ [Backend] Validation passed");
+    console.log("📤 [Backend] Data to update:", JSON.stringify(validation.data, null, 2));
+    
+    const offering = await storage.updateOffering(id, validation.data);
+    console.log("💾 [Backend] Updated offering from database:", JSON.stringify(offering, null, 2));
+    
+    res.json(offering);
+  } catch (error) {
+    console.error("Error updating offering:", error);
+    res.status(500).json({ error: "Failed to update offering" });
+  }
+});
+
+// Admin: Delete offering
+router.delete("/offerings/:id", async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    await storage.deleteOffering(id);
+    res.json({ success: true });
+  } catch (error) {
+    console.error("Error deleting offering:", error);
+    res.status(500).json({ error: "Failed to delete offering" });
   }
 });
 
