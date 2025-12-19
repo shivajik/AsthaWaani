@@ -495,7 +495,15 @@ export class DatabaseStorage implements IStorage {
   }
 
   async updateOffering(id: string, offering: Partial<InsertOffering>): Promise<Offering> {
-    const [updated] = await db.update(offerings).set({ ...offering, updatedAt: new Date() }).where(eq(offerings.id, id)).returning();
+    console.log("💾 [Storage] Updating offering with ID:", id);
+    console.log("💾 [Storage] Update data:", JSON.stringify(offering, null, 2));
+    
+    const updateData = { ...offering, updatedAt: new Date() };
+    console.log("💾 [Storage] Final update object with timestamp:", JSON.stringify(updateData, null, 2));
+    
+    const [updated] = await db.update(offerings).set(updateData).where(eq(offerings.id, id)).returning();
+    
+    console.log("💾 [Storage] Updated record from database:", JSON.stringify(updated, null, 2));
     return updated;
   }
 

@@ -1049,17 +1049,32 @@ function OfferingManager() {
     mutationFn: async (offering: any) => {
       const url = offering.id ? `/api/cms/offerings/${offering.id}` : "/api/cms/offerings";
       const method = offering.id ? "PUT" : "POST";
+      
+      console.log("🚀 [Frontend] Sending offering data:", {
+        method,
+        url,
+        offering,
+        offeringKeys: Object.keys(offering),
+      });
+      
       const res = await fetch(url, {
         method,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(offering),
         credentials: "include",
       });
+      
+      console.log("📦 [Frontend] API Response status:", res.status);
+      
       if (!res.ok) {
         const errorData = await res.json();
+        console.error("❌ [Frontend] API Error response:", errorData);
         throw new Error(errorData.error || "Failed to save offering");
       }
-      return res.json();
+      
+      const responseData = await res.json();
+      console.log("✅ [Frontend] API Success response:", responseData);
+      return responseData;
     },
     onSuccess: () => {
       toast({ title: "Offering saved successfully" });

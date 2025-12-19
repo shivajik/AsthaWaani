@@ -281,11 +281,25 @@ export async function registerRoutes(
   app.put("/api/cms/offerings/:id", async (req, res) => {
     try {
       const { id } = req.params;
+      console.log("🔵 [Backend] PUT /api/cms/offerings/:id received");
+      console.log("📥 [Backend] Offering ID:", id);
+      console.log("📥 [Backend] Request body:", JSON.stringify(req.body, null, 2));
+      console.log("📥 [Backend] Request body keys:", Object.keys(req.body));
+      
       const validation = insertOfferingSchema.partial().safeParse(req.body);
+      console.log("🔍 [Backend] Validation success:", validation.success);
+      
       if (!validation.success) {
+        console.error("❌ [Backend] Validation failed:", validation.error.errors);
         return res.status(400).json({ error: validation.error.errors });
       }
+      
+      console.log("✅ [Backend] Validation passed");
+      console.log("📤 [Backend] Data to update:", JSON.stringify(validation.data, null, 2));
+      
       const offering = await storage.updateOffering(id, validation.data);
+      console.log("💾 [Backend] Updated offering from database:", JSON.stringify(offering, null, 2));
+      
       res.json(offering);
     } catch (error) {
       console.error("Error updating offering:", error);
