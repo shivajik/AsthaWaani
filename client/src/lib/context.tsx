@@ -33,6 +33,8 @@ const translations: Record<string, Record<Language, string>> = {
   
   // Footer
   'footer.address': { en: 'Asthawaani Kendra, Mathura', hi: 'आस्थावाणी केंद्र, मथुरा' },
+  'footer.terms': { en: 'Terms of Service', hi: 'सेवा की शर्तें' },
+  'footer.privacy': { en: 'Privacy Policy', hi: 'गोपनीयता नीति' },
 };
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
