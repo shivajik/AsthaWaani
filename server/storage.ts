@@ -3,7 +3,8 @@ import {
   type Admin, type InsertAdmin, type Page, type InsertPage, type Post, type InsertPost,
   type Media, type InsertMedia, type SeoMeta, type InsertSeoMeta, type SiteSettings, type InsertSiteSettings,
   type ContactInfo, type InsertContactInfo, type Category, type InsertCategory, type PostCategory,
-  videos, youtubeChannels, users, admins, pages, posts, media, seoMeta, siteSettings, contactInfo, categories, postCategories
+  type Offering, type InsertOffering,
+  videos, youtubeChannels, users, admins, pages, posts, media, seoMeta, siteSettings, contactInfo, categories, postCategories, offerings
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, desc, and } from "drizzle-orm";
@@ -86,6 +87,15 @@ export interface IStorage {
   removePostFromCategory(postId: string, categoryId: string): Promise<void>;
   getPostCategories(postId: string): Promise<Category[]>;
   getPublishedPostsByCategory(categoryId: string): Promise<Post[]>;
+
+  // Offering operations
+  getOffering(id: string): Promise<Offering | undefined>;
+  getOfferingBySlug(slug: string): Promise<Offering | undefined>;
+  getAllOfferings(): Promise<Offering[]>;
+  getPublishedOfferings(): Promise<Offering[]>;
+  createOffering(offering: InsertOffering): Promise<Offering>;
+  updateOffering(id: string, offering: Partial<InsertOffering>): Promise<Offering>;
+  deleteOffering(id: string): Promise<void>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -458,6 +468,39 @@ export class DatabaseStorage implements IStorage {
       ))
       .orderBy(desc(posts.publishedAt))
       .then(rows => rows.map(row => row.post));
+  }
+
+  // Offering operations
+  async getOffering(id: string): Promise<Offering | undefined> {
+    const [offering] = await db.select().from(offerings).where(eq(offerings.id, id));
+    return offering || undefined;
+  }
+
+  async getOfferingBySlug(slug: string): Promise<Offering | undefined> {
+    const [offering] = await db.select().from(offerings).where(eq(offerings.slug, slug));
+    return offering || undefined;
+  }
+
+  async getAllOfferings(): Promise<Offering[]> {
+    return await db.select().from(offerings).orderBy(offerings.order);
+  }
+
+  async getPublishedOfferings(): Promise<Offering[]> {
+    return await db.select().from(offerings).where(eq(offerings.isPublished, true)).orderBy(offerings.order);
+  }
+
+  async createOffering(offering: InsertOffering): Promise<Offering> {
+    const [newOffering] = await db.insert(offerings).values(offering).returning();
+    return newOffering;
+  }
+
+  async updateOffering(id: string, offering: Partial<InsertOffering>): Promise<Offering> {
+    const [updated] = await db.update(offerings).set(offering).where(eq(offerings.id, id)).returning();
+    return updated;
+  }
+
+  async deleteOffering(id: string): Promise<void> {
+    await db.delete(offerings).where(eq(offerings.id, id));
   }
 }
 

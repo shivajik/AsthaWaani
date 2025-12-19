@@ -2,7 +2,7 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { YouTubeService } from "./youtube.service";
-import { insertYoutubeChannelSchema, insertVideoSchema, insertContactInfoSchema, insertCategorySchema } from "@shared/schema";
+import { insertYoutubeChannelSchema, insertVideoSchema, insertContactInfoSchema, insertCategorySchema, insertOfferingSchema } from "@shared/schema";
 
 export async function registerRoutes(
   httpServer: Server,
@@ -237,6 +237,71 @@ export async function registerRoutes(
     } catch (error) {
       console.error("Error fetching post:", error);
       res.status(500).json({ error: "Failed to fetch post" });
+    }
+  });
+
+  // Get all published offerings (public endpoint)
+  app.get("/api/offerings", async (req, res) => {
+    try {
+      const offerings = await storage.getPublishedOfferings();
+      res.json(offerings);
+    } catch (error) {
+      console.error("Error fetching offerings:", error);
+      res.status(500).json({ error: "Failed to fetch offerings" });
+    }
+  });
+
+  // Admin: Get all offerings (including unpublished)
+  app.get("/api/cms/offerings", async (req, res) => {
+    try {
+      const offerings = await storage.getAllOfferings();
+      res.json(offerings);
+    } catch (error) {
+      console.error("Error fetching offerings:", error);
+      res.status(500).json({ error: "Failed to fetch offerings" });
+    }
+  });
+
+  // Admin: Create offering
+  app.post("/api/cms/offerings", async (req, res) => {
+    try {
+      const validation = insertOfferingSchema.safeParse(req.body);
+      if (!validation.success) {
+        return res.status(400).json({ error: validation.error.errors });
+      }
+      const offering = await storage.createOffering(validation.data);
+      res.status(201).json(offering);
+    } catch (error) {
+      console.error("Error creating offering:", error);
+      res.status(500).json({ error: "Failed to create offering" });
+    }
+  });
+
+  // Admin: Update offering
+  app.put("/api/cms/offerings/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const validation = insertOfferingSchema.partial().safeParse(req.body);
+      if (!validation.success) {
+        return res.status(400).json({ error: validation.error.errors });
+      }
+      const offering = await storage.updateOffering(id, validation.data);
+      res.json(offering);
+    } catch (error) {
+      console.error("Error updating offering:", error);
+      res.status(500).json({ error: "Failed to update offering" });
+    }
+  });
+
+  // Admin: Delete offering
+  app.delete("/api/cms/offerings/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      await storage.deleteOffering(id);
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Error deleting offering:", error);
+      res.status(500).json({ error: "Failed to delete offering" });
     }
   });
 

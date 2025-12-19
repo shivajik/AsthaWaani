@@ -1017,6 +1017,189 @@ function ContactInfoManager() {
   );
 }
 
+function OfferingManager() {
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
+  const [editingOffering, setEditingOffering] = useState<any>(null);
+  const [isCreating, setIsCreating] = useState(false);
+  const [newOffering, setNewOffering] = useState({
+    slug: "",
+    title: "",
+    titleHi: "",
+    subtitle: "",
+    subtitleHi: "",
+    description: "",
+    descriptionHi: "",
+    keywords: "",
+    icon: "Heart",
+    isPublished: true,
+    order: 0,
+  });
+
+  const { data: offerings = [], isLoading } = useQuery({
+    queryKey: ["/api/cms/offerings"],
+    queryFn: async () => {
+      const res = await fetch("/api/cms/offerings", { credentials: "include" });
+      if (!res.ok) return [];
+      return res.json();
+    },
+  });
+
+  const saveMutation = useMutation({
+    mutationFn: async (offering: any) => {
+      const url = offering.id ? `/api/cms/offerings/${offering.id}` : "/api/cms/offerings";
+      const method = offering.id ? "PUT" : "POST";
+      const res = await fetch(url, {
+        method,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(offering),
+        credentials: "include",
+      });
+      if (!res.ok) throw new Error("Failed to save offering");
+      return res.json();
+    },
+    onSuccess: () => {
+      toast({ title: "Offering saved successfully" });
+      queryClient.invalidateQueries({ queryKey: ["/api/cms/offerings"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/offerings"] });
+      setEditingOffering(null);
+      setIsCreating(false);
+    },
+    onError: () => {
+      toast({ title: "Failed to save offering", variant: "destructive" });
+    },
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: async (id: string) => {
+      const res = await fetch(`/api/cms/offerings/${id}`, { method: "DELETE", credentials: "include" });
+      if (!res.ok) throw new Error("Failed to delete");
+    },
+    onSuccess: () => {
+      toast({ title: "Offering deleted" });
+      queryClient.invalidateQueries({ queryKey: ["/api/cms/offerings"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/offerings"] });
+    },
+  });
+
+  if (editingOffering || isCreating) {
+    const offering = editingOffering || newOffering;
+    const updateField = (field: string, value: any) => {
+      if (editingOffering) {
+        setEditingOffering({ ...editingOffering, [field]: value });
+      } else {
+        setNewOffering({ ...newOffering, [field]: value });
+      }
+    };
+
+    return (
+      <div className="space-y-4">
+        <div className="flex justify-between items-center">
+          <h2 className="text-2xl font-bold">{editingOffering ? "Edit Offering" : "Create Offering"}</h2>
+          <Button variant="outline" onClick={() => { setEditingOffering(null); setIsCreating(false); }}>
+            Cancel
+          </Button>
+        </div>
+        <Card>
+          <CardContent className="pt-6 space-y-4">
+            <div className="grid md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label>Slug</Label>
+                <Input value={offering.slug} onChange={(e) => updateField("slug", e.target.value)} placeholder="daily-satsang" />
+              </div>
+              <div className="space-y-2">
+                <Label>Icon Name</Label>
+                <Input value={offering.icon} onChange={(e) => updateField("icon", e.target.value)} placeholder="Heart" />
+              </div>
+            </div>
+            <div className="grid md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label>Title (EN)</Label>
+                <Input value={offering.title} onChange={(e) => updateField("title", e.target.value)} placeholder="Daily Satsang" />
+              </div>
+              <div className="space-y-2">
+                <Label>Title (HI)</Label>
+                <Input value={offering.titleHi} onChange={(e) => updateField("titleHi", e.target.value)} placeholder="दैनिक सत्संग" />
+              </div>
+            </div>
+            <div className="grid md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label>Subtitle (EN)</Label>
+                <Input value={offering.subtitle} onChange={(e) => updateField("subtitle", e.target.value)} />
+              </div>
+              <div className="space-y-2">
+                <Label>Subtitle (HI)</Label>
+                <Input value={offering.subtitleHi} onChange={(e) => updateField("subtitleHi", e.target.value)} />
+              </div>
+            </div>
+            <div className="space-y-2">
+              <Label>Description (EN)</Label>
+              <Textarea value={offering.description} onChange={(e) => updateField("description", e.target.value)} rows={4} />
+            </div>
+            <div className="space-y-2">
+              <Label>Description (HI)</Label>
+              <Textarea value={offering.descriptionHi} onChange={(e) => updateField("descriptionHi", e.target.value)} rows={4} />
+            </div>
+            <div className="space-y-2">
+              <Label>Keywords</Label>
+              <Input value={offering.keywords} onChange={(e) => updateField("keywords", e.target.value)} placeholder="satsang, spirituality" />
+            </div>
+            <div className="flex items-center gap-2">
+              <Switch checked={offering.isPublished} onCheckedChange={(checked) => updateField("isPublished", checked)} />
+              <Label>Published</Label>
+            </div>
+            <Button onClick={() => saveMutation.mutate(editingOffering || newOffering)} disabled={saveMutation.isPending} className="gap-2">
+              <Save className="w-4 h-4" />
+              {saveMutation.isPending ? "Saving..." : "Save"}
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-4">
+      <div className="flex justify-between items-center">
+        <h2 className="text-2xl font-bold">Spiritual Offerings</h2>
+        <Button onClick={() => setIsCreating(true)} className="gap-2">
+          <Plus className="w-4 h-4" /> New Offering
+        </Button>
+      </div>
+      {isLoading ? <p>Loading...</p> : (
+        <div className="space-y-2">
+          {offerings.map((offering: any) => (
+            <Card key={offering.id}>
+              <CardContent className="py-4 flex justify-between items-center">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <p className="font-medium">{offering.title}</p>
+                    <span className={`px-2 py-0.5 rounded text-xs ${
+                      offering.isPublished ? "bg-green-100 text-green-800" : "bg-yellow-100 text-yellow-800"
+                    }`}>
+                      {offering.isPublished ? "Published" : "Draft"}
+                    </span>
+                  </div>
+                  <p className="text-sm text-muted-foreground">/{offering.slug}</p>
+                </div>
+                <div className="flex gap-2">
+                  <Button variant="outline" size="sm" onClick={() => setEditingOffering(offering)}>
+                    <PenSquare className="w-4 h-4" />
+                  </Button>
+                  <Button variant="destructive" size="sm" onClick={() => deleteMutation.mutate(offering.id)}>
+                    <Trash2 className="w-4 h-4" />
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+          {offerings.length === 0 && <p className="text-muted-foreground text-center py-8">No offerings yet. Create your first one!</p>}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function YouTubeSync() {
   const [channelId, setChannelId] = useState("");
   const { toast } = useToast();
@@ -1156,6 +1339,7 @@ export default function Admin() {
     { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
     { id: "pages", label: "Pages", icon: FileText },
     { id: "posts", label: "Blog Posts", icon: PenSquare },
+    { id: "offerings", label: "Offerings", icon: PenSquare },
     { id: "media", label: "Media", icon: Image },
     { id: "contact", label: "Contact Info", icon: Phone },
     { id: "youtube", label: "YouTube", icon: Youtube },
@@ -1204,6 +1388,7 @@ export default function Admin() {
           {activeTab === "dashboard" && <DashboardOverview />}
           {activeTab === "pages" && <PageManager />}
           {activeTab === "posts" && <PostManager />}
+          {activeTab === "offerings" && <OfferingManager />}
           {activeTab === "media" && <MediaManager />}
           {activeTab === "contact" && <ContactInfoManager />}
           {activeTab === "youtube" && <YouTubeSync />}

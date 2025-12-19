@@ -268,3 +268,30 @@ export const postCategories = pgTable("post_categories", {
 });
 
 export type PostCategory = typeof postCategories.$inferSelect;
+
+// Offerings/Services
+export const offerings = pgTable("offerings", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  slug: text("slug").notNull().unique(),
+  title: text("title").notNull(),
+  titleHi: text("title_hi"),
+  subtitle: text("subtitle"),
+  subtitleHi: text("subtitle_hi"),
+  description: text("description"),
+  descriptionHi: text("description_hi"),
+  keywords: text("keywords"),
+  icon: text("icon").notNull(),
+  isPublished: boolean("is_published").notNull().default(true),
+  order: integer("order").notNull().default(0),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
+
+export const insertOfferingSchema = createInsertSchema(offerings).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export type InsertOffering = z.infer<typeof insertOfferingSchema>;
+export type Offering = typeof offerings.$inferSelect;
