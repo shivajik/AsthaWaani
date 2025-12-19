@@ -971,6 +971,75 @@ app.post("/api/admin/contact-info", isAuthenticated, async (req: Request, res: R
 });
 
 // ============================================
+// ADMIN OFFERINGS ENDPOINTS
+// ============================================
+
+// Admin: Get all offerings (including unpublished)
+app.get("/api/cms/offerings", isAuthenticated, async (req: Request, res: Response) => {
+  try {
+    const allOfferings = await db.select().from(offerings).orderBy(offerings.order);
+    res.json(allOfferings);
+  } catch (error) {
+    console.error("Error fetching offerings:", error);
+    res.status(500).json({ error: "Failed to fetch offerings" });
+  }
+});
+
+// Admin: Create offering
+app.post("/api/cms/offerings", isAuthenticated, async (req: Request, res: Response) => {
+  try {
+    const validation = insertOfferingSchema.safeParse(req.body);
+    if (!validation.success) {
+      return res.status(400).json({ error: validation.error.errors });
+    }
+    const [offering] = await db.insert(offerings).values(validation.data).returning();
+    res.status(201).json(offering);
+  } catch (error) {
+    console.error("Error creating offering:", error);
+    res.status(500).json({ error: "Failed to create offering" });
+  }
+});
+
+// Admin: Update offering
+app.put("/api/cms/offerings/:id", isAuthenticated, async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    console.log("🔵 [API] PUT /api/cms/offerings/:id received");
+    console.log("📥 [API] Offering ID:", id);
+    console.log("📥 [API] Request body:", JSON.stringify(req.body, null, 2));
+    
+    const validation = insertOfferingSchema.partial().safeParse(req.body);
+    console.log("🔍 [API] Validation success:", validation.success);
+    
+    if (!validation.success) {
+      console.error("❌ [API] Validation failed:", validation.error.errors);
+      return res.status(400).json({ error: validation.error.errors });
+    }
+    
+    console.log("✅ [API] Validation passed");
+    const [offering] = await db.update(offerings).set({ ...validation.data, updatedAt: new Date() }).where(eq(offerings.id, id)).returning();
+    console.log("💾 [API] Updated offering from database:", JSON.stringify(offering, null, 2));
+    
+    res.json(offering);
+  } catch (error) {
+    console.error("Error updating offering:", error);
+    res.status(500).json({ error: "Failed to update offering" });
+  }
+});
+
+// Admin: Delete offering
+app.delete("/api/cms/offerings/:id", isAuthenticated, async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    await db.delete(offerings).where(eq(offerings.id, id));
+    res.json({ success: true });
+  } catch (error) {
+    console.error("Error deleting offering:", error);
+    res.status(500).json({ error: "Failed to delete offering" });
+  }
+});
+
+// ============================================
 // PUBLIC BLOG ENDPOINTS
 // ============================================
 
