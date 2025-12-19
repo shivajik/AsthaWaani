@@ -164,18 +164,24 @@ export function Header() {
 
 export function Footer() {
   const { t } = useLanguage();
+  const locations = [
+    { label: 'Mathura', id: 'mathura', hi: 'मथुरा' },
+    { label: 'Vrindavan', id: 'vrindavan', hi: 'वृंदावन' },
+    { label: 'Gokul', id: 'gokul', hi: 'गोकुल' },
+    { label: 'Govardhan', id: 'govardhan', hi: 'गोवर्धन' },
+    { label: 'Mahavan', id: 'mahavan', hi: 'महावन' },
+  ];
   
   return (
     <footer className="bg-primary text-primary-foreground py-20">
       <div className="container mx-auto px-4">
-        <div className="grid md:grid-cols-3 gap-16">
+        <div className="grid md:grid-cols-4 gap-12">
           <div className="flex flex-col items-start">
-            <div className="mb-8">
-              {/* Increased Footer Logo Size and Visibility */}
+            <div className="mb-8 bg-white/10 backdrop-blur-sm rounded-2xl p-4 hover:bg-white/20 transition-colors">
               <img 
                 src={logoSquareWhite} 
                 alt="Asthawaani" 
-                className="h-32 w-auto rounded-xl p-2" 
+                className="h-48 w-auto rounded-xl" 
               />
             </div>
             <p className="opacity-90 max-w-sm mb-8 leading-relaxed text-lg">
@@ -206,6 +212,24 @@ export function Footer() {
                 <Phone className="w-5 h-5 text-secondary" />
                 <span>+91 76684 09246</span>
               </li>
+            </ul>
+          </div>
+          
+          <div>
+            <h4 className="font-bold mb-6 text-secondary">Our Locations</h4>
+            <ul className="space-y-3">
+              {locations.map((location) => (
+                <li key={location.id}>
+                  <Link 
+                    href={`/brajbhoomi?location=${location.id}`}
+                    className="text-sm opacity-90 hover:opacity-100 hover:text-secondary transition-colors inline-flex items-center gap-2 group"
+                    data-testid={`link-location-${location.id}`}
+                  >
+                    <span className="w-1.5 h-1.5 rounded-full bg-secondary group-hover:scale-125 transition-transform" />
+                    <span>{location.label}</span>
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
           
