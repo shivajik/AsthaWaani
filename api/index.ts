@@ -160,8 +160,26 @@ const contactInfo = pgTable("contact_info", {
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
 
+const categories = pgTable("categories", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  slug: text("slug").notNull().unique(),
+  name: text("name").notNull(),
+  nameHi: text("name_hi"),
+  description: text("description"),
+  descriptionHi: text("description_hi"),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
+
+const postCategories = pgTable("post_categories", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  postId: varchar("post_id").notNull().references(() => posts.id, { onDelete: "cascade" }),
+  categoryId: varchar("category_id").notNull().references(() => categories.id, { onDelete: "cascade" }),
+});
+
 const insertPageSchema = createInsertSchema(pages).omit({ id: true, createdAt: true, updatedAt: true });
 const insertPostSchema = createInsertSchema(posts).omit({ id: true, createdAt: true, updatedAt: true });
+const insertCategorySchema = createInsertSchema(categories).omit({ id: true, createdAt: true, updatedAt: true });
 const insertSeoMetaSchema = createInsertSchema(seoMeta).omit({ id: true, createdAt: true, updatedAt: true });
 const insertContactInfoSchema = createInsertSchema(contactInfo).omit({ id: true, createdAt: true, updatedAt: true });
 
@@ -320,6 +338,34 @@ class DatabaseStorage {
   async updateContactInfo(id: string, info: any) {
     const [updatedInfo] = await db.update(contactInfo).set({ ...info, updatedAt: new Date() }).where(eq(contactInfo.id, id)).returning();
     return updatedInfo;
+  }
+
+  async getAllCategories() {
+    return await db.select().from(categories).orderBy(categories.name);
+  }
+
+  async getCategoryBySlug(slug: string) {
+    const [category] = await db.select().from(categories).where(eq(categories.slug, slug));
+    return category || undefined;
+  }
+
+  async createCategory(category: any) {
+    const [newCategory] = await db.insert(categories).values(category).returning();
+    return newCategory;
+  }
+
+  async getPublishedPostsByCategory(categoryId: string) {
+    return await db
+      .select()
+      .from(posts)
+      .innerJoin(postCategories, eq(posts.id, postCategories.postId))
+      .where(and(eq(postCategories.categoryId, categoryId), eq(posts.status, "published")))
+      .orderBy(desc(posts.publishedAt));
+  }
+
+  async addPostToCategory(postId: string, categoryId: string) {
+    const [result] = await db.insert(postCategories).values({ postId, categoryId }).returning();
+    return result;
   }
 }
 
@@ -868,6 +914,63 @@ app.post("/api/admin/contact-info", isAuthenticated, async (req: Request, res: R
     }
     console.error("Error saving contact info:", error);
     res.status(500).json({ error: "Failed to save contact info" });
+  }
+});
+
+// ============================================
+// PUBLIC BLOG ENDPOINTS
+// ============================================
+
+app.get("/api/categories", async (req: Request, res: Response) => {
+  try {
+    const allCategories = await storage.getAllCategories();
+    res.json(allCategories);
+  } catch (error) {
+    console.error("Error fetching categories:", error);
+    res.status(500).json({ error: "Failed to fetch categories" });
+  }
+});
+
+app.get("/api/blog/posts", async (req: Request, res: Response) => {
+  try {
+    const publishedPosts = await storage.getPublishedPosts();
+    res.json(publishedPosts);
+  } catch (error) {
+    console.error("Error fetching published posts:", error);
+    res.status(500).json({ error: "Failed to fetch posts" });
+  }
+});
+
+app.get("/api/blog/category/:slug", async (req: Request, res: Response) => {
+  try {
+    const { slug } = req.params;
+    const category = await storage.getCategoryBySlug(slug);
+    
+    if (!category) {
+      return res.status(404).json({ error: "Category not found" });
+    }
+
+    const posts = await storage.getPublishedPostsByCategory(category.id);
+    res.json({ category, posts });
+  } catch (error) {
+    console.error("Error fetching posts by category:", error);
+    res.status(500).json({ error: "Failed to fetch posts" });
+  }
+});
+
+app.get("/api/blog/post/:slug", async (req: Request, res: Response) => {
+  try {
+    const { slug } = req.params;
+    const post = await storage.getPostBySlug(slug);
+    
+    if (!post || post.status !== "published") {
+      return res.status(404).json({ error: "Post not found" });
+    }
+
+    res.json(post);
+  } catch (error) {
+    console.error("Error fetching post:", error);
+    res.status(500).json({ error: "Failed to fetch post" });
   }
 });
 
