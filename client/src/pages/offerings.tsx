@@ -3,10 +3,13 @@ import { useLanguage } from "@/lib/context";
 import { Card, CardContent } from "@/components/ui/card";
 import { useCmsPage } from "@/lib/useCmsPage";
 import * as Icons from "lucide-react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import bhajanKirtan from "@assets/generated_images/devotional_bhajan_kirtan.png";
 import { useQuery } from "@tanstack/react-query";
 import type { Offering } from "@shared/schema";
+
+// DEBUG: Add console log to track data loading
+const enableDebug = false;
 
 const staggerContainer = {
   hidden: { opacity: 0 },
@@ -28,21 +31,35 @@ const fadeUpItem = {
 export default function Offerings() {
   const { language } = useLanguage();
   const { data: pageData } = useCmsPage("offerings");
+  const [hasError, setHasError] = useState(false);
 
-  const { data: offerings = [] } = useQuery<Offering[]>({
+  const { data: offerings = [], isLoading, error } = useQuery<Offering[]>({
     queryKey: ["/api/offerings"],
     queryFn: async () => {
-      const res = await fetch("/api/offerings");
-      if (!res.ok) return [];
-      return res.json();
+      try {
+        const res = await fetch("/api/offerings");
+        if (!res.ok) {
+          console.error("API response not ok:", res.status);
+          return [];
+        }
+        const data = await res.json();
+        if (enableDebug) console.log("Offerings fetched:", data);
+        return data;
+      } catch (err) {
+        console.error("Error fetching offerings:", err);
+        setHasError(true);
+        return [];
+      }
     },
     staleTime: 0,
     gcTime: 0,
+    retry: 3,
   });
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, []);
+    if (enableDebug) console.log("Offerings data:", offerings, "Loading:", isLoading, "Error:", error);
+  }, [offerings, isLoading, error]);
 
   const pageTitle = language === 'en' 
     ? "Daily Offerings - Spiritual Services | Asthawaani" 
@@ -122,13 +139,12 @@ export default function Offerings() {
         <section className="py-24 bg-gradient-to-b from-stone-50 to-white">
           <div className="container mx-auto px-4">
             <motion.div
-              variants={staggerContainer}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: "-50px" }}
               className="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5 }}
             >
-              {offerings.map((offering) => {
+              {offerings.length > 0 ? offerings.map((offering) => {
                 const IconComponent = getIcon(offering.icon);
                 return (
                   <motion.div
