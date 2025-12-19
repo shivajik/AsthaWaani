@@ -268,7 +268,9 @@ export async function registerRoutes(
         descriptionHi: "ध्यान के अभ्यास और तकनीकें",
       });
 
-      // Create sample posts
+      // Create sample posts with featured image and primary category
+      const featuredImageUrl = "/attached_assets/image_1766130308405.png";
+      
       const post1 = await storage.createPost({
         slug: "krishna-wisdom",
         title: "Ancient Krishna Wisdom",
@@ -279,6 +281,8 @@ export async function registerRoutes(
         contentHi: "भगवद्गीता में भगवान कृष्ण की शिक्षाएं आज भी प्रासंगिक हैं। धर्म, भक्ति और जीवन के उद्देश्य पर उनका ज्ञान लाखों लोगों को मार्गदर्शन देता है।",
         status: "published",
         publishedAt: new Date(),
+        featuredImage: featuredImageUrl,
+        categoryId: spiritualityCategory.id,
       });
 
       const post2 = await storage.createPost({
@@ -291,6 +295,8 @@ export async function registerRoutes(
         contentHi: "भक्ति योग चार मुख्य योग पथों में से एक है। यह ईश्वर के प्रति प्रेम और भक्ति पर जोर देता है।",
         status: "published",
         publishedAt: new Date(Date.now() - 86400000),
+        featuredImage: featuredImageUrl,
+        categoryId: devotionCategory.id,
       });
 
       const post3 = await storage.createPost({
@@ -303,6 +309,8 @@ export async function registerRoutes(
         contentHi: "ध्यान एक सरल लेकिन शक्तिशाली अभ्यास है। प्रतिदिन केवल 5 मिनट से शुरू करें। अपनी सांस पर ध्यान दें।",
         status: "published",
         publishedAt: new Date(Date.now() - 172800000),
+        featuredImage: featuredImageUrl,
+        categoryId: meditationCategory.id,
       });
 
       const post4 = await storage.createPost({
@@ -315,17 +323,12 @@ export async function registerRoutes(
         contentHi: "वृंदावन, भगवान कृष्ण की दिव्य लीलाओं की भूमि, अपार आध्यात्मिक महत्व रखती है। हर कोने में दिव्य ऊर्जा गूँजती है।",
         status: "published",
         publishedAt: new Date(Date.now() - 259200000),
+        featuredImage: featuredImageUrl,
+        categoryId: spiritualityCategory.id,
       });
 
-      // Add posts to categories
-      await storage.addPostToCategory(post1.id, spiritualityCategory.id);
+      // Add posts to additional categories (if needed for multi-category support)
       await storage.addPostToCategory(post1.id, devotionCategory.id);
-
-      await storage.addPostToCategory(post2.id, devotionCategory.id);
-
-      await storage.addPostToCategory(post3.id, meditationCategory.id);
-
-      await storage.addPostToCategory(post4.id, spiritualityCategory.id);
 
       res.json({
         success: true,

@@ -126,6 +126,7 @@ export const posts = pgTable("posts", {
   metaDescription: text("meta_description"),
   status: text("status").notNull().default("draft"),
   authorId: varchar("author_id").references(() => admins.id),
+  categoryId: varchar("category_id").references(() => categories.id),
   publishedAt: timestamp("published_at"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),

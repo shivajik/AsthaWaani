@@ -102,18 +102,25 @@ export default function Blog() {
                             {language === "hi" ? post.excerptHi || post.excerpt : post.excerpt}
                           </p>
                         )}
-                        {post.publishedAt && (
-                          <div className="text-sm text-muted-foreground">
-                            {new Date(post.publishedAt).toLocaleDateString(
-                              language === "hi" ? "hi-IN" : "en-US",
-                              {
-                                year: "numeric",
-                                month: "long",
-                                day: "numeric",
-                              }
-                            )}
-                          </div>
-                        )}
+                        <div className="flex items-center justify-between">
+                          {post.publishedAt && (
+                            <div className="text-sm text-muted-foreground">
+                              {new Date(post.publishedAt).toLocaleDateString(
+                                language === "hi" ? "hi-IN" : "en-US",
+                                {
+                                  year: "numeric",
+                                  month: "long",
+                                  day: "numeric",
+                                }
+                              )}
+                            </div>
+                          )}
+                          {post.categoryId && (
+                            <Badge variant="secondary" className="text-xs">
+                              {categories.find(c => c.id === post.categoryId)?.name || ""}
+                            </Badge>
+                          )}
+                        </div>
                       </div>
                     </Card>
                   </Link>
