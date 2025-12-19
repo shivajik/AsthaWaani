@@ -2,7 +2,7 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { YouTubeService } from "./youtube.service";
-import { insertYoutubeChannelSchema, insertVideoSchema } from "@shared/schema";
+import { insertYoutubeChannelSchema, insertVideoSchema, insertContactInfoSchema } from "@shared/schema";
 
 export async function registerRoutes(
   httpServer: Server,
@@ -142,6 +142,43 @@ export async function registerRoutes(
     } catch (error) {
       console.error("Error fetching channel:", error);
       res.status(500).json({ error: "Failed to fetch channel" });
+    }
+  });
+
+  // Get contact info (public endpoint)
+  app.get("/api/cms/public/contact-info", async (req, res) => {
+    try {
+      const contactInfo = await storage.getContactInfo();
+      if (!contactInfo) {
+        return res.status(404).json({ error: "Contact info not found" });
+      }
+      res.json(contactInfo);
+    } catch (error) {
+      console.error("Error fetching contact info:", error);
+      res.status(500).json({ error: "Failed to fetch contact info" });
+    }
+  });
+
+  // Create or update contact info (admin endpoint)
+  app.post("/api/admin/contact-info", async (req, res) => {
+    try {
+      const validation = insertContactInfoSchema.safeParse(req.body);
+      if (!validation.success) {
+        return res.status(400).json({ error: "Invalid contact info data", issues: validation.error.issues });
+      }
+
+      const existingInfo = await storage.getContactInfo();
+      
+      if (existingInfo) {
+        const updated = await storage.updateContactInfo(existingInfo.id, validation.data);
+        return res.json(updated);
+      }
+
+      const created = await storage.createContactInfo(validation.data);
+      res.status(201).json(created);
+    } catch (error) {
+      console.error("Error saving contact info:", error);
+      res.status(500).json({ error: "Failed to save contact info" });
     }
   });
 

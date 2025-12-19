@@ -74,6 +74,18 @@ export default function Contact() {
                       <p className="text-muted-foreground">{contactData.whatsapp || contactData.phone}</p>
                     </div>
                   </div>
+                  
+                  <div className="flex gap-4">
+                    <div className="w-12 h-12 bg-primary/10 text-primary rounded-lg flex items-center justify-center shrink-0">
+                      <Mail className="w-6 h-6" />
+                    </div>
+                    <div>
+                      <h3 className="font-bold text-lg mb-1">{language === 'en' ? 'Email' : 'ईमेल'}</h3>
+                      <a href={`mailto:${contactData.email}`} className="text-primary hover:underline">
+                        {contactData.email}
+                      </a>
+                    </div>
+                  </div>
                 </>
               )}
             </div>

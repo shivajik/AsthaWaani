@@ -784,9 +784,9 @@ function ContactInfoManager() {
   const [editing, setEditing] = useState(false);
 
   const { data: contactInfo, isLoading } = useQuery<ContactInfo | null>({
-    queryKey: ["/api/cms/contact-info"],
+    queryKey: ["/api/cms/public/contact-info"],
     queryFn: async () => {
-      const res = await fetch("/api/cms/contact-info", { credentials: "include" });
+      const res = await fetch("/api/cms/public/contact-info", { credentials: "include" });
       if (!res.ok) return null;
       return res.json();
     },
@@ -802,6 +802,7 @@ function ContactInfoManager() {
     state: "",
     country: "",
     postalCode: "",
+    email: "",
     phone: "",
     whatsapp: "",
   });
@@ -814,7 +815,7 @@ function ContactInfoManager() {
 
   const saveMutation = useMutation({
     mutationFn: async (data: Partial<ContactInfo>) => {
-      const res = await fetch("/api/cms/contact-info", {
+      const res = await fetch("/api/admin/contact-info", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
@@ -825,7 +826,7 @@ function ContactInfoManager() {
     },
     onSuccess: () => {
       toast({ title: "Contact information saved successfully" });
-      queryClient.invalidateQueries({ queryKey: ["/api/cms/contact-info"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/cms/public/contact-info"] });
       setEditing(false);
     },
     onError: () => {
@@ -922,6 +923,25 @@ function ContactInfoManager() {
                 />
               </div>
             </div>
+            <div className="grid md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label>Email</Label>
+                <Input
+                  type="email"
+                  value={formData.email || ""}
+                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  placeholder="contact@example.com"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>Phone</Label>
+                <Input
+                  value={formData.phone || ""}
+                  onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                  placeholder="+91 XXXXX XXXXX"
+                />
+              </div>
+            </div>
             <div className="space-y-2">
               <Label>WhatsApp Number</Label>
               <Input
@@ -969,6 +989,16 @@ function ContactInfoManager() {
               <p className="text-sm text-muted-foreground">Address</p>
               <p className="font-medium">{contactInfo.address}</p>
               {contactInfo.city && <p>{contactInfo.city}, {contactInfo.state} {contactInfo.postalCode}</p>}
+            </div>
+            <div className="grid md:grid-cols-2 gap-4">
+              <div>
+                <p className="text-sm text-muted-foreground">Email</p>
+                <p className="font-medium">{contactInfo.email}</p>
+              </div>
+              <div>
+                <p className="text-sm text-muted-foreground">Phone</p>
+                <p className="font-medium">{contactInfo.phone}</p>
+              </div>
             </div>
             <div>
               <p className="text-sm text-muted-foreground">WhatsApp Number</p>
