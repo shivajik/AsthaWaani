@@ -23,10 +23,7 @@ export default function Blog() {
 
   // Filter posts by selected category
   const filteredPosts = selectedCategory
-    ? (allPosts as Post[]).filter((post: Post) => {
-        // This will need to be enhanced once we have category data per post
-        return true; // Placeholder - will be updated when category-post relationship is queried
-      })
+    ? (allPosts as Post[]).filter((post: Post) => post.categoryId === selectedCategory)
     : (allPosts as Post[]);
 
   const title = language === "hi" ? "ब्लॉग" : "Blog";
