@@ -179,11 +179,29 @@ const postCategories = pgTable("post_categories", {
   categoryId: varchar("category_id").notNull().references(() => categories.id, { onDelete: "cascade" }),
 });
 
+const offerings = pgTable("offerings", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  slug: text("slug").notNull().unique(),
+  title: text("title").notNull(),
+  titleHi: text("title_hi"),
+  subtitle: text("subtitle").notNull(),
+  subtitleHi: text("subtitle_hi"),
+  description: text("description").notNull(),
+  descriptionHi: text("description_hi"),
+  keywords: text("keywords"),
+  icon: text("icon").notNull(),
+  isPublished: boolean("is_published").default(true),
+  order: integer("order").default(0),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
+
 const insertPageSchema = createInsertSchema(pages).omit({ id: true, createdAt: true, updatedAt: true });
 const insertPostSchema = createInsertSchema(posts).omit({ id: true, createdAt: true, updatedAt: true });
 const insertCategorySchema = createInsertSchema(categories).omit({ id: true, createdAt: true, updatedAt: true });
 const insertSeoMetaSchema = createInsertSchema(seoMeta).omit({ id: true, createdAt: true, updatedAt: true });
 const insertContactInfoSchema = createInsertSchema(contactInfo).omit({ id: true, createdAt: true, updatedAt: true });
+const insertOfferingSchema = createInsertSchema(offerings).omit({ id: true, createdAt: true, updatedAt: true });
 
 class DatabaseStorage {
   async getAllVideos() {
@@ -369,6 +387,29 @@ class DatabaseStorage {
     const [result] = await db.insert(postCategories).values({ postId, categoryId }).returning();
     return result;
   }
+
+  async getAllOfferings() {
+    return await db.select().from(offerings).where(eq(offerings.isPublished, true)).orderBy(offerings.order);
+  }
+
+  async getOfferingBySlug(slug: string) {
+    const [offering] = await db.select().from(offerings).where(eq(offerings.slug, slug));
+    return offering || undefined;
+  }
+
+  async createOffering(offering: any) {
+    const [newOffering] = await db.insert(offerings).values(offering).returning();
+    return newOffering;
+  }
+
+  async updateOffering(id: string, offering: any) {
+    const [updatedOffering] = await db.update(offerings).set({ ...offering, updatedAt: new Date() }).where(eq(offerings.id, id)).returning();
+    return updatedOffering;
+  }
+
+  async deleteOffering(id: string) {
+    await db.delete(offerings).where(eq(offerings.id, id));
+  }
 }
 
 const storage = new DatabaseStorage();
@@ -512,6 +553,16 @@ app.get("/api/channel", async (req, res) => {
   } catch (error) {
     console.error("Error fetching channel:", error);
     res.status(500).json({ error: "Failed to fetch channel" });
+  }
+});
+
+app.get("/api/offerings", async (req, res) => {
+  try {
+    const offeringsList = await storage.getAllOfferings();
+    res.json(offeringsList);
+  } catch (error) {
+    console.error("Error fetching offerings:", error);
+    res.status(500).json({ error: "Failed to fetch offerings" });
   }
 });
 
