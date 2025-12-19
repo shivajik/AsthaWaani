@@ -850,6 +850,27 @@ app.get("/api/cms/public/contact-info", async (req: Request, res: Response) => {
   }
 });
 
+app.post("/api/admin/contact-info", isAuthenticated, async (req: Request, res: Response) => {
+  try {
+    const data = insertContactInfoSchema.parse(req.body);
+    const existing = await storage.getContactInfo();
+    
+    if (existing) {
+      const updated = await storage.updateContactInfo(existing.id, data);
+      return res.json(updated);
+    }
+    
+    const info = await storage.createContactInfo(data);
+    res.status(201).json(info);
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return res.status(400).json({ error: "Validation error", details: error.errors });
+    }
+    console.error("Error saving contact info:", error);
+    res.status(500).json({ error: "Failed to save contact info" });
+  }
+});
+
 app.all("/api/*", (req, res) => {
   res.status(404).json({ error: "API endpoint not found" });
 });
