@@ -1055,7 +1055,10 @@ function OfferingManager() {
         body: JSON.stringify(offering),
         credentials: "include",
       });
-      if (!res.ok) throw new Error("Failed to save offering");
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.error || "Failed to save offering");
+      }
       return res.json();
     },
     onSuccess: () => {
@@ -1065,8 +1068,8 @@ function OfferingManager() {
       setEditingOffering(null);
       setIsCreating(false);
     },
-    onError: () => {
-      toast({ title: "Failed to save offering", variant: "destructive" });
+    onError: (error: Error) => {
+      toast({ title: "Failed to save offering", description: error.message, variant: "destructive" });
     },
   });
 
