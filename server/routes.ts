@@ -240,5 +240,104 @@ export async function registerRoutes(
     }
   });
 
+  // Seed sample blog posts and categories
+  app.post("/api/seed/blog-data", async (req, res) => {
+    try {
+      // Create categories
+      const spiritualityCategory = await storage.createCategory({
+        slug: "spirituality",
+        name: "Spirituality",
+        nameHi: "आध्यात्मिकता",
+        description: "Explore spiritual wisdom and devotional insights",
+        descriptionHi: "आध्यात्मिक ज्ञान और भक्ति अंतर्दृष्टि का अन्वेषण करें",
+      });
+
+      const devotionCategory = await storage.createCategory({
+        slug: "devotion",
+        name: "Devotion",
+        nameHi: "भक्ति",
+        description: "Stories and teachings on devotion",
+        descriptionHi: "भक्ति पर कहानियाँ और शिक्षाएं",
+      });
+
+      const meditationCategory = await storage.createCategory({
+        slug: "meditation",
+        name: "Meditation",
+        nameHi: "ध्यान",
+        description: "Meditation practices and techniques",
+        descriptionHi: "ध्यान के अभ्यास और तकनीकें",
+      });
+
+      // Create sample posts
+      const post1 = await storage.createPost({
+        slug: "krishna-wisdom",
+        title: "Ancient Krishna Wisdom",
+        titleHi: "प्राचीन कृष्ण ज्ञान",
+        excerpt: "Discover the timeless wisdom of Lord Krishna",
+        excerptHi: "भगवान कृष्ण के शाश्वत ज्ञान की खोज करें",
+        content: "Lord Krishna's teachings in the Bhagavad Gita remain relevant today. His wisdom on dharma, devotion, and life's purpose guides millions.",
+        contentHi: "भगवद्गीता में भगवान कृष्ण की शिक्षाएं आज भी प्रासंगिक हैं। धर्म, भक्ति और जीवन के उद्देश्य पर उनका ज्ञान लाखों लोगों को मार्गदर्शन देता है।",
+        status: "published",
+        publishedAt: new Date(),
+      });
+
+      const post2 = await storage.createPost({
+        slug: "bhakti-yoga-path",
+        title: "The Path of Bhakti Yoga",
+        titleHi: "भक्ति योग का मार्ग",
+        excerpt: "Understanding the yoga of devotion",
+        excerptHi: "भक्ति योग को समझना",
+        content: "Bhakti Yoga is the path of devotion, one of the four main paths of yoga. It emphasizes love and devotion to the divine.",
+        contentHi: "भक्ति योग चार मुख्य योग पथों में से एक है। यह ईश्वर के प्रति प्रेम और भक्ति पर जोर देता है।",
+        status: "published",
+        publishedAt: new Date(Date.now() - 86400000),
+      });
+
+      const post3 = await storage.createPost({
+        slug: "meditation-beginners",
+        title: "Meditation for Beginners",
+        titleHi: "शुरुआती लोगों के लिए ध्यान",
+        excerpt: "Start your meditation journey today",
+        excerptHi: "आज अपनी ध्यान यात्रा शुरू करें",
+        content: "Meditation is a simple yet powerful practice. Start with just 5 minutes daily and gradually increase. Focus on your breath and let thoughts pass.",
+        contentHi: "ध्यान एक सरल लेकिन शक्तिशाली अभ्यास है। प्रतिदिन केवल 5 मिनट से शुरू करें। अपनी सांस पर ध्यान दें।",
+        status: "published",
+        publishedAt: new Date(Date.now() - 172800000),
+      });
+
+      const post4 = await storage.createPost({
+        slug: "vrindavan-mysteries",
+        title: "The Sacred Mysteries of Vrindavan",
+        titleHi: "वृंदावन के पवित्र रहस्य",
+        excerpt: "Discover the spiritual significance of Vrindavan",
+        excerptHi: "वृंदावन के आध्यात्मिक महत्व की खोज करें",
+        content: "Vrindavan, the land of Lord Krishna's divine pastimes, holds immense spiritual significance. Every corner resonates with divine energy.",
+        contentHi: "वृंदावन, भगवान कृष्ण की दिव्य लीलाओं की भूमि, अपार आध्यात्मिक महत्व रखती है। हर कोने में दिव्य ऊर्जा गूँजती है।",
+        status: "published",
+        publishedAt: new Date(Date.now() - 259200000),
+      });
+
+      // Add posts to categories
+      await storage.addPostToCategory(post1.id, spiritualityCategory.id);
+      await storage.addPostToCategory(post1.id, devotionCategory.id);
+
+      await storage.addPostToCategory(post2.id, devotionCategory.id);
+
+      await storage.addPostToCategory(post3.id, meditationCategory.id);
+
+      await storage.addPostToCategory(post4.id, spiritualityCategory.id);
+
+      res.json({
+        success: true,
+        message: "Sample blog data created successfully",
+        categories: [spiritualityCategory, devotionCategory, meditationCategory],
+        posts: [post1, post2, post3, post4],
+      });
+    } catch (error) {
+      console.error("Error seeding blog data:", error);
+      res.status(500).json({ error: "Failed to seed blog data" });
+    }
+  });
+
   return httpServer;
 }
