@@ -211,8 +211,15 @@ export function Footer() {
           
           <div>
             <h4 className="font-bold mb-6 text-secondary">Map</h4>
-            <div className="bg-white/10 rounded-lg h-32 flex items-center justify-center border border-white/10">
-              <span className="text-sm opacity-60">Map Embed Placeholder</span>
+            <div className="rounded-lg overflow-hidden border border-white/10 h-64 w-full">
+              <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3521.0!2d77.6998269!3d27.5071311!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39eb19e9e9e9e9e9%3A0x0!2sAshirwad%20Palace%20Mathura!5e0!3m2!1sen!2sin!4v1640000000000"
+                className="w-full h-full"
+                style={{ border: 0, margin: 0, padding: 0 }}
+                allowFullScreen={true}
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              />
             </div>
           </div>
         </div>
