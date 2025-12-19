@@ -131,7 +131,13 @@ function LoginForm({ onLogin }: { onLogin: () => void }) {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && !loginMutation.isPending) {
+                    loginMutation.mutate();
+                  }
+                }}
                 placeholder="Enter your password"
+                data-testid="input-password"
               />
             </div>
             <Button
