@@ -1,0 +1,150 @@
+import { useQuery } from "@tanstack/react-query";
+import { useParams } from "wouter";
+import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { useLanguage } from "@/lib/context";
+import { Link } from "wouter";
+import { ChevronLeft } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import type { Post, Category } from "@shared/schema";
+
+interface BlogPostDetailResponse {
+  post: Post;
+  categories?: Category[];
+}
+
+export default function BlogPostDetail() {
+  const { slug } = useParams();
+  const { language } = useLanguage();
+
+  const { data, isLoading, error } = useQuery<BlogPostDetailResponse>({
+    queryKey: [`/api/blog/post/${slug}`],
+    queryFn: async () => {
+      const response = await fetch(`/api/blog/post/${slug}`);
+      if (!response.ok) {
+        throw new Error("Post not found");
+      }
+      return response.json();
+    },
+    enabled: !!slug,
+  });
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-white dark:bg-black flex items-center justify-center">
+        <p className="text-muted-foreground">Loading...</p>
+      </div>
+    );
+  }
+
+  if (error || !data?.post) {
+    return (
+      <div className="min-h-screen bg-white dark:bg-black">
+        <div className="container mx-auto px-4 py-12">
+          <div className="max-w-2xl mx-auto">
+            <Link href="/blog">
+              <Button variant="outline" className="gap-2 mb-8">
+                <ChevronLeft className="w-4 h-4" />
+                Back to Blog
+              </Button>
+            </Link>
+            <Card className="p-8 text-center">
+              <p className="text-lg text-muted-foreground">
+                {language === "hi" ? "पोस्ट नहीं मिली" : "Post not found"}
+              </p>
+            </Card>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const post = data.post;
+  const isHindi = language === "hi";
+  const title = isHindi ? post.titleHi || post.title : post.title;
+  const content = isHindi ? post.contentHi || post.content : post.content;
+  const excerpt = isHindi ? post.excerptHi || post.excerpt : post.excerpt;
+
+  return (
+    <div className="min-h-screen bg-white dark:bg-black">
+      <div className="container mx-auto px-4 py-12">
+        <div className="max-w-3xl mx-auto">
+          <Link href="/blog">
+            <Button variant="outline" className="gap-2 mb-8">
+              <ChevronLeft className="w-4 h-4" />
+              {language === "hi" ? "ब्लॉग पर वापस जाएँ" : "Back to Blog"}
+            </Button>
+          </Link>
+
+          <article className="space-y-6">
+            {post.featuredImage && (
+              <div className="w-full h-96 overflow-hidden rounded-lg bg-gray-200 dark:bg-gray-800">
+                <img
+                  src={post.featuredImage}
+                  alt={title}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            )}
+
+            <div className="space-y-4">
+              <div className="flex items-center justify-between gap-4 flex-wrap">
+                <h1 className="text-4xl md:text-5xl font-bold">{title}</h1>
+              </div>
+
+              <div className="flex items-center gap-4 flex-wrap">
+                {post.publishedAt && (
+                  <div className="text-sm text-muted-foreground">
+                    {new Date(post.publishedAt).toLocaleDateString(
+                      language === "hi" ? "hi-IN" : "en-US",
+                      {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                      }
+                    )}
+                  </div>
+                )}
+                {post.categoryId && data.categories?.find(c => c.id === post.categoryId) && (
+                  <Badge variant="secondary">
+                    {data.categories.find(c => c.id === post.categoryId)?.name}
+                  </Badge>
+                )}
+              </div>
+
+              {excerpt && (
+                <p className="text-lg text-muted-foreground italic">{excerpt}</p>
+              )}
+            </div>
+
+            {content && (
+              <div
+                className="prose dark:prose-invert max-w-none
+                  prose-headings:font-bold prose-headings:text-foreground
+                  prose-p:text-foreground/90 prose-p:leading-7
+                  prose-a:text-primary prose-a:underline
+                  prose-strong:font-semibold prose-strong:text-foreground
+                  prose-img:rounded-lg prose-img:border prose-img:border-border
+                  prose-blockquote:border-l-primary prose-blockquote:text-muted-foreground
+                  prose-code:bg-secondary prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded
+                  prose-pre:bg-secondary prose-pre:p-4 prose-pre:rounded-lg
+                  prose-ul:list-disc prose-ul:ml-6
+                  prose-ol:list-decimal prose-ol:ml-6"
+                dangerouslySetInnerHTML={{ __html: content }}
+              />
+            )}
+          </article>
+
+          <div className="mt-12 pt-8 border-t border-border">
+            <Link href="/blog">
+              <Button variant="outline" className="gap-2">
+                <ChevronLeft className="w-4 h-4" />
+                {language === "hi" ? "सभी ब्लॉग देखें" : "View All Posts"}
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

@@ -15,6 +15,7 @@ import Admin from "@/pages/admin";
 import Offerings from "@/pages/offerings";
 import Brajbhoomi from "@/pages/brajbhoomi";
 import Blog from "@/pages/blog";
+import BlogPostDetail from "@/pages/blog-post";
 
 function Router() {
   return (
@@ -26,6 +27,7 @@ function Router() {
       <Route path="/offerings" component={Offerings} />
       <Route path="/brajbhoomi" component={Brajbhoomi} />
       <Route path="/blog" component={Blog} />
+      <Route path="/blog/:slug" component={BlogPostDetail} />
       <Route path="/contact" component={Contact} />
       <Route path="/admin" component={Admin} />
       <Route component={NotFound} />
