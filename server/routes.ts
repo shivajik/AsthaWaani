@@ -2,7 +2,7 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { YouTubeService } from "./youtube.service";
-import { insertYoutubeChannelSchema, insertVideoSchema, insertContactInfoSchema } from "@shared/schema";
+import { insertYoutubeChannelSchema, insertVideoSchema, insertContactInfoSchema, insertCategorySchema } from "@shared/schema";
 
 export async function registerRoutes(
   httpServer: Server,
@@ -179,6 +179,64 @@ export async function registerRoutes(
     } catch (error) {
       console.error("Error saving contact info:", error);
       res.status(500).json({ error: "Failed to save contact info" });
+    }
+  });
+
+  // Get all categories (public endpoint)
+  app.get("/api/categories", async (req, res) => {
+    try {
+      const categories = await storage.getAllCategories();
+      res.json(categories);
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+      res.status(500).json({ error: "Failed to fetch categories" });
+    }
+  });
+
+  // Get published posts by category (public endpoint)
+  app.get("/api/blog/category/:slug", async (req, res) => {
+    try {
+      const { slug } = req.params;
+      const category = await storage.getCategoryBySlug(slug);
+      
+      if (!category) {
+        return res.status(404).json({ error: "Category not found" });
+      }
+
+      const posts = await storage.getPublishedPostsByCategory(category.id);
+      res.json({ category, posts });
+    } catch (error) {
+      console.error("Error fetching posts by category:", error);
+      res.status(500).json({ error: "Failed to fetch posts" });
+    }
+  });
+
+  // Get all published posts (public endpoint for blog page)
+  app.get("/api/blog/posts", async (req, res) => {
+    try {
+      const posts = await storage.getPublishedPosts();
+      res.json(posts);
+    } catch (error) {
+      console.error("Error fetching published posts:", error);
+      res.status(500).json({ error: "Failed to fetch posts" });
+    }
+  });
+
+  // Get single post with categories
+  app.get("/api/blog/post/:slug", async (req, res) => {
+    try {
+      const { slug } = req.params;
+      const post = await storage.getPostBySlug(slug);
+      
+      if (!post || post.status !== "published") {
+        return res.status(404).json({ error: "Post not found" });
+      }
+
+      const categories = await storage.getPostCategories(post.id);
+      res.json({ post, categories });
+    } catch (error) {
+      console.error("Error fetching post:", error);
+      res.status(500).json({ error: "Failed to fetch post" });
     }
   });
 

@@ -2,8 +2,8 @@ import {
   type User, type InsertUser, type Video, type InsertVideo, type YoutubeChannel, type InsertYoutubeChannel,
   type Admin, type InsertAdmin, type Page, type InsertPage, type Post, type InsertPost,
   type Media, type InsertMedia, type SeoMeta, type InsertSeoMeta, type SiteSettings, type InsertSiteSettings,
-  type ContactInfo, type InsertContactInfo,
-  videos, youtubeChannels, users, admins, pages, posts, media, seoMeta, siteSettings, contactInfo
+  type ContactInfo, type InsertContactInfo, type Category, type InsertCategory, type PostCategory,
+  videos, youtubeChannels, users, admins, pages, posts, media, seoMeta, siteSettings, contactInfo, categories, postCategories
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, desc, and } from "drizzle-orm";
@@ -72,6 +72,20 @@ export interface IStorage {
   getContactInfo(): Promise<ContactInfo | undefined>;
   createContactInfo(info: InsertContactInfo): Promise<ContactInfo>;
   updateContactInfo(id: string, info: Partial<InsertContactInfo>): Promise<ContactInfo>;
+
+  // Category operations
+  getCategory(id: string): Promise<Category | undefined>;
+  getCategoryBySlug(slug: string): Promise<Category | undefined>;
+  getAllCategories(): Promise<Category[]>;
+  createCategory(category: InsertCategory): Promise<Category>;
+  updateCategory(id: string, category: Partial<InsertCategory>): Promise<Category>;
+  deleteCategory(id: string): Promise<void>;
+
+  // Post-Category operations
+  addPostToCategory(postId: string, categoryId: string): Promise<PostCategory>;
+  removePostFromCategory(postId: string, categoryId: string): Promise<void>;
+  getPostCategories(postId: string): Promise<Category[]>;
+  getPublishedPostsByCategory(categoryId: string): Promise<Post[]>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -371,6 +385,79 @@ export class DatabaseStorage implements IStorage {
       .where(eq(contactInfo.id, id))
       .returning();
     return updated;
+  }
+
+  // Category operations
+  async getCategory(id: string): Promise<Category | undefined> {
+    const [category] = await db.select().from(categories).where(eq(categories.id, id));
+    return category || undefined;
+  }
+
+  async getCategoryBySlug(slug: string): Promise<Category | undefined> {
+    const [category] = await db.select().from(categories).where(eq(categories.slug, slug));
+    return category || undefined;
+  }
+
+  async getAllCategories(): Promise<Category[]> {
+    return await db.select().from(categories).orderBy(desc(categories.name));
+  }
+
+  async createCategory(category: InsertCategory): Promise<Category> {
+    const [newCategory] = await db
+      .insert(categories)
+      .values(category)
+      .returning();
+    return newCategory;
+  }
+
+  async updateCategory(id: string, category: Partial<InsertCategory>): Promise<Category> {
+    const [updatedCategory] = await db
+      .update(categories)
+      .set({ ...category, updatedAt: new Date() })
+      .where(eq(categories.id, id))
+      .returning();
+    return updatedCategory;
+  }
+
+  async deleteCategory(id: string): Promise<void> {
+    await db.delete(categories).where(eq(categories.id, id));
+  }
+
+  // Post-Category operations
+  async addPostToCategory(postId: string, categoryId: string): Promise<PostCategory> {
+    const [pc] = await db
+      .insert(postCategories)
+      .values({ postId, categoryId })
+      .returning();
+    return pc;
+  }
+
+  async removePostFromCategory(postId: string, categoryId: string): Promise<void> {
+    await db
+      .delete(postCategories)
+      .where(and(eq(postCategories.postId, postId), eq(postCategories.categoryId, categoryId)));
+  }
+
+  async getPostCategories(postId: string): Promise<Category[]> {
+    return await db
+      .select({ cat: categories })
+      .from(postCategories)
+      .innerJoin(categories, eq(postCategories.categoryId, categories.id))
+      .where(eq(postCategories.postId, postId))
+      .then(rows => rows.map(row => row.cat));
+  }
+
+  async getPublishedPostsByCategory(categoryId: string): Promise<Post[]> {
+    return await db
+      .select({ post: posts })
+      .from(postCategories)
+      .innerJoin(posts, eq(postCategories.postId, posts.id))
+      .where(and(
+        eq(postCategories.categoryId, categoryId),
+        eq(posts.status, "published")
+      ))
+      .orderBy(desc(posts.publishedAt))
+      .then(rows => rows.map(row => row.post));
   }
 }
 

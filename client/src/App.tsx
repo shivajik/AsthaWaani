@@ -14,6 +14,7 @@ import Videos from "@/pages/videos";
 import Admin from "@/pages/admin";
 import Offerings from "@/pages/offerings";
 import Brajbhoomi from "@/pages/brajbhoomi";
+import Blog from "@/pages/blog";
 
 function Router() {
   return (
@@ -24,6 +25,7 @@ function Router() {
       <Route path="/gallery" component={Gallery} />
       <Route path="/offerings" component={Offerings} />
       <Route path="/brajbhoomi" component={Brajbhoomi} />
+      <Route path="/blog" component={Blog} />
       <Route path="/contact" component={Contact} />
       <Route path="/admin" component={Admin} />
       <Route component={NotFound} />
