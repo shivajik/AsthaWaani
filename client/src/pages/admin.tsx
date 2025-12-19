@@ -1134,11 +1134,19 @@ function OfferingManager() {
             </div>
             <div className="space-y-2">
               <Label>Description (EN)</Label>
-              <Textarea value={offering.description} onChange={(e) => updateField("description", e.target.value)} rows={4} />
+              <RichTextEditor 
+                content={offering.description} 
+                onChange={(content) => updateField("description", content)}
+                placeholder="Enter description with formatting..."
+              />
             </div>
             <div className="space-y-2">
               <Label>Description (HI)</Label>
-              <Textarea value={offering.descriptionHi} onChange={(e) => updateField("descriptionHi", e.target.value)} rows={4} />
+              <RichTextEditor 
+                content={offering.descriptionHi} 
+                onChange={(content) => updateField("descriptionHi", content)}
+                placeholder="विवरण दर्ज करें..."
+              />
             </div>
             <div className="space-y-2">
               <Label>Keywords</Label>
