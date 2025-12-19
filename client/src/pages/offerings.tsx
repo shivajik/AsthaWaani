@@ -146,6 +146,7 @@ export default function Offerings() {
             >
               {offerings.length > 0 ? offerings.map((offering) => {
                 const IconComponent = getIcon(offering.icon);
+                const descriptionText = language === 'en' ? offering.description : offering.descriptionHi || offering.description;
                 return (
                   <motion.div
                     key={offering.id}
@@ -168,14 +169,26 @@ export default function Offerings() {
                           </div>
                         </div>
                         
-                        <p className="text-stone-600 leading-relaxed">
-                          {language === 'en' ? offering.description : offering.descriptionHi || offering.description}
-                        </p>
+                        <div className="text-stone-600 leading-relaxed preserve-whitespace
+                          prose prose-sm dark:prose-invert max-w-none
+                          prose-p:text-stone-600 prose-p:leading-relaxed prose-p:m-0
+                          prose-strong:font-semibold prose-strong:text-stone-800
+                          prose-em:italic prose-em:text-stone-600
+                          prose-headings:font-serif prose-headings:text-stone-800
+                          dark:prose-p:text-stone-400 dark:prose-strong:text-stone-200"
+                          dangerouslySetInnerHTML={{ __html: descriptionText || '' }} 
+                        />
                       </CardContent>
                     </Card>
                   </motion.div>
                 );
-              })}
+              }) : (
+                <div className="col-span-full text-center py-12">
+                  <p className="text-stone-500 text-lg">
+                    {language === 'en' ? 'No offerings available' : 'कोई प्रसाद उपलब्ध नहीं'}
+                  </p>
+                </div>
+              )}
             </motion.div>
           </div>
         </section>
