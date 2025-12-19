@@ -94,6 +94,8 @@ const posts = pgTable("posts", {
   metaTitle: text("meta_title"),
   metaDescription: text("meta_description"),
   status: text("status").notNull().default("draft"),
+  authorId: varchar("author_id").references(() => admins.id),
+  categoryId: varchar("category_id").references(() => categories.id),
   publishedAt: timestamp("published_at"),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
