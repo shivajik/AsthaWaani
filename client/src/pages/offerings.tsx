@@ -36,6 +36,8 @@ export default function Offerings() {
       if (!res.ok) return [];
       return res.json();
     },
+    staleTime: 0,
+    gcTime: 0,
   });
 
   useEffect(() => {

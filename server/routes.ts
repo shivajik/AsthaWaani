@@ -305,6 +305,101 @@ export async function registerRoutes(
     }
   });
 
+  // Seed offerings data
+  app.post("/api/seed/offerings", async (req, res) => {
+    try {
+      const offeringsData = [
+        {
+          slug: "morning-aarti",
+          title: "Morning Aarti",
+          titleHi: "प्रातः आरती",
+          subtitle: "Start the Day with Blessings",
+          subtitleHi: "दिन की शुरुआत आशीर्वाद से करें",
+          description: "Begin your day with the divine morning aarti ceremony, connecting with the spiritual energy of Vrindavan.",
+          descriptionHi: "वृंदावन की आध्यात्मिक ऊर्जा से जुड़ते हुए प्रातःकालीन आरती समारोह के साथ अपने दिन की शुरुआत करें।",
+          keywords: "morning aarti, divine worship, Vrindavan",
+          icon: "Sun",
+          isPublished: true,
+          order: 1,
+        },
+        {
+          slug: "bhajan-kirtan",
+          title: "Bhajan Kirtan",
+          titleHi: "भजन कीर्तन",
+          subtitle: "Devotional Music & Chanting",
+          subtitleHi: "भक्तिमय संगीत और गायन",
+          description: "Immerse yourself in the soulful bhajans and kirtans that elevate the spirit and connect the heart to divinity.",
+          descriptionHi: "आत्मा को ऊंचा करने वाले भजनों और कीर्तनों में खो जाएं जो हृदय को दिव्यता से जोड़ते हैं।",
+          keywords: "bhajan, kirtan, devotional music",
+          icon: "Music",
+          isPublished: true,
+          order: 2,
+        },
+        {
+          slug: "daily-satsang",
+          title: "Daily Satsang",
+          titleHi: "दैनिक सत्संग",
+          subtitle: "Spiritual Discourse & Guidance",
+          subtitleHi: "आध्यात्मिक प्रवचन और मार्गदर्शन",
+          description: "Join our daily satsang sessions for profound spiritual teachings and guidance on the path of bhakti.",
+          descriptionHi: "भक्ति के मार्ग पर गहन आध्यात्मिक शिक्षा और मार्गदर्शन के लिए हमारे दैनिक सत्संग में शामिल हों।",
+          keywords: "satsang, spiritual discourse, bhakti path",
+          icon: "BookOpen",
+          isPublished: true,
+          order: 3,
+        },
+        {
+          slug: "mantra-jaap",
+          title: "Mantra Jaap",
+          titleHi: "मंत्र जाप",
+          subtitle: "Sacred Chanting & Meditation",
+          subtitleHi: "पवित्र मंत्रोच्चार और ध्यान",
+          description: "Experience the transformative power of sacred mantras through guided meditation and chanting practices.",
+          descriptionHi: "निर्देशित ध्यान और उच्चारण अभ्यास के माध्यम से पवित्र मंत्रों की परिवर्तनकारी शक्ति का अनुभव करें।",
+          keywords: "mantra, jaap, meditation, chanting",
+          icon: "Sparkles",
+          isPublished: true,
+          order: 4,
+        },
+        {
+          slug: "katha-pravachan",
+          title: "Katha Pravachan",
+          titleHi: "कथा प्रवचन",
+          subtitle: "Spiritual Stories & Wisdom",
+          subtitleHi: "आध्यात्मिक कथाएं और ज्ञान",
+          description: "Explore the timeless wisdom through sacred stories from our spiritual traditions.",
+          descriptionHi: "हमारी आध्यात्मिक परंपराओं से पवित्र कथाओं के माध्यम से कालजयी ज्ञान का अन्वेषण करें।",
+          keywords: "katha, stories, spiritual wisdom",
+          icon: "Mic",
+          isPublished: true,
+          order: 5,
+        },
+        {
+          slug: "community",
+          title: "Community Service",
+          titleHi: "समुदाय सेवा",
+          subtitle: "Grow Together on the Path",
+          subtitleHi: "मार्ग पर एक साथ बढ़ें",
+          description: "Join our spiritual community for collective healing, growth, and service to others.",
+          descriptionHi: "सामूहिक उपचार, वृद्धि और दूसरों की सेवा के लिए हमारे आध्यात्मिक समुदाय में शामिल हों।",
+          keywords: "community, service, collective growth",
+          icon: "Users",
+          isPublished: true,
+          order: 6,
+        },
+      ];
+
+      for (const offering of offeringsData) {
+        await storage.createOffering(offering);
+      }
+
+      res.json({ success: true, count: offeringsData.length });
+    } catch (error) {
+      console.error("Error seeding offerings:", error);
+      res.status(500).json({ error: "Failed to seed offerings" });
+    }
+  });
+
   // Seed sample blog posts and categories
   app.post("/api/seed/blog-data", async (req, res) => {
     try {
