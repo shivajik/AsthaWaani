@@ -35,7 +35,8 @@ export class YouTubeService {
       const cleanHandle = handle.startsWith('@') ? handle.substring(1) : handle;
       
       // Use the search endpoint to find the channel by handle/username
-      const url = `${this.baseUrl}/channels?part=id&forHandle=${cleanHandle}&key=${this.apiKey}`;
+      // Note: We search for the handle and filter by channel type
+      const url = `${this.baseUrl}/search?part=snippet&q=${encodeURIComponent(cleanHandle)}&type=channel&maxResults=1&key=${this.apiKey}`;
       const response = await fetch(url);
       
       if (!response.ok) {
@@ -48,7 +49,7 @@ export class YouTubeService {
         return null;
       }
 
-      return data.items[0].id;
+      return data.items[0].id.channelId;
     } catch (error) {
       console.error("Error resolving handle:", error);
       throw error;
