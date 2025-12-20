@@ -83,81 +83,39 @@ export default function BlogPostDetail() {
 
   return (
     <div className="min-h-screen bg-white dark:bg-black">
-      <div className="container mx-auto px-4 pt-12 pb-12 md:pb-16">
+      <div className="container mx-auto px-4 pt-24 md:pt-32 pb-12 md:pb-16">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Categories Sidebar */}
           <aside className="md:col-span-1">
-            <div className="sticky top-4 space-y-8">
-              {/* Categories Section */}
-              <div>
-                <h2 className="text-lg font-semibold mb-4">
-                  {language === "hi" ? "श्रेणियां" : "Categories"}
-                </h2>
-                <div className="space-y-2">
+            <div className="sticky top-4">
+              <h2 className="text-lg font-semibold mb-4">
+                {language === "hi" ? "श्रेणियां" : "Categories"}
+              </h2>
+              <div className="space-y-2">
+                <Button
+                  variant="outline"
+                  className="w-full justify-start"
+                  data-testid="button-category-all"
+                >
                   <Link href="/blog">
-                    <Button
-                      variant="outline"
-                      className="w-full justify-start"
-                      data-testid="button-category-all"
-                    >
-                      {language === "hi" ? "सभी" : "All"}
-                    </Button>
+                    {language === "hi" ? "सभी" : "All"}
                   </Link>
-                  {(allCategories as Category[]).map((category: Category) => (
-                    <Link
-                      key={category.id}
-                      href={`/blog?category=${category.id}`}
-                    >
-                      <Button
-                        variant={
-                          post.categoryId === category.id ? "default" : "outline"
-                        }
-                        className="w-full justify-start"
-                        data-testid={`button-category-${category.slug}`}
-                      >
-                        {language === "hi" ? category.nameHi || category.name : category.name}
-                      </Button>
+                </Button>
+                {(allCategories as Category[]).map((category: Category) => (
+                  <Button
+                    key={category.id}
+                    variant={
+                      post.categoryId === category.id ? "default" : "outline"
+                    }
+                    className="w-full justify-start"
+                    data-testid={`button-category-${category.slug}`}
+                  >
+                    <Link href={`/blog?category=${category.id}`}>
+                      {language === "hi" ? category.nameHi || category.name : category.name}
                     </Link>
-                  ))}
-                </div>
+                  </Button>
+                ))}
               </div>
-
-              {/* Related Posts Section */}
-              {relatedPosts.length > 0 && (
-                <div>
-                  <h2 className="text-lg font-semibold mb-4">
-                    {language === "hi" ? "संबंधित पोस्ट" : "Related Posts"}
-                  </h2>
-                  <div className="space-y-3">
-                    {relatedPosts.map((relatedPost: Post) => (
-                      <Link key={relatedPost.id} href={`/blog/${relatedPost.slug}`}>
-                        <Card
-                          className="p-4 cursor-pointer hover-elevate hover:shadow-md transition-shadow"
-                          data-testid={`card-related-post-${relatedPost.id}`}
-                        >
-                          <h3 className="font-semibold text-sm line-clamp-2">
-                            {language === "hi"
-                              ? relatedPost.titleHi || relatedPost.title
-                              : relatedPost.title}
-                          </h3>
-                          {relatedPost.publishedAt && (
-                            <p className="text-xs text-muted-foreground mt-2">
-                              {new Date(relatedPost.publishedAt).toLocaleDateString(
-                                language === "hi" ? "hi-IN" : "en-US",
-                                {
-                                  year: "numeric",
-                                  month: "short",
-                                  day: "numeric",
-                                }
-                              )}
-                            </p>
-                          )}
-                        </Card>
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-              )}
             </div>
           </aside>
 
