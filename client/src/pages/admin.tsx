@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { 
   RefreshCw, Youtube, LogOut, FileText, 
   Image, Settings, LayoutDashboard, PenSquare, Trash2, Plus, Save, Phone, Megaphone
@@ -49,6 +50,14 @@ interface Post {
   metaDescription: string | null;
   status: string;
   publishedAt: string | null;
+  categoryId: string | null;
+}
+
+interface Category {
+  id: string;
+  slug: string;
+  name: string;
+  nameHi: string | null;
 }
 
 interface MediaItem {
@@ -432,6 +441,7 @@ function PostManager() {
   const { toast } = useToast();
   const [editingPost, setEditingPost] = useState<Post | null>(null);
   const [isCreating, setIsCreating] = useState(false);
+  const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
   const [newPost, setNewPost] = useState({
     slug: "",
     title: "",
@@ -444,12 +454,22 @@ function PostManager() {
     metaTitle: "",
     metaDescription: "",
     status: "draft",
+    categoryId: "",
   });
 
   const { data: posts, isLoading } = useQuery<Post[]>({
     queryKey: ["/api/cms/posts"],
     queryFn: async () => {
       const res = await fetch("/api/cms/posts", { credentials: "include" });
+      if (!res.ok) return [];
+      return res.json();
+    },
+  });
+
+  const { data: categories } = useQuery<Category[]>({
+    queryKey: ["/api/categories"],
+    queryFn: async () => {
+      const res = await fetch("/api/categories");
       if (!res.ok) return [];
       return res.json();
     },
@@ -475,7 +495,7 @@ function PostManager() {
       setIsCreating(false);
       setNewPost({
         slug: "", title: "", titleHi: "", excerpt: "", excerptHi: "",
-        content: "", contentHi: "", featuredImage: "", metaTitle: "", metaDescription: "", status: "draft",
+        content: "", contentHi: "", featuredImage: "", metaTitle: "", metaDescription: "", status: "draft", categoryId: "",
       });
     },
     onError: () => {
@@ -491,6 +511,7 @@ function PostManager() {
     onSuccess: () => {
       toast({ title: "Post deleted" });
       queryClient.invalidateQueries({ queryKey: ["/api/cms/posts"] });
+      setDeleteConfirmId(null);
     },
   });
 
@@ -535,6 +556,22 @@ function PostManager() {
                   </SelectContent>
                 </Select>
               </div>
+            </div>
+            <div className="space-y-2">
+              <Label>Category</Label>
+              <Select value={post.categoryId || ""} onValueChange={(value) => updateField("categoryId", value || null)}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select a category" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="">No category</SelectItem>
+                  {categories?.map((cat) => (
+                    <SelectItem key={cat.id} value={cat.id}>
+                      {cat.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
             <div className="grid md:grid-cols-2 gap-4">
               <div className="space-y-2">
@@ -652,11 +689,25 @@ function PostManager() {
                   <Button 
                     variant="destructive" 
                     size="sm" 
-                    onClick={() => deleteMutation.mutate(post.id)}
+                    onClick={() => setDeleteConfirmId(post.id)}
                   >
                     <Trash2 className="w-4 h-4" />
                   </Button>
                 </div>
+                <AlertDialog open={deleteConfirmId === post.id} onOpenChange={() => setDeleteConfirmId(null)}>
+                  <AlertDialogContent>
+                    <AlertDialogTitle>Delete Blog Post</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      Are you sure you want to delete "{post.title}"? This action cannot be undone.
+                    </AlertDialogDescription>
+                    <div className="flex justify-end gap-2">
+                      <AlertDialogCancel>Cancel</AlertDialogCancel>
+                      <AlertDialogAction onClick={() => deleteMutation.mutate(post.id)} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+                        Delete
+                      </AlertDialogAction>
+                    </div>
+                  </AlertDialogContent>
+                </AlertDialog>
               </CardContent>
             </Card>
           ))}
