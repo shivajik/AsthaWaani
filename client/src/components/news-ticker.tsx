@@ -26,6 +26,10 @@ export function NewsTicker() {
   const newsItems = tickers.map(item => language === 'en' ? item.titleEn : item.titleHi);
   const allNews = newsItems.length > 0 ? [...newsItems, ...newsItems] : ["Welcome to Asthwaani - Connecting Divine Voices"];
 
+  if (tickers.length === 0) {
+    return null;
+  }
+
   return (
     <section className="bg-gradient-to-r from-blue-600 to-blue-700 py-4 overflow-hidden border-y border-blue-500/30">
       <div className="container mx-auto px-4">

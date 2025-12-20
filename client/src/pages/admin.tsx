@@ -1073,6 +1073,7 @@ function OfferingManager() {
   const { toast } = useToast();
   const [editingOffering, setEditingOffering] = useState<any>(null);
   const [isCreating, setIsCreating] = useState(false);
+  const [deletingOfferingId, setDeletingOfferingId] = useState<string | null>(null);
   const [newOffering, setNewOffering] = useState({
     slug: "",
     title: "",
@@ -1263,7 +1264,7 @@ function OfferingManager() {
                   <Button variant="outline" size="sm" onClick={() => setEditingOffering(offering)}>
                     <PenSquare className="w-4 h-4" />
                   </Button>
-                  <Button variant="destructive" size="sm" onClick={() => deleteMutation.mutate(offering.id)}>
+                  <Button variant="destructive" size="sm" onClick={() => setDeletingOfferingId(offering.id)} data-testid="button-delete-offering">
                     <Trash2 className="w-4 h-4" />
                   </Button>
                 </div>
@@ -1273,6 +1274,29 @@ function OfferingManager() {
           {offerings.length === 0 && <p className="text-muted-foreground text-center py-8">No offerings yet. Create your first one!</p>}
         </div>
       )}
+      
+      <AlertDialog open={!!deletingOfferingId} onOpenChange={(open) => !open && setDeletingOfferingId(null)}>
+        <AlertDialogContent>
+          <AlertDialogTitle>Delete Offering</AlertDialogTitle>
+          <AlertDialogDescription>
+            Are you sure you want to delete this offering? This action cannot be undone.
+          </AlertDialogDescription>
+          <div className="flex gap-2 justify-end">
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => {
+                if (deletingOfferingId) {
+                  deleteMutation.mutate(deletingOfferingId);
+                  setDeletingOfferingId(null);
+                }
+              }}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Delete
+            </AlertDialogAction>
+          </div>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
@@ -1281,6 +1305,7 @@ function NewsTickerManager() {
   const queryClient = useQueryClient();
   const { toast } = useToast();
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [deletingTickerId, setDeletingTickerId] = useState<string | null>(null);
   const [formData, setFormData] = useState({ titleEn: "", titleHi: "", order: 0, isActive: true });
 
   interface NewsTickerItem {
@@ -1410,7 +1435,7 @@ function NewsTickerManager() {
                 <Button variant="outline" size="sm" onClick={() => handleEdit(ticker)}>
                   Edit
                 </Button>
-                <Button variant="destructive" size="sm" onClick={() => deleteMutation.mutate(ticker.id)}>
+                <Button variant="destructive" size="sm" onClick={() => setDeletingTickerId(ticker.id)} data-testid="button-delete-news-ticker">
                   Delete
                 </Button>
               </div>
@@ -1418,6 +1443,29 @@ function NewsTickerManager() {
           </Card>
         ))}
       </div>
+      
+      <AlertDialog open={!!deletingTickerId} onOpenChange={(open) => !open && setDeletingTickerId(null)}>
+        <AlertDialogContent>
+          <AlertDialogTitle>Delete News Item</AlertDialogTitle>
+          <AlertDialogDescription>
+            Are you sure you want to delete this news item? This action cannot be undone.
+          </AlertDialogDescription>
+          <div className="flex gap-2 justify-end">
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => {
+                if (deletingTickerId) {
+                  deleteMutation.mutate(deletingTickerId);
+                  setDeletingTickerId(null);
+                }
+              }}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Delete
+            </AlertDialogAction>
+          </div>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
