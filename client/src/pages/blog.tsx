@@ -33,7 +33,7 @@ export default function Blog() {
 
   return (
     <div className="min-h-screen bg-white dark:bg-black">
-      <div className="container mx-auto px-4 py-12 md:py-16">
+      <div className="container mx-auto px-4 pt-24 md:pt-32 pb-12 md:pb-16">
         <h1 className="text-4xl md:text-5xl font-bold mb-12 text-center">
           {title}
         </h1>
