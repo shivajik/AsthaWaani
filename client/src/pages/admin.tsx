@@ -443,6 +443,7 @@ function PostManager() {
   const [editingPost, setEditingPost] = useState<Post | null>(null);
   const [isCreating, setIsCreating] = useState(false);
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
+  const [originalImage, setOriginalImage] = useState<string | null>(null);
   const [newPost, setNewPost] = useState({
     slug: "",
     title: "",
@@ -477,13 +478,31 @@ function PostManager() {
   });
 
   const saveMutation = useMutation({
-    mutationFn: async (post: Partial<Post> & { id?: string }) => {
-      const url = post.id ? `/api/cms/posts/${post.id}` : "/api/cms/posts";
-      const method = post.id ? "PUT" : "POST";
+    mutationFn: async (post: Partial<Post> & { id?: string; oldImage?: string | null }) => {
+      const { oldImage, ...postData } = post;
+      
+      if (oldImage && oldImage !== postData.featuredImage) {
+        try {
+          const publicId = oldImage.split('/').pop()?.split('.')[0];
+          if (publicId) {
+            await fetch(`/api/cms/media/delete-cloudinary`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ publicId }),
+              credentials: "include",
+            });
+          }
+        } catch (error) {
+          console.error("Failed to delete old image:", error);
+        }
+      }
+
+      const url = postData.id ? `/api/cms/posts/${postData.id}` : "/api/cms/posts";
+      const method = postData.id ? "PUT" : "POST";
       const res = await fetch(url, {
         method,
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(post),
+        body: JSON.stringify(postData),
         credentials: "include",
       });
       if (!res.ok) throw new Error("Failed to save post");
@@ -494,6 +513,7 @@ function PostManager() {
       queryClient.invalidateQueries({ queryKey: ["/api/cms/posts"] });
       setEditingPost(null);
       setIsCreating(false);
+      setOriginalImage(null);
       setNewPost({
         slug: "", title: "", titleHi: "", excerpt: "", excerptHi: "",
         content: "", contentHi: "", featuredImage: "", metaTitle: "", metaDescription: "", status: "draft", categoryId: "",
@@ -525,6 +545,10 @@ function PostManager() {
         setNewPost({ ...newPost, [field]: value });
       }
     };
+
+    if (!originalImage && (editingPost || isCreating)) {
+      setOriginalImage(post.featuredImage || null);
+    }
 
     return (
       <div className="space-y-4">
@@ -595,19 +619,11 @@ function PostManager() {
             <div className="space-y-2">
               <Label>Featured Image</Label>
               <MediaUpload
+                currentImage={post.featuredImage || undefined}
                 onUploadSuccess={(url) => updateField("featuredImage", url)}
                 onUploadError={(error) => console.error("Upload error:", error)}
+                onImageRemove={() => updateField("featuredImage", "")}
               />
-              {post.featuredImage && (
-                <div className="mt-4">
-                  <img
-                    src={post.featuredImage}
-                    alt="Featured preview"
-                    className="max-w-full h-auto rounded-md"
-                    data-testid="featured-image-preview"
-                  />
-                </div>
-              )}
             </div>
             <div className="space-y-2">
               <Label>Excerpt (English)</Label>
@@ -653,7 +669,7 @@ function PostManager() {
               </div>
             </div>
             <Button
-              onClick={() => saveMutation.mutate(editingPost || newPost)}
+              onClick={() => saveMutation.mutate({ ...(editingPost || newPost), oldImage: originalImage })}
               disabled={saveMutation.isPending}
               className="gap-2"
             >

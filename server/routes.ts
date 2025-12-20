@@ -13,7 +13,7 @@ export async function registerRoutes(
   const upload = multer({ storage: multer.memoryStorage() });
 
   // Media Upload endpoint (for admin)
-  app.post("/api/cms/upload-media", upload.single("file"), async (req, res) => {
+  app.post("/api/cms/media/upload", upload.single("file"), async (req, res) => {
     try {
       if (!req.file) {
         return res.status(400).json({ error: "No file provided" });
@@ -69,6 +69,21 @@ export async function registerRoutes(
     } catch (error) {
       console.error("Error deleting media:", error);
       res.status(500).json({ error: "Failed to delete media" });
+    }
+  });
+
+  // Delete from Cloudinary directly (for replacing images)
+  app.post("/api/cms/media/delete-cloudinary", async (req, res) => {
+    try {
+      const { publicId } = req.body;
+      if (!publicId) {
+        return res.status(400).json({ error: "Missing publicId" });
+      }
+      await deleteFromCloudinary(publicId);
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Error deleting from Cloudinary:", error);
+      res.status(500).json({ error: "Failed to delete image" });
     }
   });
 

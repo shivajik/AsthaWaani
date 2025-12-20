@@ -1,14 +1,17 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { Upload } from "lucide-react";
+import { Upload, X } from "lucide-react";
 
 interface MediaUploadProps {
   onUploadSuccess?: (mediaUrl: string, mediaId: string) => void;
   onUploadError?: (error: string) => void;
+  currentImage?: string;
+  onImageRemove?: () => void;
+  uploadProgress?: number;
 }
 
-export function MediaUpload({ onUploadSuccess, onUploadError }: MediaUploadProps) {
+export function MediaUpload({ onUploadSuccess, onUploadError, currentImage, onImageRemove, uploadProgress }: MediaUploadProps) {
   const [isUploading, setIsUploading] = useState(false);
   const { toast } = useToast();
   const fileInputRef = useState<HTMLInputElement | null>(null);
@@ -69,32 +72,65 @@ export function MediaUpload({ onUploadSuccess, onUploadError }: MediaUploadProps
   };
 
   return (
-    <div
-      onDrop={handleDrop}
-      onDragOver={handleDragOver}
-      className="flex items-center justify-center w-full"
-    >
-      <label className="flex flex-col items-center justify-center w-full border-2 border-dashed border-border rounded-lg p-8 cursor-pointer hover:bg-muted/50 transition-colors"
-        data-testid="upload-area"
+    <div className="space-y-3 w-full">
+      <div
+        onDrop={handleDrop}
+        onDragOver={handleDragOver}
+        className="flex items-center justify-center w-full"
       >
-        <div className="flex flex-col items-center justify-center">
-          <Upload className="w-8 h-8 text-muted-foreground mb-2" />
-          <p className="text-sm font-medium text-center">
-            Drag and drop your image here, or click to select
-          </p>
-          <p className="text-xs text-muted-foreground mt-1">
-            PNG, JPG, GIF up to 10MB
-          </p>
+        <label className="flex flex-col items-center justify-center w-full border-2 border-dashed border-border rounded-lg p-8 cursor-pointer hover:bg-muted/50 transition-colors"
+          data-testid="upload-area"
+        >
+          <div className="flex flex-col items-center justify-center">
+            <Upload className="w-8 h-8 text-muted-foreground mb-2" />
+            <p className="text-sm font-medium text-center">
+              Drag and drop your image here, or click to select
+            </p>
+            <p className="text-xs text-muted-foreground mt-1">
+              PNG, JPG, GIF up to 10MB
+            </p>
+          </div>
+          <input
+            type="file"
+            className="hidden"
+            accept="image/*"
+            onChange={handleInputChange}
+            disabled={isUploading}
+            data-testid="file-input"
+          />
+        </label>
+      </div>
+      {isUploading && (
+        <div className="w-full bg-muted rounded-md p-3">
+          <div className="text-sm font-medium text-center mb-2">Uploading...</div>
+          <div className="w-full bg-background rounded-full h-2 overflow-hidden">
+            <div className="h-full bg-primary transition-all duration-300" style={{ width: `${uploadProgress || 0}%` }} />
+          </div>
         </div>
-        <input
-          type="file"
-          className="hidden"
-          accept="image/*"
-          onChange={handleInputChange}
-          disabled={isUploading}
-          data-testid="file-input"
-        />
-      </label>
+      )}
+      {currentImage && !isUploading && (
+        <div className="relative mt-4 group">
+          <img
+            src={currentImage}
+            alt="Current featured image"
+            className="max-w-full h-auto rounded-md"
+            data-testid="featured-image-preview"
+          />
+          <button
+            type="button"
+            onClick={(e) => {
+              e.preventDefault();
+              onImageRemove?.();
+              toast({ title: "Image removed", description: "Image removed from preview (not saved until you click Save)" });
+            }}
+            className="absolute top-2 right-2 bg-destructive text-destructive-foreground rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+            title="Remove image from preview"
+            data-testid="button-remove-image"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        </div>
+      )}
     </div>
   );
 }

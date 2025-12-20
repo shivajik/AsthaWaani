@@ -951,6 +951,20 @@ app.delete("/api/cms/media/:id", isAuthenticated, async (req: Request, res: Resp
   }
 });
 
+app.post("/api/cms/media/delete-cloudinary", isAuthenticated, async (req: Request, res: Response) => {
+  try {
+    const { publicId } = req.body;
+    if (!publicId) {
+      return res.status(400).json({ error: "Missing publicId" });
+    }
+    await cloudinary.uploader.destroy(publicId);
+    res.json({ success: true });
+  } catch (error) {
+    console.error("Error deleting from Cloudinary:", error);
+    res.status(500).json({ error: "Failed to delete image" });
+  }
+});
+
 app.get("/api/cms/seo/:entityType/:entityId", isAuthenticated, async (req: Request, res: Response) => {
   try {
     const seo = await storage.getSeoMeta(req.params.entityType, req.params.entityId);
