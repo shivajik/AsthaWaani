@@ -559,12 +559,12 @@ function PostManager() {
             </div>
             <div className="space-y-2">
               <Label>Category</Label>
-              <Select value={post.categoryId || ""} onValueChange={(value) => updateField("categoryId", value || null)}>
+              <Select value={post.categoryId || "none"} onValueChange={(value) => updateField("categoryId", value === "none" ? null : value)}>
                 <SelectTrigger>
                   <SelectValue placeholder="Select a category" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">No category</SelectItem>
+                  <SelectItem value="none">No category</SelectItem>
                   {categories?.map((cat) => (
                     <SelectItem key={cat.id} value={cat.id}>
                       {cat.name}
