@@ -26,7 +26,7 @@ export function MediaUpload({ onUploadSuccess, onUploadError }: MediaUploadProps
       const formData = new FormData();
       formData.append("file", file);
 
-      const response = await fetch("/api/cms/upload-media", {
+      const response = await fetch("/api/cms/media/upload", {
         method: "POST",
         body: formData,
       });
