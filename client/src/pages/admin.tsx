@@ -750,6 +750,8 @@ function MediaManager() {
   const queryClient = useQueryClient();
   const { toast } = useToast();
   const [uploading, setUploading] = useState(false);
+  const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
+  const [deleteConfirmFilename, setDeleteConfirmFilename] = useState<string>("");
 
   const { data: media, isLoading } = useQuery<MediaItem[]>({
     queryKey: ["/api/cms/media"],
@@ -795,6 +797,7 @@ function MediaManager() {
     onSuccess: () => {
       toast({ title: "Media deleted" });
       queryClient.invalidateQueries({ queryKey: ["/api/cms/media"] });
+      setDeleteConfirmId(null);
     },
   });
 
@@ -841,7 +844,10 @@ function MediaManager() {
                   <Button
                     size="sm"
                     variant="destructive"
-                    onClick={() => deleteMutation.mutate(item.id)}
+                    onClick={() => {
+                      setDeleteConfirmId(item.id);
+                      setDeleteConfirmFilename(item.filename);
+                    }}
                   >
                     <Trash2 className="w-4 h-4" />
                   </Button>
@@ -857,6 +863,24 @@ function MediaManager() {
           )}
         </div>
       )}
+      <AlertDialog open={deleteConfirmId !== null} onOpenChange={() => setDeleteConfirmId(null)}>
+        <AlertDialogContent>
+          <AlertDialogTitle>Delete Media</AlertDialogTitle>
+          <AlertDialogDescription>
+            Are you sure you want to delete "{deleteConfirmFilename}"? This action cannot be undone.
+          </AlertDialogDescription>
+          <div className="flex justify-end gap-2">
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction 
+              onClick={() => deleteMutation.mutate(deleteConfirmId || "")} 
+              disabled={deleteMutation.isPending}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              {deleteMutation.isPending ? "Deleting..." : "Delete"}
+            </AlertDialogAction>
+          </div>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
