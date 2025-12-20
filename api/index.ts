@@ -10,6 +10,8 @@ import { Pool } from "pg";
 import { eq, desc, and, sql } from "drizzle-orm";
 import { pgTable, text, serial, integer, boolean, timestamp, varchar, jsonb } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
+import multer from "multer";
+import { v2 as cloudinary } from "cloudinary";
 
 declare module "express-session" {
   interface SessionData {
@@ -20,11 +22,18 @@ declare module "express-session" {
   }
 }
 
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
 });
 
 const db = drizzle(pool);
+const upload = multer({ storage: multer.memoryStorage() });
 
 const users = pgTable("users", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
@@ -870,8 +879,48 @@ app.get("/api/cms/media", isAuthenticated, async (req: Request, res: Response) =
   }
 });
 
-app.post("/api/cms/media/upload", isAuthenticated, async (req: Request, res: Response) => {
-  res.status(501).json({ error: "Media upload is not available in serverless mode. Use the development server." });
+app.post("/api/cms/media/upload", isAuthenticated, upload.single("file"), async (req: Request, res: Response) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ error: "No file provided" });
+    }
+
+    const uploadResponse = await new Promise<any>((resolve, reject) => {
+      const stream = cloudinary.uploader.upload_stream(
+        {
+          resource_type: "auto",
+          public_id: req.file!.originalname.replace(/\.[^/.]+$/, ""),
+          overwrite: false,
+        },
+        (error, result) => {
+          if (error) {
+            reject(error);
+          } else {
+            resolve(result);
+          }
+        }
+      );
+      stream.end(req.file!.buffer);
+    });
+
+    const mediaItem = await storage.createMedia({
+      publicId: uploadResponse.public_id,
+      url: uploadResponse.url,
+      secureUrl: uploadResponse.secure_url,
+      filename: req.file.originalname,
+      format: uploadResponse.format || "",
+      width: uploadResponse.width || 0,
+      height: uploadResponse.height || 0,
+      bytes: uploadResponse.bytes || 0,
+      altText: "",
+      uploadedBy: req.session.adminId,
+    });
+
+    res.json(mediaItem);
+  } catch (error) {
+    console.error("Error uploading media:", error);
+    res.status(500).json({ error: "Failed to upload media" });
+  }
 });
 
 app.put("/api/cms/media/:id", isAuthenticated, async (req: Request, res: Response) => {
