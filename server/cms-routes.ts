@@ -76,6 +76,7 @@ const updatePostSchema = z.object({
   metaTitle: z.string().nullable().optional(),
   metaDescription: z.string().nullable().optional(),
   status: z.enum(["draft", "published"]).optional(),
+  categoryId: z.string().nullable().optional(),
 });
 
 router.use(apiLimiter);
