@@ -17,7 +17,6 @@ interface BlogPostDetailResponse {
 export default function BlogPostDetail() {
   const { slug } = useParams();
   const { language } = useLanguage();
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
   // Fetch the current blog post
   const { data, isLoading, error } = useQuery<BlogPostDetailResponse>({
@@ -36,16 +35,13 @@ export default function BlogPostDetail() {
   const { data: categories = [] } = useQuery({
     queryKey: ["/api/categories"],
   }) as { data: Category[] };
-  // // Fetch all categories for sidebar
-  // const { data: allCategories = [] } = useQuery({
-  //   queryKey: ["/api/categories"],
-  // }) as { data: Category[] };
 
   // Fetch all posts to show related posts
   const { data: allPosts = [] } = useQuery({
     queryKey: ["/api/blog/posts"],
   }) as { data: Post[] };
- const allText = language === "hi" ? "सभी" : "All";
+
+  const allText = language === "hi" ? "सभी" : "All";
   if (isLoading) {
     return (
       <div className="min-h-screen bg-white dark:bg-black flex items-center justify-center">
@@ -92,65 +88,36 @@ export default function BlogPostDetail() {
       <div className="container mx-auto px-4 pt-24 md:pt-32 pb-12 md:pb-16">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Categories Sidebar */}
-          {/* <aside className="md:col-span-1">
+          <aside className="md:col-span-1">
             <div className="sticky top-4">
               <h2 className="text-lg font-semibold mb-4">
                 {language === "hi" ? "श्रेणियां" : "Categories"}
               </h2>
               <div className="space-y-2">
-                <Button
-                  variant="outline"
-                  className="w-full justify-start"
-                  data-testid="button-category-all"
-                >
-                  <Link href="/blog">
-                    {language === "hi" ? "सभी" : "All"}
-                  </Link>
-                </Button>
-                {(allCategories as Category[]).map((category: Category) => (
+                <Link href="/blog">
                   <Button
-                    key={category.id}
-                    variant={
-                      post.categoryId === category.id ? "default" : "outline"
-                    }
+                    variant="outline"
                     className="w-full justify-start"
-                    data-testid={`button-category-${category.slug}`}
+                    data-testid="button-category-all"
                   >
-                    <Link href={`/blog?category=${category.id}`}>
-                      {language === "hi" ? category.nameHi || category.name : category.name}
-                    </Link>
+                    {allText}
                   </Button>
-                ))}
-              </div>
-            </div>
-          </aside> */}
-
-<aside className="md:col-span-1">
-            <div className="sticky top-4">
-              <h2 className="text-lg font-semibold mb-4">
-                {language === "hi" ? "श्रेणियां" : "Categories"}
-              </h2>
-              <div className="space-y-2">
-                <Button
-                  variant={selectedCategory === null ? "default" : "outline"}
-                  onClick={() => setSelectedCategory(null)}
-                  className="w-full justify-start"
-                  data-testid="button-category-all"
-                >
-                  {allText}
-                </Button>
+                </Link>
                 {(categories as Category[]).map((category: Category) => (
-                  <Button
+                  <Link
                     key={category.id}
-                    variant={
-                      selectedCategory === category.id ? "default" : "outline"
-                    }
-                    onClick={() => setSelectedCategory(category.id)}
-                    className="w-full justify-start"
-                    data-testid={`button-category-${category.slug}`}
+                    href={`/blog?category=${category.id}`}
                   >
-                    {language === "hi" ? category.nameHi || category.name : category.name}
-                  </Button>
+                    <Button
+                      variant={
+                        post.categoryId === category.id ? "default" : "outline"
+                      }
+                      className="w-full justify-start"
+                      data-testid={`button-category-${category.slug}`}
+                    >
+                      {language === "hi" ? category.nameHi || category.name : category.name}
+                    </Button>
+                  </Link>
                 ))}
               </div>
             </div>
