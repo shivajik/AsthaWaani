@@ -45,7 +45,7 @@ export default function Blog() {
               <h2 className="text-lg font-semibold mb-4">
                 {language === "hi" ? "श्रेणियां" : "Categories"}
               </h2>
-              <div className="space-y-2">
+              <div className="space-y-3">
                 <Button
                   variant={selectedCategory === null ? "default" : "outline"}
                   onClick={() => setSelectedCategory(null)}

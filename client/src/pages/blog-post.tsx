@@ -90,10 +90,10 @@ export default function BlogPostDetail() {
           {/* Categories Sidebar */}
           <aside className="md:col-span-1">
             <div className="sticky top-4">
-              <h2 className="text-lg font-semibold mb-4">
+              <h2 className="text-lg font-semibold mb-6">
                 {language === "hi" ? "श्रेणियां" : "Categories"}
               </h2>
-              <div className="space-y-2">
+              <div className="flex flex-col gap-4">
                 <Link href="/blog">
                   <Button
                     variant="outline"
