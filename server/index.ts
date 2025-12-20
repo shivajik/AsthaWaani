@@ -7,9 +7,8 @@ import cmsRoutes from "./cms-routes";
 
 const app = express();
 
-if (process.env.NODE_ENV === "production") {
-  app.set('trust proxy', 1);
-}
+// Trust proxy for rate limiting and security headers in all environments
+app.set('trust proxy', 1);
 
 const httpServer = createServer(app);
 

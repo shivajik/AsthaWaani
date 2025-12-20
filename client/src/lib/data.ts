@@ -3,11 +3,11 @@ import vrindavanSunrise from "@assets/generated_images/vrindavan_sunrise_temple_
 import guruTeaching from "@assets/generated_images/spiritual_guru_teaching.png";
 import bhajanKirtan from "@assets/generated_images/devotional_bhajan_kirtan.png";
 import meditation from "@assets/generated_images/peaceful_river_ghat_meditation.png";
-import mathuraImage from "@assets/stock_images/mathura_temple_ghat__d4f9531c.jpg";
-import vrindavanImage from "@assets/stock_images/vrindavan_temple_arc_5815b304.jpg";
-import gokulImage from "@assets/stock_images/gokul_krishna_birthp_14f078c6.jpg";
-import govardhanImage from "@assets/stock_images/govardhan_hill_templ_59e90b12.jpg";
-import mahavanImage from "@assets/stock_images/mahavan_gokul_temple_486bbc8f.jpg";
+import mathuraImage from "@assets/Temple/Srikrishna_Janmabhoomi.png";
+import vrindavanImage from "@assets/Temple/Prem_mandir.png";
+import gokulImage from "@assets/Temple/Raman_reti.png";
+import govardhanImage from "@assets/Temple/Daan_Ghati.png";
+import mahavanImage from "@assets/Temple/mahaban_Chaurasi.png";
 
 export const assets = {
   hero: vrindavanSunrise,

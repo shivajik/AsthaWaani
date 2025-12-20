@@ -6,17 +6,18 @@ import { MapPin, Sparkles, ArrowRight } from "lucide-react";
 import { Link, useSearch } from "wouter";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
-import mathuraImage from "@assets/stock_images/mathura_temple_ghat__d4f9531c.jpg";
-import vrindavanImage from "@assets/stock_images/vrindavan_temple_arc_5815b304.jpg";
-import gokulImage from "@assets/stock_images/gokul_krishna_birthp_14f078c6.jpg";
-import govardhanImage from "@assets/stock_images/govardhan_hill_templ_59e90b12.jpg";
-import mahavanImage from "@assets/stock_images/mahavan_gokul_temple_486bbc8f.jpg";
-import vrindavanSunrise from "@assets/generated_images/vrindavan_sunrise_temple_landscape.png";
+import mathuraImage from "@assets/Temple/Srikrishna_Janmabhoomi.png";
+import vrindavanImage from "@assets/Temple/Prem_mandir.png";
+import gokulImage from "@assets/Temple/Raman_reti.png";
+import govardhanImage from "@assets/Temple/Daan_Ghati.png";
+import mahavanImage from "@assets/Temple/mahaban_Chaurasi.png";
+import barsanaImage from "@assets/Temple/Barsana_Radha_Rani.png";
 
 const locationsData = [
   {
     id: "mathura",
     name: { en: "Mathura", hi: "मथुरा" },
+    templeAltName: { en: "Srikrishna Janmabhoomi", hi: "श्रीकृष्ण जन्मभूमि" },
     title: { en: "The Divine Birthplace of Lord Krishna", hi: "भगवान कृष्ण की दिव्य जन्मभूमि" },
     image: mathuraImage,
     description: {
@@ -29,6 +30,7 @@ const locationsData = [
   {
     id: "vrindavan",
     name: { en: "Vrindavan", hi: "वृंदावन" },
+    templeAltName: { en: "Prem Mandir Temple", hi: "प्रेम मंदिर मंदिर" },
     title: { en: "The Land of Divine Love and Bhakti", hi: "दिव्य प्रेम और भक्ति की भूमि" },
     image: vrindavanImage,
     description: {
@@ -41,6 +43,7 @@ const locationsData = [
   {
     id: "gokul",
     name: { en: "Gokul", hi: "गोकुल" },
+    templeAltName: { en: "Raman Reti Temple", hi: "रमण रेती मंदिर" },
     title: { en: "The Sacred Childhood Abode of Shri Krishna", hi: "श्री कृष्ण का पवित्र बाल्यकाल निवास" },
     image: gokulImage,
     description: {
@@ -53,6 +56,7 @@ const locationsData = [
   {
     id: "govardhan",
     name: { en: "Govardhan", hi: "गोवर्धन" },
+    templeAltName: { en: "Daan Ghati Temple", hi: "दान घाटी मंदिर" },
     title: { en: "The Sacred Hill of Protection and Surrender", hi: "सुरक्षा और समर्पण का पवित्र पर्वत" },
     image: govardhanImage,
     description: {
@@ -65,6 +69,7 @@ const locationsData = [
   {
     id: "mahavan",
     name: { en: "Mahavan", hi: "महावन" },
+    templeAltName: { en: "Chaurasi Khamba Temple", hi: "चौरासी खंभा मंदिर" },
     title: { en: "The Forest of Divine Protection", hi: "दिव्य सुरक्षा का वन" },
     image: mahavanImage,
     description: {
@@ -77,8 +82,9 @@ const locationsData = [
   {
     id: "barsana",
     name: { en: "Barsana", hi: "बरसाना" },
+    templeAltName: { en: "Radha Rani Mandir", hi: "राधा रानी मंदिर" },
     title: { en: "The Divine Land of Radha Rani", hi: "राधा रानी की दिव्य भूमि" },
-    image: vrindavanImage,
+    image: barsanaImage,
     description: {
       en: "Barsana is the sacred birthplace of Shri Radha Rani, the embodiment of supreme devotion and divine love. Asthawaani's presence in Barsana celebrates Radha-Krishna Bhakti, spiritual femininity, and unconditional surrender. Known for Lathmar Holi and Radha Bhav, Barsana represents devotion beyond words. Through satsang, bhajan, and spiritual discourse, Asthawaani brings Radha Rani's grace, compassion, and bhakti to seekers seeking emotional healing and divine connection.",
       hi: "बरसाना श्री राधा रानी की पवित्र जन्मभूमि है, जो सर्वोच्च भक्ति और दिव्य प्रेम का मूर्त रूप हैं। बरसाना में आस्थावाणी की उपस्थिति राधा-कृष्ण भक्ति, आध्यात्मिक स्त्रीत्व और बिना शर्त समर्पण का जश्न मनाती है।"
