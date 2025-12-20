@@ -2,13 +2,76 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { YouTubeService } from "./youtube.service";
-import { insertYoutubeChannelSchema, insertVideoSchema, insertContactInfoSchema, insertCategorySchema, insertOfferingSchema, insertNewsTickerSchema } from "@shared/schema";
+import { insertYoutubeChannelSchema, insertVideoSchema, insertContactInfoSchema, insertCategorySchema, insertOfferingSchema, insertNewsTickerSchema, insertMediaSchema } from "@shared/schema";
+import multer from "multer";
+import { uploadToCloudinary, deleteFromCloudinary } from "./cloudinary.service";
 
 export async function registerRoutes(
   httpServer: Server,
   app: Express
 ): Promise<Server> {
-  
+  const upload = multer({ storage: multer.memoryStorage() });
+
+  // Media Upload endpoint (for admin)
+  app.post("/api/cms/upload-media", upload.single("file"), async (req, res) => {
+    try {
+      if (!req.file) {
+        return res.status(400).json({ error: "No file provided" });
+      }
+
+      const uploadResponse = await uploadToCloudinary(
+        req.file.buffer,
+        req.file.originalname
+      );
+
+      const mediaItem = await storage.createMedia({
+        publicId: uploadResponse.public_id,
+        url: uploadResponse.url,
+        secureUrl: uploadResponse.secure_url,
+        filename: req.file.originalname,
+        format: uploadResponse.format,
+        width: uploadResponse.width,
+        height: uploadResponse.height,
+        bytes: uploadResponse.bytes,
+        altText: "",
+        uploadedBy: undefined,
+      });
+
+      res.json(mediaItem);
+    } catch (error) {
+      console.error("Error uploading media:", error);
+      res.status(500).json({ error: "Failed to upload media" });
+    }
+  });
+
+  // Get all media (admin)
+  app.get("/api/cms/media", async (req, res) => {
+    try {
+      const allMedia = await storage.getAllMedia();
+      res.json(allMedia);
+    } catch (error) {
+      console.error("Error fetching media:", error);
+      res.status(500).json({ error: "Failed to fetch media" });
+    }
+  });
+
+  // Delete media (admin)
+  app.delete("/api/cms/media/:id", async (req, res) => {
+    try {
+      const media = await storage.getMedia(req.params.id);
+      if (!media) {
+        return res.status(404).json({ error: "Media not found" });
+      }
+
+      await deleteFromCloudinary(media.publicId);
+      await storage.deleteMedia(req.params.id);
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Error deleting media:", error);
+      res.status(500).json({ error: "Failed to delete media" });
+    }
+  });
+
   // Get all videos from database
   app.get("/api/videos", async (req, res) => {
     try {

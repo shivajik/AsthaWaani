@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogTitle } from "@/components/ui/alert-dialog";
+import { MediaUpload } from "@/components/media-upload";
 import { 
   RefreshCw, Youtube, LogOut, FileText, 
   Image, Settings, LayoutDashboard, PenSquare, Trash2, Plus, Save, Phone, Megaphone
@@ -592,12 +593,21 @@ function PostManager() {
               </div>
             </div>
             <div className="space-y-2">
-              <Label>Featured Image URL</Label>
-              <Input
-                value={post.featuredImage || ""}
-                onChange={(e) => updateField("featuredImage", e.target.value)}
-                placeholder="https://..."
+              <Label>Featured Image</Label>
+              <MediaUpload
+                onUploadSuccess={(url) => updateField("featuredImage", url)}
+                onUploadError={(error) => console.error("Upload error:", error)}
               />
+              {post.featuredImage && (
+                <div className="mt-4">
+                  <img
+                    src={post.featuredImage}
+                    alt="Featured preview"
+                    className="max-w-full h-auto rounded-md"
+                    data-testid="featured-image-preview"
+                  />
+                </div>
+              )}
             </div>
             <div className="space-y-2">
               <Label>Excerpt (English)</Label>
