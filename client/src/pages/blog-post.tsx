@@ -17,6 +17,7 @@ export default function BlogPostDetail() {
   const { slug } = useParams();
   const { language } = useLanguage();
 
+  // Fetch the current blog post
   const { data, isLoading, error } = useQuery<BlogPostDetailResponse>({
     queryKey: [`/api/blog/post/${slug}`],
     queryFn: async () => {
@@ -28,6 +29,16 @@ export default function BlogPostDetail() {
     },
     enabled: !!slug,
   });
+
+  // Fetch all categories for sidebar
+  const { data: allCategories = [] } = useQuery({
+    queryKey: ["/api/categories"],
+  }) as { data: Category[] };
+
+  // Fetch all posts to show related posts
+  const { data: allPosts = [] } = useQuery({
+    queryKey: ["/api/blog/posts"],
+  }) as { data: Post[] };
 
   if (isLoading) {
     return (
@@ -64,16 +75,6 @@ export default function BlogPostDetail() {
   const title = isHindi ? post.titleHi || post.title : post.title;
   const content = isHindi ? post.contentHi || post.content : post.content;
   const excerpt = isHindi ? post.excerptHi || post.excerpt : post.excerpt;
-
-  // Fetch all categories for sidebar
-  const { data: allCategories = [] } = useQuery({
-    queryKey: ["/api/categories"],
-  }) as { data: Category[] };
-
-  // Fetch all posts to show related posts
-  const { data: allPosts = [] } = useQuery({
-    queryKey: ["/api/blog/posts"],
-  }) as { data: Post[] };
 
   // Get related posts from the same category
   const relatedPosts = (allPosts as Post[])
