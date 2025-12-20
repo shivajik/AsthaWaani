@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import { useRef, useState, useEffect } from "react";
 import { useCmsPage } from "@/lib/useCmsPage";
+import { NewsTicker } from "@/components/news-ticker";
 
 interface Video {
   id: string;
@@ -331,6 +332,9 @@ export default function Home() {
           </motion.div>
         </motion.div>
       </section>
+
+      {/* News Ticker */}
+      <NewsTicker />
 
       {/* About Preview */}
       <section className="py-24 bg-background relative overflow-hidden">
