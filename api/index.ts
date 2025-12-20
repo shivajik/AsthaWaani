@@ -196,12 +196,23 @@ const offerings = pgTable("offerings", {
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
 
+const newsTickers = pgTable("news_tickers", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  titleEn: text("title_en").notNull(),
+  titleHi: text("title_hi").notNull(),
+  order: integer("order").default(0),
+  isActive: boolean("is_active").default(true),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
+
 const insertPageSchema = createInsertSchema(pages).omit({ id: true, createdAt: true, updatedAt: true });
 const insertPostSchema = createInsertSchema(posts).omit({ id: true, createdAt: true, updatedAt: true });
 const insertCategorySchema = createInsertSchema(categories).omit({ id: true, createdAt: true, updatedAt: true });
 const insertSeoMetaSchema = createInsertSchema(seoMeta).omit({ id: true, createdAt: true, updatedAt: true });
 const insertContactInfoSchema = createInsertSchema(contactInfo).omit({ id: true, createdAt: true, updatedAt: true });
 const insertOfferingSchema = createInsertSchema(offerings).omit({ id: true, createdAt: true, updatedAt: true });
+const insertNewsTickerSchema = createInsertSchema(newsTickers).omit({ id: true, createdAt: true, updatedAt: true });
 
 class DatabaseStorage {
   async getAllVideos() {
@@ -410,6 +421,28 @@ class DatabaseStorage {
   async deleteOffering(id: string) {
     await db.delete(offerings).where(eq(offerings.id, id));
   }
+
+  async getActiveNewsTickers() {
+    return await db.select().from(newsTickers).where(eq(newsTickers.isActive, true)).orderBy(newsTickers.order);
+  }
+
+  async getAllNewsTickers() {
+    return await db.select().from(newsTickers).orderBy(newsTickers.order);
+  }
+
+  async createNewsTicker(ticker: any) {
+    const [newTicker] = await db.insert(newsTickers).values(ticker).returning();
+    return newTicker;
+  }
+
+  async updateNewsTicker(id: string, ticker: any) {
+    const [updatedTicker] = await db.update(newsTickers).set({ ...ticker, updatedAt: new Date() }).where(eq(newsTickers.id, id)).returning();
+    return updatedTicker;
+  }
+
+  async deleteNewsTicker(id: string) {
+    await db.delete(newsTickers).where(eq(newsTickers.id, id));
+  }
 }
 
 const storage = new DatabaseStorage();
@@ -509,6 +542,7 @@ const updatePostSchema = z.object({
   metaTitle: z.string().nullable().optional(),
   metaDescription: z.string().nullable().optional(),
   status: z.enum(["draft", "published"]).optional(),
+  categoryId: z.string().nullable().optional(),
 });
 
 const updateSeoSchema = z.object({
@@ -563,6 +597,64 @@ app.get("/api/offerings", async (req, res) => {
   } catch (error) {
     console.error("Error fetching offerings:", error);
     res.status(500).json({ error: "Failed to fetch offerings" });
+  }
+});
+
+app.get("/api/news-tickers", async (req, res) => {
+  try {
+    const tickers = await storage.getActiveNewsTickers();
+    res.json(tickers);
+  } catch (error) {
+    console.error("Error fetching news tickers:", error);
+    res.status(500).json({ error: "Failed to fetch news tickers" });
+  }
+});
+
+app.get("/api/cms/news-tickers", isAuthenticated, async (req: Request, res: Response) => {
+  try {
+    const tickers = await storage.getAllNewsTickers();
+    res.json(tickers);
+  } catch (error) {
+    console.error("Error fetching news tickers:", error);
+    res.status(500).json({ error: "Failed to fetch news tickers" });
+  }
+});
+
+app.post("/api/cms/news-tickers", isAuthenticated, async (req: Request, res: Response) => {
+  try {
+    const data = insertNewsTickerSchema.parse(req.body);
+    const ticker = await storage.createNewsTicker(data);
+    res.json(ticker);
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return res.status(400).json({ error: "Validation error", details: error.errors });
+    }
+    console.error("Error creating news ticker:", error);
+    res.status(500).json({ error: "Failed to create news ticker" });
+  }
+});
+
+app.put("/api/cms/news-tickers/:id", isAuthenticated, async (req: Request, res: Response) => {
+  try {
+    const data = insertNewsTickerSchema.partial().parse(req.body);
+    const ticker = await storage.updateNewsTicker(req.params.id, data);
+    res.json(ticker);
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return res.status(400).json({ error: "Validation error", details: error.errors });
+    }
+    console.error("Error updating news ticker:", error);
+    res.status(500).json({ error: "Failed to update news ticker" });
+  }
+});
+
+app.delete("/api/cms/news-tickers/:id", isAuthenticated, async (req: Request, res: Response) => {
+  try {
+    await storage.deleteNewsTicker(req.params.id);
+    res.json({ success: true });
+  } catch (error) {
+    console.error("Error deleting news ticker:", error);
+    res.status(500).json({ error: "Failed to delete news ticker" });
   }
 });
 
