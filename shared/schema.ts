@@ -295,3 +295,23 @@ export const insertOfferingSchema = createInsertSchema(offerings).omit({
 
 export type InsertOffering = z.infer<typeof insertOfferingSchema>;
 export type Offering = typeof offerings.$inferSelect;
+
+// News Ticker Items
+export const newsTickers = pgTable("news_tickers", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  titleEn: text("title_en").notNull(),
+  titleHi: text("title_hi").notNull(),
+  order: integer("order").notNull().default(0),
+  isActive: boolean("is_active").notNull().default(true),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
+
+export const insertNewsTickerSchema = createInsertSchema(newsTickers).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export type InsertNewsTicker = z.infer<typeof insertNewsTickerSchema>;
+export type NewsTicker = typeof newsTickers.$inferSelect;

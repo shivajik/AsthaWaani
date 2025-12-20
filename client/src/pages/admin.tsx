@@ -10,7 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Switch } from "@/components/ui/switch";
 import { 
   RefreshCw, Youtube, LogOut, FileText, 
-  Image, Settings, LayoutDashboard, PenSquare, Trash2, Plus, Save, Phone
+  Image, Settings, LayoutDashboard, PenSquare, Trash2, Plus, Save, Phone, Megaphone
 } from "lucide-react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
@@ -1226,6 +1226,151 @@ function OfferingManager() {
   );
 }
 
+function NewsTickerManager() {
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [formData, setFormData] = useState({ titleEn: "", titleHi: "", order: 0, isActive: true });
+
+  interface NewsTickerItem {
+    id: string;
+    titleEn: string;
+    titleHi: string;
+    order: number;
+    isActive: boolean;
+  }
+
+  const { data: tickers = [] } = useQuery<NewsTickerItem[]>({
+    queryKey: ["/api/cms/news-tickers"],
+    queryFn: async () => {
+      const res = await fetch("/api/cms/news-tickers", { credentials: "include" });
+      if (!res.ok) return [];
+      return res.json();
+    },
+  });
+
+  const saveMutation = useMutation({
+    mutationFn: async () => {
+      const url = editingId ? `/api/cms/news-tickers/${editingId}` : "/api/cms/news-tickers";
+      const method = editingId ? "PUT" : "POST";
+      const res = await fetch(url, {
+        method,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+        credentials: "include",
+      });
+      if (!res.ok) throw new Error("Failed to save");
+      return res.json();
+    },
+    onSuccess: () => {
+      toast({ title: editingId ? "Updated" : "Created" });
+      queryClient.invalidateQueries({ queryKey: ["/api/cms/news-tickers"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/news-tickers"] });
+      setEditingId(null);
+      setFormData({ titleEn: "", titleHi: "", order: 0, isActive: true });
+    },
+    onError: () => {
+      toast({ title: "Failed to save", variant: "destructive" });
+    },
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: async (id: string) => {
+      const res = await fetch(`/api/cms/news-tickers/${id}`, { method: "DELETE", credentials: "include" });
+      if (!res.ok) throw new Error("Failed to delete");
+    },
+    onSuccess: () => {
+      toast({ title: "Deleted" });
+      queryClient.invalidateQueries({ queryKey: ["/api/cms/news-tickers"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/news-tickers"] });
+    },
+  });
+
+  const handleEdit = (ticker: NewsTickerItem) => {
+    setEditingId(ticker.id);
+    setFormData(ticker);
+  };
+
+  return (
+    <div className="space-y-6">
+      <h2 className="text-2xl font-bold">News Ticker</h2>
+      <Card>
+        <CardHeader>
+          <CardTitle>{editingId ? "Edit News Item" : "Add News Item"}</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="space-y-2">
+            <Label>English Text</Label>
+            <Input
+              value={formData.titleEn}
+              onChange={(e) => setFormData({ ...formData, titleEn: e.target.value })}
+              placeholder="Enter English news text"
+            />
+          </div>
+          <div className="space-y-2">
+            <Label>Hindi Text</Label>
+            <Input
+              value={formData.titleHi}
+              onChange={(e) => setFormData({ ...formData, titleHi: e.target.value })}
+              placeholder="हिंदी समाचार पाठ दर्ज करें"
+            />
+          </div>
+          <div className="space-y-2">
+            <Label>Order</Label>
+            <Input
+              type="number"
+              value={formData.order}
+              onChange={(e) => setFormData({ ...formData, order: parseInt(e.target.value) })}
+            />
+          </div>
+          <div className="flex items-center gap-2">
+            <Switch
+              checked={formData.isActive}
+              onCheckedChange={(checked) => setFormData({ ...formData, isActive: checked })}
+            />
+            <Label>Active</Label>
+          </div>
+          <div className="flex gap-2">
+            <Button onClick={() => saveMutation.mutate()} disabled={saveMutation.isPending}>
+              {editingId ? "Update" : "Add"} News Item
+            </Button>
+            {editingId && (
+              <Button variant="outline" onClick={() => {
+                setEditingId(null);
+                setFormData({ titleEn: "", titleHi: "", order: 0, isActive: true });
+              }}>
+                Cancel
+              </Button>
+            )}
+          </div>
+        </CardContent>
+      </Card>
+
+      <div className="space-y-2">
+        <h3 className="font-semibold">All News Items</h3>
+        {tickers.map((ticker) => (
+          <Card key={ticker.id}>
+            <CardContent className="pt-6 flex items-center justify-between">
+              <div>
+                <p className="font-medium">{ticker.titleEn}</p>
+                <p className="text-sm text-muted-foreground">{ticker.titleHi}</p>
+              </div>
+              <div className="flex gap-2">
+                <Button variant="outline" size="sm" onClick={() => handleEdit(ticker)}>
+                  Edit
+                </Button>
+                <Button variant="destructive" size="sm" onClick={() => deleteMutation.mutate(ticker.id)}>
+                  Delete
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function YouTubeSync() {
   const [channelId, setChannelId] = useState("");
   const { toast } = useToast();
@@ -1368,6 +1513,7 @@ export default function Admin() {
     { id: "offerings", label: "Offerings", icon: PenSquare },
     { id: "media", label: "Media", icon: Image },
     { id: "contact", label: "Contact Info", icon: Phone },
+    { id: "news-ticker", label: "News Ticker", icon: Megaphone },
     { id: "youtube", label: "YouTube", icon: Youtube },
     { id: "settings", label: "Settings", icon: Settings },
   ];
@@ -1417,6 +1563,7 @@ export default function Admin() {
           {activeTab === "offerings" && <OfferingManager />}
           {activeTab === "media" && <MediaManager />}
           {activeTab === "contact" && <ContactInfoManager />}
+          {activeTab === "news-ticker" && <NewsTickerManager />}
           {activeTab === "youtube" && <YouTubeSync />}
           {activeTab === "settings" && (
             <div className="space-y-4">

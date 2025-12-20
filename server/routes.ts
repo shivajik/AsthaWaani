@@ -2,7 +2,7 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { YouTubeService } from "./youtube.service";
-import { insertYoutubeChannelSchema, insertVideoSchema, insertContactInfoSchema, insertCategorySchema, insertOfferingSchema } from "@shared/schema";
+import { insertYoutubeChannelSchema, insertVideoSchema, insertContactInfoSchema, insertCategorySchema, insertOfferingSchema, insertNewsTickerSchema } from "@shared/schema";
 
 export async function registerRoutes(
   httpServer: Server,
@@ -17,6 +17,56 @@ export async function registerRoutes(
     } catch (error) {
       console.error("Error fetching videos:", error);
       res.status(500).json({ error: "Failed to fetch videos" });
+    }
+  });
+
+  // News Ticker routes
+  app.get("/api/news-tickers", async (req, res) => {
+    try {
+      const tickers = await storage.getActiveNewsTickers();
+      res.json(tickers);
+    } catch (error) {
+      console.error("Error fetching news tickers:", error);
+      res.status(500).json({ error: "Failed to fetch news tickers" });
+    }
+  });
+
+  app.get("/api/cms/news-tickers", async (req, res) => {
+    try {
+      const tickers = await storage.getAllNewsTickers();
+      res.json(tickers);
+    } catch (error) {
+      console.error("Error fetching news tickers:", error);
+      res.status(500).json({ error: "Failed to fetch news tickers" });
+    }
+  });
+
+  app.post("/api/cms/news-tickers", async (req, res) => {
+    try {
+      const data = insertNewsTickerSchema.parse(req.body);
+      const ticker = await storage.createNewsTicker(data);
+      res.json(ticker);
+    } catch (error) {
+      res.status(400).json({ error: error instanceof Error ? error.message : "Invalid data" });
+    }
+  });
+
+  app.put("/api/cms/news-tickers/:id", async (req, res) => {
+    try {
+      const data = insertNewsTickerSchema.partial().parse(req.body);
+      const ticker = await storage.updateNewsTicker(req.params.id, data);
+      res.json(ticker);
+    } catch (error) {
+      res.status(400).json({ error: error instanceof Error ? error.message : "Invalid data" });
+    }
+  });
+
+  app.delete("/api/cms/news-tickers/:id", async (req, res) => {
+    try {
+      await storage.deleteNewsTicker(req.params.id);
+      res.json({ success: true });
+    } catch (error) {
+      res.status(500).json({ error: "Failed to delete news ticker" });
     }
   });
 

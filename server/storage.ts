@@ -3,8 +3,8 @@ import {
   type Admin, type InsertAdmin, type Page, type InsertPage, type Post, type InsertPost,
   type Media, type InsertMedia, type SeoMeta, type InsertSeoMeta, type SiteSettings, type InsertSiteSettings,
   type ContactInfo, type InsertContactInfo, type Category, type InsertCategory, type PostCategory,
-  type Offering, type InsertOffering,
-  videos, youtubeChannels, users, admins, pages, posts, media, seoMeta, siteSettings, contactInfo, categories, postCategories, offerings
+  type Offering, type InsertOffering, type NewsTicker, type InsertNewsTicker,
+  videos, youtubeChannels, users, admins, pages, posts, media, seoMeta, siteSettings, contactInfo, categories, postCategories, offerings, newsTickers
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, desc, and } from "drizzle-orm";
@@ -96,6 +96,13 @@ export interface IStorage {
   createOffering(offering: InsertOffering): Promise<Offering>;
   updateOffering(id: string, offering: Partial<InsertOffering>): Promise<Offering>;
   deleteOffering(id: string): Promise<void>;
+
+  // News Ticker operations
+  getAllNewsTickers(): Promise<NewsTicker[]>;
+  getActiveNewsTickers(): Promise<NewsTicker[]>;
+  createNewsTicker(ticker: InsertNewsTicker): Promise<NewsTicker>;
+  updateNewsTicker(id: string, ticker: Partial<InsertNewsTicker>): Promise<NewsTicker>;
+  deleteNewsTicker(id: string): Promise<void>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -509,6 +516,29 @@ export class DatabaseStorage implements IStorage {
 
   async deleteOffering(id: string): Promise<void> {
     await db.delete(offerings).where(eq(offerings.id, id));
+  }
+
+  // News Ticker operations
+  async getAllNewsTickers(): Promise<NewsTicker[]> {
+    return await db.select().from(newsTickers).orderBy(newsTickers.order);
+  }
+
+  async getActiveNewsTickers(): Promise<NewsTicker[]> {
+    return await db.select().from(newsTickers).where(eq(newsTickers.isActive, true)).orderBy(newsTickers.order);
+  }
+
+  async createNewsTicker(ticker: InsertNewsTicker): Promise<NewsTicker> {
+    const [newTicker] = await db.insert(newsTickers).values(ticker).returning();
+    return newTicker;
+  }
+
+  async updateNewsTicker(id: string, ticker: Partial<InsertNewsTicker>): Promise<NewsTicker> {
+    const [updated] = await db.update(newsTickers).set({ ...ticker, updatedAt: new Date() }).where(eq(newsTickers.id, id)).returning();
+    return updated;
+  }
+
+  async deleteNewsTicker(id: string): Promise<void> {
+    await db.delete(newsTickers).where(eq(newsTickers.id, id));
   }
 }
 
