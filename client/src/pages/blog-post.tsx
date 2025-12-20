@@ -65,84 +65,178 @@ export default function BlogPostDetail() {
   const content = isHindi ? post.contentHi || post.content : post.content;
   const excerpt = isHindi ? post.excerptHi || post.excerpt : post.excerpt;
 
+  // Fetch all categories for sidebar
+  const { data: allCategories = [] } = useQuery({
+    queryKey: ["/api/categories"],
+  }) as { data: Category[] };
+
+  // Fetch all posts to show related posts
+  const { data: allPosts = [] } = useQuery({
+    queryKey: ["/api/blog/posts"],
+  }) as { data: Post[] };
+
+  // Get related posts from the same category
+  const relatedPosts = (allPosts as Post[])
+    .filter((p: Post) => p.categoryId === post.categoryId && p.id !== post.id)
+    .slice(0, 5);
+
   return (
     <div className="min-h-screen bg-white dark:bg-black">
-      <div className="container mx-auto px-4 py-12">
-        <div className="max-w-3xl mx-auto">
-          <Link href="/blog">
-            <Button variant="outline" className="gap-2 mb-8">
-              <ChevronLeft className="w-4 h-4" />
-              {language === "hi" ? "ब्लॉग पर वापस जाएँ" : "Back to Blog"}
-            </Button>
-          </Link>
-
-          <article className="space-y-6">
-            {post.featuredImage && (
-              <div className="w-full h-96 overflow-hidden rounded-lg bg-gray-200 dark:bg-gray-800">
-                <img
-                  src={post.featuredImage}
-                  alt={title}
-                  className="w-full h-full object-cover"
-                />
+      <div className="container mx-auto px-4 pt-12 pb-12 md:pb-16">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+          {/* Categories Sidebar */}
+          <aside className="md:col-span-1">
+            <div className="sticky top-4 space-y-8">
+              {/* Categories Section */}
+              <div>
+                <h2 className="text-lg font-semibold mb-4">
+                  {language === "hi" ? "श्रेणियां" : "Categories"}
+                </h2>
+                <div className="space-y-2">
+                  <Link href="/blog">
+                    <Button
+                      variant="outline"
+                      className="w-full justify-start"
+                      data-testid="button-category-all"
+                    >
+                      {language === "hi" ? "सभी" : "All"}
+                    </Button>
+                  </Link>
+                  {(allCategories as Category[]).map((category: Category) => (
+                    <Link
+                      key={category.id}
+                      href={`/blog?category=${category.id}`}
+                    >
+                      <Button
+                        variant={
+                          post.categoryId === category.id ? "default" : "outline"
+                        }
+                        className="w-full justify-start"
+                        data-testid={`button-category-${category.slug}`}
+                      >
+                        {language === "hi" ? category.nameHi || category.name : category.name}
+                      </Button>
+                    </Link>
+                  ))}
+                </div>
               </div>
-            )}
 
-            <div className="space-y-4">
-              <div className="flex items-center justify-between gap-4 flex-wrap">
-                <h1 className="text-4xl md:text-5xl font-bold">{title}</h1>
-              </div>
-
-              <div className="flex items-center gap-4 flex-wrap">
-                {post.publishedAt && (
-                  <div className="text-sm text-muted-foreground">
-                    {new Date(post.publishedAt).toLocaleDateString(
-                      language === "hi" ? "hi-IN" : "en-US",
-                      {
-                        year: "numeric",
-                        month: "long",
-                        day: "numeric",
-                      }
-                    )}
+              {/* Related Posts Section */}
+              {relatedPosts.length > 0 && (
+                <div>
+                  <h2 className="text-lg font-semibold mb-4">
+                    {language === "hi" ? "संबंधित पोस्ट" : "Related Posts"}
+                  </h2>
+                  <div className="space-y-3">
+                    {relatedPosts.map((relatedPost: Post) => (
+                      <Link key={relatedPost.id} href={`/blog/${relatedPost.slug}`}>
+                        <Card
+                          className="p-4 cursor-pointer hover-elevate hover:shadow-md transition-shadow"
+                          data-testid={`card-related-post-${relatedPost.id}`}
+                        >
+                          <h3 className="font-semibold text-sm line-clamp-2">
+                            {language === "hi"
+                              ? relatedPost.titleHi || relatedPost.title
+                              : relatedPost.title}
+                          </h3>
+                          {relatedPost.publishedAt && (
+                            <p className="text-xs text-muted-foreground mt-2">
+                              {new Date(relatedPost.publishedAt).toLocaleDateString(
+                                language === "hi" ? "hi-IN" : "en-US",
+                                {
+                                  year: "numeric",
+                                  month: "short",
+                                  day: "numeric",
+                                }
+                              )}
+                            </p>
+                          )}
+                        </Card>
+                      </Link>
+                    ))}
                   </div>
-                )}
-                {post.categoryId && data.categories?.find(c => c.id === post.categoryId) && (
-                  <Badge variant="secondary">
-                    {data.categories.find(c => c.id === post.categoryId)?.name}
-                  </Badge>
-                )}
-              </div>
-
-              {excerpt && (
-                <p className="text-lg text-muted-foreground italic">{excerpt}</p>
+                </div>
               )}
             </div>
+          </aside>
 
-            {content && (
-              <div
-                className="prose dark:prose-invert max-w-none
-                  prose-headings:font-bold prose-headings:text-foreground
-                  prose-p:text-foreground/90 prose-p:leading-7
-                  prose-a:text-primary prose-a:underline
-                  prose-strong:font-semibold prose-strong:text-foreground
-                  prose-img:rounded-lg prose-img:border prose-img:border-border
-                  prose-blockquote:border-l-primary prose-blockquote:text-muted-foreground
-                  prose-code:bg-secondary prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded
-                  prose-pre:bg-secondary prose-pre:p-4 prose-pre:rounded-lg
-                  prose-ul:list-disc prose-ul:ml-6
-                  prose-ol:list-decimal prose-ol:ml-6"
-                dangerouslySetInnerHTML={{ __html: content }}
-              />
-            )}
-          </article>
-
-          <div className="mt-12 pt-8 border-t border-border">
+          {/* Main Content */}
+          <main className="md:col-span-3">
             <Link href="/blog">
-              <Button variant="outline" className="gap-2">
+              <Button variant="outline" className="gap-2 mb-8">
                 <ChevronLeft className="w-4 h-4" />
-                {language === "hi" ? "सभी ब्लॉग देखें" : "View All Posts"}
+                {language === "hi" ? "ब्लॉग पर वापस जाएँ" : "Back to Blog"}
               </Button>
             </Link>
-          </div>
+
+            <article className="space-y-6">
+              {post.featuredImage && (
+                <div className="w-full h-96 overflow-hidden rounded-lg bg-gray-200 dark:bg-gray-800">
+                  <img
+                    src={post.featuredImage}
+                    alt={title}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              )}
+
+              <div className="space-y-4">
+                <div className="flex items-center justify-between gap-4 flex-wrap">
+                  <h1 className="text-4xl md:text-5xl font-bold">{title}</h1>
+                </div>
+
+                <div className="flex items-center gap-4 flex-wrap">
+                  {post.publishedAt && (
+                    <div className="text-sm text-muted-foreground">
+                      {new Date(post.publishedAt).toLocaleDateString(
+                        language === "hi" ? "hi-IN" : "en-US",
+                        {
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
+                        }
+                      )}
+                    </div>
+                  )}
+                  {post.categoryId && data.categories?.find(c => c.id === post.categoryId) && (
+                    <Badge variant="secondary">
+                      {data.categories.find(c => c.id === post.categoryId)?.name}
+                    </Badge>
+                  )}
+                </div>
+
+                {excerpt && (
+                  <p className="text-lg text-muted-foreground italic">{excerpt}</p>
+                )}
+              </div>
+
+              {content && (
+                <div
+                  className="prose dark:prose-invert max-w-none
+                    prose-headings:font-bold prose-headings:text-foreground
+                    prose-p:text-foreground/90 prose-p:leading-7
+                    prose-a:text-primary prose-a:underline
+                    prose-strong:font-semibold prose-strong:text-foreground
+                    prose-img:rounded-lg prose-img:border prose-img:border-border
+                    prose-blockquote:border-l-primary prose-blockquote:text-muted-foreground
+                    prose-code:bg-secondary prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded
+                    prose-pre:bg-secondary prose-pre:p-4 prose-pre:rounded-lg
+                    prose-ul:list-disc prose-ul:ml-6
+                    prose-ol:list-decimal prose-ol:ml-6"
+                  dangerouslySetInnerHTML={{ __html: content }}
+                />
+              )}
+            </article>
+
+            <div className="mt-12 pt-8 border-t border-border">
+              <Link href="/blog">
+                <Button variant="outline" className="gap-2">
+                  <ChevronLeft className="w-4 h-4" />
+                  {language === "hi" ? "सभी ब्लॉग देखें" : "View All Posts"}
+                </Button>
+              </Link>
+            </div>
+          </main>
         </div>
       </div>
     </div>
