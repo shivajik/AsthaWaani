@@ -77,6 +77,13 @@
   }
 }
 
+@layer base {
+  /* Style numbered headings in legal pages content */
+  .prose h3 {
+    @apply text-secondary font-serif font-bold;
+  }
+}
+
 @layer utilities {
   .preserve-whitespace {
     white-space: normal;
