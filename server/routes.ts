@@ -101,7 +101,7 @@ export async function registerRoutes(
   app.get("/api/pages/:slug", async (req, res) => {
     try {
       const page = await storage.getPageBySlug(req.params.slug);
-      if (!page) {
+      if (!page || !page.isPublished) {
         return res.status(404).json({ error: "Page not found" });
       }
       res.json(page);
@@ -114,6 +114,10 @@ export async function registerRoutes(
   app.post("/api/cms/pages", async (req, res) => {
     try {
       const data = insertPageSchema.parse(req.body);
+      const existing = await storage.getPageBySlug(data.slug);
+      if (existing) {
+        return res.status(400).json({ error: "A page with this slug already exists" });
+      }
       const page = await storage.createPage(data);
       res.json(page);
     } catch (error: any) {
@@ -125,6 +129,12 @@ export async function registerRoutes(
   app.put("/api/cms/pages/:id", async (req, res) => {
     try {
       const data = insertPageSchema.partial().parse(req.body);
+      if (data.slug) {
+        const existing = await storage.getPageBySlug(data.slug);
+        if (existing && existing.id !== req.params.id) {
+          return res.status(400).json({ error: "A page with this slug already exists" });
+        }
+      }
       const page = await storage.updatePage(req.params.id, data);
       res.json(page);
     } catch (error: any) {

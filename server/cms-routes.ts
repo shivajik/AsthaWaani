@@ -240,6 +240,10 @@ router.get("/posts/:id", isAuthenticated, async (req: Request, res: Response) =>
 router.post("/posts", isAuthenticated, async (req: Request, res: Response) => {
   try {
     const data = insertPostSchema.parse(req.body);
+    const existing = await storage.getPostBySlug(data.slug);
+    if (existing) {
+      return res.status(400).json({ error: "A post with this slug already exists" });
+    }
     if (data.content) {
       data.content = sanitizeContent(data.content);
     }
@@ -268,6 +272,13 @@ router.put("/posts/:id", isAuthenticated, async (req: Request, res: Response) =>
     }
     
     const validated = updatePostSchema.parse(req.body);
+    
+    if (validated.slug) {
+      const existingSlug = await storage.getPostBySlug(validated.slug);
+      if (existingSlug && existingSlug.id !== req.params.id) {
+        return res.status(400).json({ error: "A post with this slug already exists" });
+      }
+    }
     
     if (validated.content) {
       validated.content = sanitizeContent(validated.content);
