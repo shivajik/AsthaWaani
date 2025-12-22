@@ -1547,7 +1547,7 @@ function LegalPageManager() {
   });
 
   const legalPages = pages?.filter(p => 
-    p.slug === "privacy-policy" || p.slug === "terms-conditions"
+    p.slug === "privacy-policy" || p.slug === "terms-of-service"
   ) || [];
 
   const saveMutation = useMutation({
