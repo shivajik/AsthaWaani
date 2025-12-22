@@ -12,7 +12,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { MediaUpload } from "@/components/media-upload";
 import { 
   RefreshCw, Youtube, LogOut, FileText, 
-  Image, Settings, LayoutDashboard, PenSquare, Trash2, Plus, Save, Phone, Megaphone
+  Image, Settings, LayoutDashboard, PenSquare, Trash2, Plus, Save, Phone, Megaphone, FileCheck
 } from "lucide-react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
@@ -1520,6 +1520,173 @@ function NewsTickerManager() {
   );
 }
 
+function LegalPageManager() {
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
+  const [editingPage, setEditingPage] = useState<Page | null>(null);
+
+  const { data: pages, isLoading } = useQuery<Page[]>({
+    queryKey: ["/api/cms/pages"],
+    queryFn: async () => {
+      const res = await fetch("/api/cms/pages", { credentials: "include" });
+      if (!res.ok) return [];
+      return res.json();
+    },
+  });
+
+  const legalPages = pages?.filter(p => 
+    p.slug === "privacy-policy" || p.slug === "terms-conditions"
+  ) || [];
+
+  const saveMutation = useMutation({
+    mutationFn: async (page: Partial<Page>) => {
+      const url = `/api/cms/pages/${page.id}`;
+      const res = await fetch(url, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(page),
+        credentials: "include",
+      });
+      if (!res.ok) throw new Error("Failed to save page");
+      return res.json();
+    },
+    onSuccess: () => {
+      toast({ title: "Legal page updated successfully" });
+      queryClient.invalidateQueries({ queryKey: ["/api/cms/pages"] });
+      setEditingPage(null);
+    },
+    onError: () => {
+      toast({ title: "Failed to save page", variant: "destructive" });
+    },
+  });
+
+  if (editingPage) {
+    const page = editingPage;
+
+    return (
+      <div className="space-y-4">
+        <div className="flex justify-between items-center">
+          <h2 className="text-2xl font-bold">Edit Legal Page</h2>
+          <Button variant="outline" onClick={() => setEditingPage(null)}>
+            Cancel
+          </Button>
+        </div>
+        <Card>
+          <CardContent className="pt-6 space-y-4">
+            <div className="space-y-2">
+              <Label>Title (English)</Label>
+              <Input
+                value={page.title}
+                onChange={(e) => setEditingPage({ ...editingPage, title: e.target.value })}
+                placeholder="Page Title"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>Title (Hindi)</Label>
+              <Input
+                value={page.titleHi || ""}
+                onChange={(e) => setEditingPage({ ...editingPage, titleHi: e.target.value })}
+                placeholder="पृष्ठ शीर्षक"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>Content (English)</Label>
+              <RichTextEditor
+                content={page.content || ""}
+                onChange={(content) => setEditingPage({ ...editingPage, content })}
+                placeholder="Page content..."
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>Content (Hindi)</Label>
+              <RichTextEditor
+                content={page.contentHi || ""}
+                onChange={(content) => setEditingPage({ ...editingPage, contentHi: content })}
+                placeholder="पृष्ठ सामग्री..."
+              />
+            </div>
+            <div className="grid md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label>Meta Title</Label>
+                <Input
+                  value={page.metaTitle || ""}
+                  onChange={(e) => setEditingPage({ ...editingPage, metaTitle: e.target.value })}
+                  placeholder="SEO Title"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>Meta Description</Label>
+                <Input
+                  value={page.metaDescription || ""}
+                  onChange={(e) => setEditingPage({ ...editingPage, metaDescription: e.target.value })}
+                  placeholder="SEO Description"
+                />
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <Switch
+                checked={page.isPublished}
+                onCheckedChange={(checked) => setEditingPage({ ...editingPage, isPublished: checked })}
+              />
+              <Label>Published</Label>
+            </div>
+            <Button
+              onClick={() => saveMutation.mutate(editingPage)}
+              disabled={saveMutation.isPending}
+              className="gap-2"
+            >
+              <Save className="w-4 h-4" />
+              {saveMutation.isPending ? "Saving..." : "Save Page"}
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-4">
+      <h2 className="text-2xl font-bold">Legal Pages</h2>
+      {isLoading ? (
+        <p>Loading...</p>
+      ) : (
+        <div className="grid md:grid-cols-2 gap-4">
+          {legalPages.map((page) => (
+            <Card key={page.id}>
+              <CardHeader>
+                <CardTitle className="text-lg">{page.title}</CardTitle>
+                <CardDescription>{page.titleHi}</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div>
+                    <p className="text-sm font-medium text-muted-foreground mb-2">Status</p>
+                    <p className={`text-sm font-medium ${page.isPublished ? "text-green-600" : "text-amber-600"}`}>
+                      {page.isPublished ? "Published" : "Draft"}
+                    </p>
+                  </div>
+                  <Button 
+                    onClick={() => setEditingPage(page)}
+                    className="w-full gap-2"
+                  >
+                    <PenSquare className="w-4 h-4" />
+                    Edit Page
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+          {legalPages.length === 0 && (
+            <div className="col-span-2">
+              <p className="text-muted-foreground text-center py-8">No legal pages found. Create them from the Pages section first.</p>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function YouTubeSync() {
   const [channelId, setChannelId] = useState("");
   const { toast } = useToast();
@@ -1658,6 +1825,7 @@ export default function Admin() {
   const menuItems = [
     { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
     { id: "pages", label: "Pages", icon: FileText },
+    { id: "legal", label: "Legal Pages", icon: FileCheck },
     { id: "posts", label: "Blog Posts", icon: PenSquare },
     { id: "offerings", label: "Offerings", icon: PenSquare },
     { id: "media", label: "Media", icon: Image },
@@ -1708,6 +1876,7 @@ export default function Admin() {
         <div className="flex-1 ml-64 p-8">
           {activeTab === "dashboard" && <DashboardOverview />}
           {activeTab === "pages" && <PageManager />}
+          {activeTab === "legal" && <LegalPageManager />}
           {activeTab === "posts" && <PostManager />}
           {activeTab === "offerings" && <OfferingManager />}
           {activeTab === "media" && <MediaManager />}
