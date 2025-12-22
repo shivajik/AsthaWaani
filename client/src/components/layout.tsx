@@ -37,7 +37,7 @@ export function Header() {
     { href: "/brajbhoomi", label: language === 'en' ? 'Brajbhoomi' : 'ब्रजभूमि' },
     // { href: "/blog", label: language === 'en' ? 'Blog' : 'ब्लॉग' },
     { href: "/videos", label: t('nav.videos') || "Videos" },
-    { href: "/gallery", label: t('nav.gallery') },
+    // { href: "/gallery", label: t('nav.gallery') },
     { href: "/contact", label: t('nav.contact') },
   ];
 
