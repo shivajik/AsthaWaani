@@ -305,14 +305,21 @@ function PageManager() {
       });
     },
     onError: (error: Error) => {
-      toast({ title: "Failed to save page", description: error.message, variant: "destructive" });
+      toast({ 
+        title: error.message || "Failed to save page", 
+        variant: "destructive",
+        duration: 5000 
+      });
     },
   });
 
   const deleteMutation = useMutation({
     mutationFn: async (id: string) => {
       const res = await fetch(`/api/cms/pages/${id}`, { method: "DELETE", credentials: "include" });
-      if (!res.ok) throw new Error("Failed to delete page");
+      if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.error || "Failed to delete page");
+      }
     },
     onSuccess: () => {
       toast({ title: "Page deleted" });
@@ -547,7 +554,10 @@ function PostManager() {
         body: JSON.stringify(postData),
         credentials: "include",
       });
-      if (!res.ok) throw new Error("Failed to save post");
+      if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.error || "Failed to save post");
+      }
       return res.json();
     },
     onSuccess: () => {
@@ -561,8 +571,12 @@ function PostManager() {
         content: "", contentHi: "", featuredImage: "", metaTitle: "", metaDescription: "", status: "draft", categoryId: "",
       });
     },
-    onError: () => {
-      toast({ title: "Failed to save post", variant: "destructive" });
+    onError: (error: Error) => {
+      toast({ 
+        title: error.message || "Failed to save post", 
+        variant: "destructive",
+        duration: 5000 
+      });
     },
   });
 
