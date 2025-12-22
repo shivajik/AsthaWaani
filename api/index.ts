@@ -845,6 +845,10 @@ app.get("/api/cms/posts/:id", isAuthenticated, async (req: Request, res: Respons
 app.post("/api/cms/posts", isAuthenticated, async (req: Request, res: Response) => {
   try {
     const data = insertPostSchema.parse(req.body);
+    const existingSlug = await storage.getPostBySlug(data.slug);
+    if (existingSlug) {
+      return res.status(400).json({ error: "A blog post with this slug already exists. Please use a different slug." });
+    }
     if (data.content) data.content = sanitizeContent(data.content);
     if (data.contentHi) data.contentHi = sanitizeContent(data.contentHi);
     if (data.status === "published" && !data.publishedAt) {
@@ -868,6 +872,12 @@ app.put("/api/cms/posts/:id", isAuthenticated, async (req: Request, res: Respons
       return res.status(404).json({ error: "Post not found" });
     }
     const validated = updatePostSchema.parse(req.body);
+    if (validated.slug) {
+      const existingSlug = await storage.getPostBySlug(validated.slug);
+      if (existingSlug && existingSlug.id !== req.params.id) {
+        return res.status(400).json({ error: "A blog post with this slug already exists. Please use a different slug." });
+      }
+    }
     if (validated.content) validated.content = sanitizeContent(validated.content);
     if (validated.contentHi) validated.contentHi = sanitizeContent(validated.contentHi);
     const updateData: any = { ...validated };
