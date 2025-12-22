@@ -578,6 +578,17 @@ function PostManager() {
     },
   });
 
+  useEffect(() => {
+    if (editingPost || isCreating) {
+      const post = editingPost || newPost;
+      if (!originalImage) {
+        setOriginalImage(post.featuredImage || null);
+      }
+    } else {
+      setOriginalImage(null);
+    }
+  }, [editingPost, isCreating]);
+
   if (editingPost || isCreating) {
     const post = editingPost || newPost;
     const updateField = (field: string, value: any) => {
@@ -587,10 +598,6 @@ function PostManager() {
         setNewPost({ ...newPost, [field]: value });
       }
     };
-
-    if (!originalImage && (editingPost || isCreating)) {
-      setOriginalImage(post.featuredImage || null);
-    }
 
     return (
       <div className="space-y-4">
