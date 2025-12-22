@@ -18,6 +18,7 @@ import Blog from "@/pages/blog";
 import BlogPostDetail from "@/pages/blog-post";
 import TermsOfService from "@/pages/terms-of-service";
 import PrivacyPolicy from "@/pages/privacy-policy";
+import DynamicPage from "@/pages/dynamic-page";
 
 function Router() {
   return (
@@ -34,6 +35,7 @@ function Router() {
       <Route path="/terms-of-service" component={TermsOfService} />
       <Route path="/privacy-policy" component={PrivacyPolicy} />
       <Route path="/admin" component={Admin} />
+      <Route path="/:slug" component={DynamicPage} />
       <Route component={NotFound} />
     </Switch>
   );
