@@ -5,12 +5,23 @@ import { YouTubeService } from "./youtube.service";
 import { insertYoutubeChannelSchema, insertVideoSchema, insertContactInfoSchema, insertCategorySchema, insertOfferingSchema, insertNewsTickerSchema, insertMediaSchema, insertPageSchema } from "@shared/schema";
 import multer from "multer";
 import { uploadToCloudinary, deleteFromCloudinary } from "./cloudinary.service";
+import { sendContactFormNotification } from "./email.service";
+import rateLimit from "express-rate-limit";
 
 export async function registerRoutes(
   httpServer: Server,
   app: Express
 ): Promise<Server> {
   const upload = multer({ storage: multer.memoryStorage() });
+  
+  // Rate limiting for contact form
+  const contactRateLimit = rateLimit({
+    windowMs: 60 * 60 * 1000, // 1 hour
+    max: 5, // 5 requests per hour
+    message: "Too many contact form submissions, please try again later",
+    standardHeaders: true,
+    legacyHeaders: false,
+  });
 
   // Media Upload endpoint (for admin)
   app.post("/api/cms/media/upload", upload.single("file"), async (req, res) => {
@@ -84,6 +95,46 @@ export async function registerRoutes(
     } catch (error) {
       console.error("Error deleting from Cloudinary:", error);
       res.status(500).json({ error: "Failed to delete image" });
+    }
+  });
+
+  // Contact Form API
+  app.post("/api/contact", contactRateLimit, async (req: any, res: any) => {
+    try {
+      const { name, email, subject, message, phone } = req.body;
+
+      // Validate required fields
+      if (!name || !email || !subject || !message) {
+        return res.status(400).json({ error: "All fields are required" });
+      }
+
+      // Validate field lengths
+      if (name.length > 100 || email.length > 200 || subject.length > 200 || message.length > 2000) {
+        return res.status(400).json({ error: "Input exceeds maximum allowed length" });
+      }
+
+      // Basic email validation
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        return res.status(400).json({ error: "Invalid email format" });
+      }
+
+      // Check if email service is configured
+      if (!process.env.EMAIL || !process.env.PASS) {
+        console.error("Email service not configured");
+        return res.status(500).json({ error: "Email service is not currently available. Please try again later." });
+      }
+
+      // Send email notification to admin
+      await sendContactFormNotification(name, email, subject, message, phone);
+
+      res.json({
+        success: true,
+        message: "Your message has been sent successfully. We will get back to you soon!",
+      });
+    } catch (error) {
+      console.error("Contact form submission error:", error);
+      res.status(500).json({ error: "Failed to send message. Please try again later." });
     }
   });
 
