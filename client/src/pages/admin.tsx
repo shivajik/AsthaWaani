@@ -251,6 +251,16 @@ function PageManager() {
   const { toast } = useToast();
   const [editingPage, setEditingPage] = useState<Page | null>(null);
   const [isCreating, setIsCreating] = useState(false);
+  const [newPage, setNewPage] = useState({
+    slug: "",
+    title: "",
+    titleHi: "",
+    content: "",
+    contentHi: "",
+    metaTitle: "",
+    metaDescription: "",
+    isPublished: true,
+  });
 
   const { data: pages, isLoading } = useQuery<Page[]>({
     queryKey: ["/api/cms/pages"],
@@ -279,6 +289,16 @@ function PageManager() {
       queryClient.invalidateQueries({ queryKey: ["/api/cms/pages"] });
       setEditingPage(null);
       setIsCreating(false);
+      setNewPage({
+        slug: "",
+        title: "",
+        titleHi: "",
+        content: "",
+        contentHi: "",
+        metaTitle: "",
+        metaDescription: "",
+        isPublished: true,
+      });
     },
     onError: () => {
       toast({ title: "Failed to save page", variant: "destructive" });
@@ -297,15 +317,13 @@ function PageManager() {
   });
 
   if (editingPage || isCreating) {
-    const page = editingPage || {
-      slug: "",
-      title: "",
-      titleHi: "",
-      content: "",
-      contentHi: "",
-      metaTitle: "",
-      metaDescription: "",
-      isPublished: true,
+    const page = editingPage || newPage;
+    const updateField = (field: string, value: any) => {
+      if (editingPage) {
+        setEditingPage({ ...editingPage, [field]: value });
+      } else {
+        setNewPage({ ...newPage, [field]: value });
+      }
     };
 
     return (
@@ -323,10 +341,7 @@ function PageManager() {
                 <Label>Slug (URL path)</Label>
                 <Input
                   value={page.slug}
-                  onChange={(e) => editingPage 
-                    ? setEditingPage({ ...editingPage, slug: e.target.value })
-                    : setIsCreating(true)
-                  }
+                  onChange={(e) => updateField("slug", e.target.value)}
                   disabled={!!editingPage}
                   placeholder="about-us"
                 />
@@ -335,10 +350,7 @@ function PageManager() {
                 <Label>Title (English)</Label>
                 <Input
                   value={page.title}
-                  onChange={(e) => editingPage 
-                    ? setEditingPage({ ...editingPage, title: e.target.value })
-                    : null
-                  }
+                  onChange={(e) => updateField("title", e.target.value)}
                   placeholder="Page Title"
                 />
               </div>
@@ -347,7 +359,7 @@ function PageManager() {
               <Label>Title (Hindi)</Label>
               <Input
                 value={page.titleHi || ""}
-                onChange={(e) => editingPage && setEditingPage({ ...editingPage, titleHi: e.target.value })}
+                onChange={(e) => updateField("titleHi", e.target.value)}
                 placeholder="पृष्ठ शीर्षक"
               />
             </div>
@@ -355,7 +367,7 @@ function PageManager() {
               <Label>Content (English)</Label>
               <RichTextEditor
                 content={page.content || ""}
-                onChange={(content) => editingPage && setEditingPage({ ...editingPage, content })}
+                onChange={(content) => updateField("content", content)}
                 placeholder="Page content..."
               />
             </div>
@@ -363,7 +375,7 @@ function PageManager() {
               <Label>Content (Hindi)</Label>
               <RichTextEditor
                 content={page.contentHi || ""}
-                onChange={(content) => editingPage && setEditingPage({ ...editingPage, contentHi: content })}
+                onChange={(content) => updateField("contentHi", content)}
                 placeholder="पृष्ठ सामग्री..."
               />
             </div>
@@ -372,7 +384,7 @@ function PageManager() {
                 <Label>Meta Title</Label>
                 <Input
                   value={page.metaTitle || ""}
-                  onChange={(e) => editingPage && setEditingPage({ ...editingPage, metaTitle: e.target.value })}
+                  onChange={(e) => updateField("metaTitle", e.target.value)}
                   placeholder="SEO Title"
                 />
               </div>
@@ -380,7 +392,7 @@ function PageManager() {
                 <Label>Meta Description</Label>
                 <Input
                   value={page.metaDescription || ""}
-                  onChange={(e) => editingPage && setEditingPage({ ...editingPage, metaDescription: e.target.value })}
+                  onChange={(e) => updateField("metaDescription", e.target.value)}
                   placeholder="SEO Description"
                 />
               </div>
@@ -388,12 +400,12 @@ function PageManager() {
             <div className="flex items-center gap-2">
               <Switch
                 checked={page.isPublished}
-                onCheckedChange={(checked) => editingPage && setEditingPage({ ...editingPage, isPublished: checked })}
+                onCheckedChange={(checked) => updateField("isPublished", checked)}
               />
               <Label>Published</Label>
             </div>
             <Button
-              onClick={() => saveMutation.mutate(editingPage as Page)}
+              onClick={() => saveMutation.mutate(editingPage || newPage)}
               disabled={saveMutation.isPending}
               className="gap-2"
             >
