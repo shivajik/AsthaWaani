@@ -578,7 +578,7 @@ const updateMediaSchema = z.object({
 app.get("/api/pages/:slug", async (req, res) => {
   try {
     const page = await storage.getPageBySlug(req.params.slug);
-    if (!page) {
+    if (!page || !page.isPublished) {
       return res.status(404).json({ error: "Page not found" });
     }
     res.json(page);
@@ -766,6 +766,10 @@ app.get("/api/cms/pages/:id", isAuthenticated, async (req: Request, res: Respons
 app.post("/api/cms/pages", isAuthenticated, async (req: Request, res: Response) => {
   try {
     const data = insertPageSchema.parse(req.body);
+    const existing = await storage.getPageBySlug(data.slug);
+    if (existing) {
+      return res.status(400).json({ error: "A page with this slug already exists. Please use a different slug." });
+    }
     if (data.content) data.content = sanitizeContent(data.content);
     if (data.contentHi) data.contentHi = sanitizeContent(data.contentHi);
     const page = await storage.createPage(data);
@@ -786,6 +790,12 @@ app.put("/api/cms/pages/:id", isAuthenticated, async (req: Request, res: Respons
       return res.status(404).json({ error: "Page not found" });
     }
     const validated = updatePageSchema.parse(req.body);
+    if (validated.slug) {
+      const existingSlug = await storage.getPageBySlug(validated.slug);
+      if (existingSlug && existingSlug.id !== req.params.id) {
+        return res.status(400).json({ error: "A page with this slug already exists. Please use a different slug." });
+      }
+    }
     if (validated.content) validated.content = sanitizeContent(validated.content);
     if (validated.contentHi) validated.contentHi = sanitizeContent(validated.contentHi);
     const page = await storage.updatePage(req.params.id, validated);

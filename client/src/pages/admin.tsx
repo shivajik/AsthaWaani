@@ -251,6 +251,7 @@ function PageManager() {
   const { toast } = useToast();
   const [editingPage, setEditingPage] = useState<Page | null>(null);
   const [isCreating, setIsCreating] = useState(false);
+  const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
   const [newPage, setNewPage] = useState({
     slug: "",
     title: "",
@@ -281,7 +282,10 @@ function PageManager() {
         body: JSON.stringify(page),
         credentials: "include",
       });
-      if (!res.ok) throw new Error("Failed to save page");
+      if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.error || "Failed to save page");
+      }
       return res.json();
     },
     onSuccess: () => {
@@ -300,8 +304,8 @@ function PageManager() {
         isPublished: true,
       });
     },
-    onError: () => {
-      toast({ title: "Failed to save page", variant: "destructive" });
+    onError: (error: Error) => {
+      toast({ title: "Failed to save page", description: error.message, variant: "destructive" });
     },
   });
 
@@ -444,11 +448,25 @@ function PageManager() {
                   <Button 
                     variant="destructive" 
                     size="sm" 
-                    onClick={() => deleteMutation.mutate(page.id)}
+                    onClick={() => setDeleteConfirmId(page.id)}
                   >
                     <Trash2 className="w-4 h-4" />
                   </Button>
                 </div>
+                <AlertDialog open={deleteConfirmId === page.id} onOpenChange={() => setDeleteConfirmId(null)}>
+                  <AlertDialogContent>
+                    <AlertDialogTitle>Delete Page</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      Are you sure you want to delete "{page.title}"? This action cannot be undone.
+                    </AlertDialogDescription>
+                    <div className="flex justify-end gap-2">
+                      <AlertDialogCancel>Cancel</AlertDialogCancel>
+                      <AlertDialogAction onClick={() => deleteMutation.mutate(page.id)} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+                        Delete
+                      </AlertDialogAction>
+                    </div>
+                  </AlertDialogContent>
+                </AlertDialog>
               </CardContent>
             </Card>
           ))}
