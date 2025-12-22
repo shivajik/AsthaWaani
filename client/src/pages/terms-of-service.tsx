@@ -58,16 +58,6 @@ export default function TermsOfService() {
                 dangerouslySetInnerHTML={{ __html: currentContent.content }}
               /></div>
 
-            <div className="mt-16 pt-8 border-t border-border">
-              <p className="text-sm text-muted-foreground">
-                {language === "hi"
-                  ? "अंतिम अपडेट: "
-                  : "Last Updated: "}{" "}
-                {new Date().toLocaleDateString(
-                  language === "hi" ? "hi-IN" : "en-US"
-                )}
-              </p>
-            </div>
           </div>
         </div>
       </section>
