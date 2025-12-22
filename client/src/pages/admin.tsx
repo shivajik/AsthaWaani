@@ -74,6 +74,18 @@ interface MediaItem {
   altText: string | null;
 }
 
+interface LegalPage {
+  id: string;
+  slug: string;
+  title: string;
+  titleHi: string | null;
+  content: string | null;
+  contentHi: string | null;
+  metaTitle: string | null;
+  metaDescription: string | null;
+  isPublished: boolean;
+}
+
 interface SyncResult {
   success: boolean;
   channel: {

@@ -2,7 +2,7 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { YouTubeService } from "./youtube.service";
-import { insertYoutubeChannelSchema, insertVideoSchema, insertContactInfoSchema, insertCategorySchema, insertOfferingSchema, insertNewsTickerSchema, insertMediaSchema } from "@shared/schema";
+import { insertYoutubeChannelSchema, insertVideoSchema, insertContactInfoSchema, insertCategorySchema, insertOfferingSchema, insertNewsTickerSchema, insertMediaSchema, insertPageSchema } from "@shared/schema";
 import multer from "multer";
 import { uploadToCloudinary, deleteFromCloudinary } from "./cloudinary.service";
 
@@ -84,6 +84,62 @@ export async function registerRoutes(
     } catch (error) {
       console.error("Error deleting from Cloudinary:", error);
       res.status(500).json({ error: "Failed to delete image" });
+    }
+  });
+
+  // Page Management Routes
+  app.get("/api/cms/pages", async (req, res) => {
+    try {
+      const pages = await storage.getAllPages();
+      res.json(pages);
+    } catch (error) {
+      console.error("Error fetching pages:", error);
+      res.status(500).json({ error: "Failed to fetch pages" });
+    }
+  });
+
+  app.get("/api/pages/:slug", async (req, res) => {
+    try {
+      const page = await storage.getPageBySlug(req.params.slug);
+      if (!page) {
+        return res.status(404).json({ error: "Page not found" });
+      }
+      res.json(page);
+    } catch (error) {
+      console.error("Error fetching page:", error);
+      res.status(500).json({ error: "Failed to fetch page" });
+    }
+  });
+
+  app.post("/api/cms/pages", async (req, res) => {
+    try {
+      const data = insertPageSchema.parse(req.body);
+      const page = await storage.createPage(data);
+      res.json(page);
+    } catch (error: any) {
+      console.error("Error creating page:", error);
+      res.status(400).json({ error: error.message || "Failed to create page" });
+    }
+  });
+
+  app.put("/api/cms/pages/:id", async (req, res) => {
+    try {
+      const data = insertPageSchema.partial().parse(req.body);
+      const page = await storage.updatePage(req.params.id, data);
+      res.json(page);
+    } catch (error: any) {
+      console.error("Error updating page:", error);
+      res.status(400).json({ error: error.message || "Failed to update page" });
+    }
+  });
+
+  app.delete("/api/cms/pages/:id", async (req, res) => {
+    try {
+      await storage.deletePage(req.params.id);
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Error deleting page:", error);
+      res.status(500).json({ error: "Failed to delete page" });
     }
   });
 
@@ -641,6 +697,58 @@ export async function registerRoutes(
     } catch (error) {
       console.error("Error seeding blog data:", error);
       res.status(500).json({ error: "Failed to seed blog data" });
+    }
+  });
+
+  // Seed Legal Pages (Privacy Policy and Terms of Service)
+  app.post("/api/seed/legal-pages", async (req, res) => {
+    try {
+      // Check if pages already exist
+      const privacyExists = await storage.getPageBySlug("privacy-policy");
+      const termsExists = await storage.getPageBySlug("terms-of-service");
+
+      const results = [];
+
+      if (!privacyExists) {
+        const privacyPage = await storage.createPage({
+          slug: "privacy-policy",
+          title: "Privacy Policy",
+          titleHi: "गोपनीयता नीति",
+          content: "<h2>1. Introduction</h2><p>At Asthawaani, we are committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and otherwise handle your personal information.</p><h2>2. Information We Collect</h2><p>We may collect information about you in a variety of ways including personal identification information, usage data through cookies and similar technologies.</p><h2>3. Contact Us</h2><p>If you have questions about this Privacy Policy, please contact us through our contact form.</p>",
+          contentHi: "<h2>1. परिचय</h2><p>अस्थावणि में, हम आपकी गोपनीयता की सुरक्षा के लिए प्रतिबद्ध हैं। यह गोपनीयता नीति बताती है कि हम आपकी व्यक्तिगत जानकारी को कैसे एकत्र करते हैं।</p><h2>2. हम कौन सी जानकारी एकत्र करते हैं</h2><p>हम विभिन्न तरीकों से आपके बारे में जानकारी एकत्र कर सकते हैं जिसमें व्यक्तिगत पहचान की जानकारी शामिल है।</p><h2>3. हमसे संपर्क करें</h2><p>यदि आपके पास इस गोपनीयता नीति के बारे में प्रश्न हैं, तो कृपया हमारे संपर्क फॉर्म के माध्यम से हमसे संपर्क करें।</p>",
+          metaTitle: "Privacy Policy - Asthawaani",
+          metaDescription: "Learn how Asthawaani protects your privacy and handles your personal information.",
+          isPublished: true,
+        });
+        results.push({ page: "privacy-policy", status: "created", id: privacyPage.id });
+      } else {
+        results.push({ page: "privacy-policy", status: "already-exists", id: privacyExists.id });
+      }
+
+      if (!termsExists) {
+        const termsPage = await storage.createPage({
+          slug: "terms-of-service",
+          title: "Terms of Service",
+          titleHi: "सेवा की शर्तें",
+          content: "<h2>1. Acceptance of Terms</h2><p>By accessing and using this website, you accept and agree to be bound by the terms and provision of this agreement.</p><h2>2. Use License</h2><p>Permission is granted to temporarily download one copy of the materials on our website for personal, non-commercial viewing only.</p><h2>3. Disclaimer</h2><p>The materials on our website are provided on an 'as is' basis. We make no warranties, expressed or implied.</p><h2>4. Governing Law</h2><p>These terms and conditions are governed by and construed in accordance with the laws of India.</p>",
+          contentHi: "<h2>1. शर्तों का स्वीकार</h2><p>इस वेबसाइट को एक्सेस और उपयोग करके, आप इस समझौते की शर्तों से बंधे होने के लिए सहमत हैं।</p><h2>2. उपयोग लाइसेंस</h2><p>हमारी वेबसाइट पर सामग्री की एक प्रति को व्यक्तिगत, गैर-वाणिज्यिक देखने के लिए अस्थायी रूप से डाउनलोड करने की अनुमति दी जाती है।</p><h2>3. अस्वीकरण</h2><p>हमारी वेबसाइट पर सामग्री 'जैसी है' के आधार पर प्रदान की जाती है। हम कोई वारंटी नहीं देते हैं।</p><h2>4. शासी कानून</h2><p>ये शर्तें भारत के कानूनों के अनुसार शासित होती हैं।</p>",
+          metaTitle: "Terms of Service - Asthawaani",
+          metaDescription: "Read our Terms of Service to understand how you can use Asthawaani.",
+          isPublished: true,
+        });
+        results.push({ page: "terms-of-service", status: "created", id: termsPage.id });
+      } else {
+        results.push({ page: "terms-of-service", status: "already-exists", id: termsExists.id });
+      }
+
+      res.json({
+        success: true,
+        message: "Legal pages seeded successfully",
+        results,
+      });
+    } catch (error) {
+      console.error("Error seeding legal pages:", error);
+      res.status(500).json({ error: "Failed to seed legal pages" });
     }
   });
 
