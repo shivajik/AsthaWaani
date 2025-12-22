@@ -82,16 +82,61 @@ export default function Videos() {
   const { t, language } = useLanguage();
   const { data: videoPageData } = useCmsPage("videos");
 
-  const { data: videos, isLoading, error } = useQuery<Video[]>({
-    queryKey: ["/api/videos"],
-    queryFn: async () => {
-      const response = await fetch("/api/videos");
-      if (!response.ok) {
-        throw new Error("Failed to fetch videos");
-      }
-      return response.json();
+  // Hardcoded videos - showing only 3 specific videos
+  const hardcodedVideos: Video[] = [
+    {
+      id: "1",
+      videoId: "8cAb1LM_cfo",
+      title: "ॐ शं शनैश्चराय नमः 108 बार | Shani Dev Mantra Jaap | शनि देव के चमत्कारी मंत्र",
+      description: "A wonderful discourse on spiritual wisdom",
+      thumbnailUrl: "https://img.youtube.com/vi/8cAb1LM_cfo/maxresdefault.jpg",
+      duration: "6:37",
+      publishedAt: '2025-09-13T10:00:00Z',
+      viewCount: 0,
+      likeCount: 0,
+      tags: []
     },
-  });
+    {
+      id: "2",
+      videoId: "_R77olhRj74",
+      title: "How to stay happy forever | Real Happiness Formula by Motivational Speaker Urmil Jain",
+      description: "A wonderful discourse on spiritual wisdom",
+      thumbnailUrl: "https://img.youtube.com/vi/_R77olhRj74/sddefault.jpg",
+      duration: "4:31",
+      publishedAt: '2025-12-04T10:00:00Z',
+      viewCount: 0,
+      likeCount: 0,
+      tags: []
+    },
+    {
+      id: "3",
+      videoId: "y8WQ15YboH8",
+      title: "श्रीनाथ जी के गोवर्धन परिक्रमा पर स्थित जतीपुरा मंदिर की अद्भुत महिमा #srinathji",
+      description: "A wonderful discourse on spiritual wisdom",
+      thumbnailUrl: "https://img.youtube.com/vi/y8WQ15YboH8/sddefault.jpg",
+      duration: "1:26",
+      publishedAt: new Date().toISOString(),
+      viewCount: 0,
+      likeCount: 0,
+      tags: []
+    }
+  ];
+
+  // Commented out - Originally fetches from API, now using hardcoded videos
+  // const { data: videos, isLoading, error } = useQuery<Video[]>({
+  //   queryKey: ["/api/videos"],
+  //   queryFn: async () => {
+  //     const response = await fetch("/api/videos");
+  //     if (!response.ok) {
+  //       throw new Error("Failed to fetch videos");
+  //     }
+  //     return response.json();
+  //   },
+  // });
+
+  const videos = hardcodedVideos;
+  const isLoading = false;
+  const error = null;
 
   const openYouTubeVideo = (videoId: string) => {
     window.open(`https://www.youtube.com/watch?v=${videoId}`, "_blank");
