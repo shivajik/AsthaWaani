@@ -30,6 +30,9 @@ cloudinary.config({
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
+  max: 5,
+  idleTimeoutMillis: 30000,
+  connectionTimeoutMillis: 2000,
 });
 
 const db = drizzle(pool);
@@ -570,6 +573,19 @@ const updateSeoSchema = z.object({
 
 const updateMediaSchema = z.object({
   altText: z.string().nullable().optional(),
+});
+
+app.get("/api/pages/:slug", async (req, res) => {
+  try {
+    const page = await storage.getPageBySlug(req.params.slug);
+    if (!page) {
+      return res.status(404).json({ error: "Page not found" });
+    }
+    res.json(page);
+  } catch (error) {
+    console.error("Error fetching page:", error);
+    res.status(500).json({ error: "Failed to fetch page" });
+  }
 });
 
 app.get("/api/videos", async (req, res) => {
