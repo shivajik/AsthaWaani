@@ -449,7 +449,10 @@ function PageManager() {
                   <p className="text-sm text-muted-foreground">/{page.slug}</p>
                 </div>
                 <div className="flex gap-2">
-                  <Button variant="outline" size="sm" onClick={() => setEditingPage(page)}>
+                  <Button variant="outline" size="sm" onClick={() => {
+                    setEditingPage(page);
+                    window.scrollTo({ top: 0, behavior: "smooth" });
+                  }}>
                     <PenSquare className="w-4 h-4" />
                   </Button>
                   <Button 
@@ -772,7 +775,10 @@ function PostManager() {
                   <p className="text-sm text-muted-foreground">/blog/{post.slug}</p>
                 </div>
                 <div className="flex gap-2">
-                  <Button variant="outline" size="sm" onClick={() => setEditingPost(post)}>
+                  <Button variant="outline" size="sm" onClick={() => {
+                    setEditingPost(post);
+                    window.scrollTo({ top: 0, behavior: "smooth" });
+                  }}>
                     <PenSquare className="w-4 h-4" />
                   </Button>
                   <Button 
@@ -900,7 +906,10 @@ function MediaManager() {
                   <Button
                     size="sm"
                     variant="secondary"
-                    onClick={() => navigator.clipboard.writeText(item.secureUrl)}
+                    onClick={() => {
+                      navigator.clipboard.writeText(item.secureUrl);
+                      toast({ title: "URL copied to clipboard" });
+                    }}
                   >
                     Copy URL
                   </Button>
@@ -1374,7 +1383,10 @@ function OfferingManager() {
                   <p className="text-sm text-muted-foreground">/{offering.slug}</p>
                 </div>
                 <div className="flex gap-2">
-                  <Button variant="outline" size="sm" onClick={() => setEditingOffering(offering)}>
+                  <Button variant="outline" size="sm" onClick={() => {
+                    setEditingOffering(offering);
+                    window.scrollTo({ top: 0, behavior: "smooth" });
+                  }}>
                     <PenSquare className="w-4 h-4" />
                   </Button>
                   <Button variant="destructive" size="sm" onClick={() => setDeletingOfferingId(offering.id)} data-testid="button-delete-offering">
@@ -1478,6 +1490,7 @@ function NewsTickerManager() {
   const handleEdit = (ticker: NewsTickerItem) => {
     setEditingId(ticker.id);
     setFormData(ticker);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   return (
@@ -1854,6 +1867,7 @@ function AdManager() {
       placement: ad.placement || "blog_post_top",
       categoryId: ad.categoryId || "",
     });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   return (
