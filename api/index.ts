@@ -1244,6 +1244,10 @@ app.delete("/api/cms/media/:id", isAuthenticated, async (req: Request, res: Resp
     if (!mediaItem) {
       return res.status(404).json({ error: "Media not found" });
     }
+    // Delete from Cloudinary if publicId exists
+    if (mediaItem.publicId) {
+      await cloudinary.uploader.destroy(mediaItem.publicId);
+    }
     await storage.deleteMedia(req.params.id);
     res.json({ success: true });
   } catch (error) {
