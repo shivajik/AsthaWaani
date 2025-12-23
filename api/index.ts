@@ -1511,6 +1511,33 @@ app.delete("/api/cms/offerings/:id", isAuthenticated, async (req: Request, res: 
 });
 
 // ============================================
+// ADMIN CATEGORY ENDPOINTS
+// ============================================
+
+app.post("/api/cms/categories", isAuthenticated, async (req: Request, res: Response) => {
+  try {
+    const insertCategorySchemaValidator = z.object({
+      slug: z.string().min(1),
+      name: z.string().min(1),
+      nameHi: z.string().optional(),
+      description: z.string().optional(),
+      descriptionHi: z.string().optional(),
+    });
+    
+    const validation = insertCategorySchemaValidator.safeParse(req.body);
+    if (!validation.success) {
+      return res.status(400).json({ error: "Invalid category data", issues: validation.error.issues });
+    }
+
+    const [category] = await db.insert(categories).values(validation.data).returning();
+    res.status(201).json(category);
+  } catch (error) {
+    console.error("Error creating category:", error);
+    res.status(500).json({ error: "Failed to create category" });
+  }
+});
+
+// ============================================
 // PUBLIC BLOG ENDPOINTS
 // ============================================
 

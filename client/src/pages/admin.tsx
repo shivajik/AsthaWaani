@@ -505,6 +505,8 @@ function PostManager() {
   const [isCreating, setIsCreating] = useState(false);
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
   const [originalImage, setOriginalImage] = useState<string | null>(null);
+  const [showCategoryForm, setShowCategoryForm] = useState(false);
+  const [newCategory, setNewCategory] = useState({ slug: "", name: "", nameHi: "" });
   const [newPost, setNewPost] = useState({
     slug: "",
     title: "",
@@ -604,6 +606,32 @@ function PostManager() {
     },
   });
 
+  const createCategoryMutation = useMutation({
+    mutationFn: async (category: { slug: string; name: string; nameHi?: string }) => {
+      const res = await fetch("/api/cms/categories", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(category),
+        credentials: "include",
+      });
+      if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.error || "Failed to create category");
+      }
+      return res.json();
+    },
+    onSuccess: (newCat) => {
+      toast({ title: "Category created successfully" });
+      queryClient.invalidateQueries({ queryKey: ["/api/categories"] });
+      setNewCategory({ slug: "", name: "", nameHi: "" });
+      setShowCategoryForm(false);
+      setNewPost({ ...newPost, categoryId: newCat.id });
+    },
+    onError: (error: Error) => {
+      toast({ title: error.message || "Failed to create category", variant: "destructive" });
+    },
+  });
+
   useEffect(() => {
     if (editingPost || isCreating) {
       const post = editingPost || newPost;
@@ -666,7 +694,74 @@ function PostManager() {
               </div>
             </div>
             <div className="space-y-2">
-              <Label>Category</Label>
+              <div className="flex items-center justify-between">
+                <Label>Category</Label>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => setShowCategoryForm(!showCategoryForm)}
+                  data-testid="button-add-category"
+                >
+                  <Plus className="w-4 h-4 mr-1" />
+                  New Category
+                </Button>
+              </div>
+              {showCategoryForm && (
+                <Card className="p-3 bg-muted/30">
+                  <div className="space-y-3">
+                    <div className="grid md:grid-cols-2 gap-3">
+                      <div className="space-y-1">
+                        <Label className="text-xs">Slug</Label>
+                        <Input
+                          placeholder="category-slug"
+                          value={newCategory.slug}
+                          onChange={(e) => setNewCategory({ ...newCategory, slug: e.target.value })}
+                          className="h-8 text-sm"
+                          data-testid="input-category-slug"
+                        />
+                      </div>
+                      <div className="space-y-1">
+                        <Label className="text-xs">Name (English)</Label>
+                        <Input
+                          placeholder="Category Name"
+                          value={newCategory.name}
+                          onChange={(e) => setNewCategory({ ...newCategory, name: e.target.value })}
+                          className="h-8 text-sm"
+                          data-testid="input-category-name"
+                        />
+                      </div>
+                    </div>
+                    <div className="space-y-1">
+                      <Label className="text-xs">Name (Hindi)</Label>
+                      <Input
+                        placeholder="श्रेणी का नाम"
+                        value={newCategory.nameHi}
+                        onChange={(e) => setNewCategory({ ...newCategory, nameHi: e.target.value })}
+                        className="h-8 text-sm"
+                        data-testid="input-category-name-hi"
+                      />
+                    </div>
+                    <div className="flex gap-2">
+                      <Button
+                        size="sm"
+                        onClick={() => createCategoryMutation.mutate(newCategory)}
+                        disabled={!newCategory.slug || !newCategory.name || createCategoryMutation.isPending}
+                        data-testid="button-create-category"
+                      >
+                        {createCategoryMutation.isPending ? "Creating..." : "Create Category"}
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => setShowCategoryForm(false)}
+                        data-testid="button-cancel-category"
+                      >
+                        Cancel
+                      </Button>
+                    </div>
+                  </div>
+                </Card>
+              )}
               <Select value={post.categoryId || "none"} onValueChange={(value) => updateField("categoryId", value === "none" ? null : value)}>
                 <SelectTrigger>
                   <SelectValue placeholder="Select a category" />

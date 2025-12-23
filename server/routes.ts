@@ -427,6 +427,22 @@ export async function registerRoutes(
     }
   });
 
+  // Create category (admin endpoint)
+  app.post("/api/cms/categories", async (req, res) => {
+    try {
+      const validation = insertCategorySchema.safeParse(req.body);
+      if (!validation.success) {
+        return res.status(400).json({ error: "Invalid category data", issues: validation.error.issues });
+      }
+
+      const category = await storage.createCategory(validation.data);
+      res.status(201).json(category);
+    } catch (error) {
+      console.error("Error creating category:", error);
+      res.status(500).json({ error: "Failed to create category" });
+    }
+  });
+
   // Get all categories (public endpoint)
   app.get("/api/categories", async (req, res) => {
     try {
