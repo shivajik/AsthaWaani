@@ -89,9 +89,8 @@ export default function Blog() {
               <div className="mt-6 space-y-3">
                 {listingAds.map((ad) => {
                   const adTitle = language === "hi" ? ad.titleHi || ad.titleEn : ad.titleEn;
-                  const aspectRatio = ad.imageWidth && ad.imageHeight ? ad.imageWidth / ad.imageHeight : 1;
                   const maxWidth = 200;
-                  const calculatedHeight = maxWidth / aspectRatio;
+                  const height = ad.imageHeight ? (ad.imageHeight / (ad.imageWidth || 1)) * maxWidth : 250;
                   
                   return (
                     <a
@@ -103,12 +102,17 @@ export default function Blog() {
                       data-testid={`ad-card-${ad.id}`}
                     >
                       <Card className="overflow-hidden hover-elevate cursor-pointer">
-                        <div className="w-full bg-gray-200 dark:bg-gray-800" style={{ height: `${calculatedHeight}px` }}>
-                          <img
-                            src={ad.imageUrl}
-                            alt={adTitle}
-                            className="w-full h-full object-contain"
-                          />
+                        <div className="relative">
+                          <span className="absolute top-2 right-2 bg-blue-500 text-white text-xs font-semibold px-2 py-1 rounded-md z-10">
+                            {language === "hi" ? "विज्ञापन" : "Advertisement"}
+                          </span>
+                          <div className="w-full rounded-lg overflow-hidden" style={{ height: `${height}px` }}>
+                            <img
+                              src={ad.imageUrl}
+                              alt={adTitle}
+                              className="w-full h-full object-contain"
+                            />
+                          </div>
                         </div>
                         <div className="p-3">
                           <p className="font-semibold text-sm">{adTitle}</p>
