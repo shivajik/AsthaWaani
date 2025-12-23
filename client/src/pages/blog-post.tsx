@@ -138,24 +138,24 @@ export default function BlogPostDetail() {
                   ))}
                 </div>
               </div>
-            </div>
 
-            {/* Sidebar Ads - Below Categories */}
-            {data?.ads?.sidebar && data.ads.sidebar.length > 0 && (
-              <div className="mt-8 space-y-4">
-                {data?.ads?.sidebar.map((ad) => {
-                  const adTitle = language === "hi" ? ad.titleHi || ad.titleEn : ad.titleEn;
-                  return (
-                    <div key={ad.id}>
-                      <a href={ensureProtocol(ad.link)} target="_blank" rel="noopener noreferrer" data-testid={`ad-sidebar-${ad.id}`} className="block">
-                        <img src={ad.imageUrl} alt={adTitle} className="w-full max-h-48 object-cover rounded-lg hover:opacity-90 transition-opacity" />
-                      </a>
-                      {adTitle && <p className="mt-2 text-sm font-semibold text-foreground">{adTitle}</p>}
-                    </div>
-                  );
-                })}
-              </div>
-            )}
+              {/* Sidebar Ads - Inside Sticky Container */}
+              {data?.ads?.sidebar && data.ads.sidebar.length > 0 && (
+                <div className="space-y-4">
+                  {data?.ads?.sidebar.map((ad) => {
+                    const adTitle = language === "hi" ? ad.titleHi || ad.titleEn : ad.titleEn;
+                    return (
+                      <div key={ad.id}>
+                        <a href={ensureProtocol(ad.link)} target="_blank" rel="noopener noreferrer" data-testid={`ad-sidebar-${ad.id}`} className="block">
+                          <img src={ad.imageUrl} alt={adTitle} className="w-full max-h-48 object-cover rounded-lg hover:opacity-90 transition-opacity" />
+                        </a>
+                        {adTitle && <p className="mt-2 text-sm font-semibold text-foreground">{adTitle}</p>}
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
           </aside>
 
           {/* Main Content */}

@@ -52,7 +52,7 @@ export default function Blog() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Sidebar */}
           <aside className="md:col-span-1">
-            <div className="sticky top-4 space-y-6">
+            <div className="space-y-6">
               {/* Categories */}
               <div>
                 <h2 className="text-lg font-semibold mb-4">
