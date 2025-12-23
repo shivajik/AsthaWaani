@@ -22,11 +22,14 @@ export interface UploadResult {
 
 export async function uploadImage(buffer: Buffer, filename: string): Promise<UploadResult> {
   return new Promise((resolve, reject) => {
+    const sanitizedFilename = filename
+      .replace(/\.[^/.]+$/, "")
+      .replace(/[^a-zA-Z0-9_-]/g, "_");
     const uploadStream = cloudinary.uploader.upload_stream(
       {
         folder: "asthawaani-cms",
         resource_type: "image",
-        public_id: filename.replace(/\.[^/.]+$/, ""),
+        public_id: sanitizedFilename,
         transformation: [
           { quality: "auto:good", fetch_format: "auto" }
         ]

@@ -324,6 +324,8 @@ const ads = pgTable("ads", {
   imagePublicId: text("image_public_id"),
   link: text("link"),
   isActive: boolean("is_active").notNull().default(true),
+  placement: text("placement").notNull().default("blog_listing"),
+  categoryId: varchar("category_id").references(() => categories.id),
   position: integer("position").notNull().default(0),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
@@ -861,6 +863,8 @@ app.post("/api/cms/ads", isAuthenticated, upload.single("image"), async (req: Re
       titleHi: req.body.titleHi || null,
       link: req.body.link || null,
       isActive: req.body.isActive === "true" || req.body.isActive === true,
+      placement: req.body.placement || "blog_listing",
+      categoryId: req.body.categoryId || null,
       position: parseInt(req.body.position || "0", 10),
       imageUrl,
       imagePublicId,
@@ -889,6 +893,8 @@ app.put("/api/cms/ads/:id", isAuthenticated, upload.single("image"), async (req:
     if (req.body.titleHi) parsedData.titleHi = req.body.titleHi;
     if (req.body.link) parsedData.link = req.body.link;
     if (req.body.isActive !== undefined) parsedData.isActive = req.body.isActive === "true" || req.body.isActive === true;
+    if (req.body.placement) parsedData.placement = req.body.placement;
+    if (req.body.categoryId !== undefined) parsedData.categoryId = req.body.categoryId || null;
     if (req.body.position !== undefined) parsedData.position = parseInt(req.body.position, 10);
 
     if (req.file) {
@@ -1530,7 +1536,16 @@ app.get("/api/blog/post/:slug", async (req: Request, res: Response) => {
     }
 
     const categories = await storage.getAllCategories();
-    res.json({ post, categories });
+    const allAds = await storage.getAllAds();
+    
+    // Get ads for blog post (top, sidebar, bottom placements)
+    const blogPostAds = {
+      top: allAds.filter(a => a.isActive && a.placement === "blog_post_top" && (!a.categoryId || a.categoryId === post.categoryId)).sort((a, b) => a.position - b.position),
+      sidebar: allAds.filter(a => a.isActive && a.placement === "blog_post_sidebar" && (!a.categoryId || a.categoryId === post.categoryId)).sort((a, b) => a.position - b.position),
+      bottom: allAds.filter(a => a.isActive && a.placement === "blog_post_bottom" && (!a.categoryId || a.categoryId === post.categoryId)).sort((a, b) => a.position - b.position),
+    };
+    
+    res.json({ post, categories, ads: blogPostAds });
   } catch (error) {
     console.error("Error fetching post:", error);
     res.status(500).json({ error: "Failed to fetch post" });

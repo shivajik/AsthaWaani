@@ -9,9 +9,24 @@ import { Button } from "@/components/ui/button";
 import type { Post, Category } from "@shared/schema";
 import { useState } from "react";
 
+interface Ad {
+  id: string;
+  titleEn: string;
+  titleHi?: string;
+  imageUrl: string;
+  link?: string;
+  placement: string;
+  categoryId?: string;
+}
+
 interface BlogPostDetailResponse {
   post: Post;
   categories?: Category[];
+  ads?: {
+    top: Ad[];
+    sidebar: Ad[];
+    bottom: Ad[];
+  };
 }
 
 export default function BlogPostDetail() {
@@ -89,36 +104,47 @@ export default function BlogPostDetail() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Categories Sidebar */}
           <aside className="md:col-span-1">
-            <div className="sticky top-4">
-              <h2 className="text-lg font-semibold mb-6">
-                {language === "hi" ? "श्रेणियां" : "Categories"}
-              </h2>
-              <div className="flex flex-col gap-4">
-                <Link href="/blog">
-                  <Button
-                    variant="outline"
-                    className="w-full justify-start"
-                    data-testid="button-category-all"
-                  >
-                    {allText}
-                  </Button>
-                </Link>
-                {(categories as Category[]).map((category: Category) => (
-                  <Link
-                    key={category.id}
-                    href={`/blog?category=${category.id}`}
-                  >
+            <div className="sticky top-4 space-y-8">
+              {/* Sidebar Ads */}
+              <div className="space-y-4">
+                {data?.ads?.sidebar.map((ad) => (
+                  <a key={ad.id} href={ad.link || "#"} target="_blank" rel="noopener noreferrer" data-testid={`ad-sidebar-${ad.id}`}>
+                    <img src={ad.imageUrl} alt={ad.titleEn} className="w-full rounded-lg hover:opacity-90 transition-opacity" />
+                  </a>
+                ))}
+              </div>
+
+              <div>
+                <h2 className="text-lg font-semibold mb-6">
+                  {language === "hi" ? "श्रेणियां" : "Categories"}
+                </h2>
+                <div className="flex flex-col gap-4">
+                  <Link href="/blog">
                     <Button
-                      variant={
-                        post.categoryId === category.id ? "default" : "outline"
-                      }
+                      variant="outline"
                       className="w-full justify-start"
-                      data-testid={`button-category-${category.slug}`}
+                      data-testid="button-category-all"
                     >
-                      {language === "hi" ? category.nameHi || category.name : category.name}
+                      {allText}
                     </Button>
                   </Link>
-                ))}
+                  {(categories as Category[]).map((category: Category) => (
+                    <Link
+                      key={category.id}
+                      href={`/blog?category=${category.id}`}
+                    >
+                      <Button
+                        variant={
+                          post.categoryId === category.id ? "default" : "outline"
+                        }
+                        className="w-full justify-start"
+                        data-testid={`button-category-${category.slug}`}
+                      >
+                        {language === "hi" ? category.nameHi || category.name : category.name}
+                      </Button>
+                    </Link>
+                  ))}
+                </div>
               </div>
             </div>
           </aside>
@@ -131,6 +157,15 @@ export default function BlogPostDetail() {
                 {language === "hi" ? "ब्लॉग पर वापस जाएँ" : "Back to Blog"}
               </Button>
             </Link>
+
+            {/* Top Ads */}
+            <div className="space-y-4">
+              {data?.ads?.top.map((ad) => (
+                <a key={ad.id} href={ad.link || "#"} target="_blank" rel="noopener noreferrer" data-testid={`ad-top-${ad.id}`}>
+                  <img src={ad.imageUrl} alt={ad.titleEn} className="w-full rounded-lg hover:opacity-90 transition-opacity" />
+                </a>
+              ))}
+            </div>
 
             <article className="space-y-6">
               {post.featuredImage && (
@@ -190,6 +225,15 @@ export default function BlogPostDetail() {
                 />
               )}
             </article>
+
+            {/* Bottom Ads */}
+            <div className="space-y-4">
+              {data?.ads?.bottom.map((ad) => (
+                <a key={ad.id} href={ad.link || "#"} target="_blank" rel="noopener noreferrer" data-testid={`ad-bottom-${ad.id}`}>
+                  <img src={ad.imageUrl} alt={ad.titleEn} className="w-full rounded-lg hover:opacity-90 transition-opacity" />
+                </a>
+              ))}
+            </div>
 
             <div className="mt-12 pt-8 border-t border-border">
               <Link href="/blog">

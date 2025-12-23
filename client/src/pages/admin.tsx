@@ -1755,7 +1755,7 @@ function AdManager() {
   const { toast } = useToast();
   const [editingId, setEditingId] = useState<string | null>(null);
   const [deletingAdId, setDeletingAdId] = useState<string | null>(null);
-  const [formData, setFormData] = useState({ titleEn: "", titleHi: "", imageUrl: "", imagePublicId: "", link: "", isActive: true, position: 0 });
+  const [formData, setFormData] = useState({ titleEn: "", titleHi: "", imageUrl: "", imagePublicId: "", link: "", isActive: true, position: 0, placement: "blog_post_top", categoryId: "" });
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   interface AdItem {
@@ -1767,7 +1767,18 @@ function AdManager() {
     link: string | null;
     isActive: boolean;
     position: number;
+    placement?: string;
+    categoryId?: string | null;
   }
+
+  const { data: categories = [] } = useQuery<Category[]>({
+    queryKey: ["/api/categories"],
+    queryFn: async () => {
+      const res = await fetch("/api/categories", { credentials: "include" });
+      if (!res.ok) return [];
+      return res.json();
+    },
+  });
 
   const { data: ads = [] } = useQuery<AdItem[]>({
     queryKey: ["/api/cms/ads"],
@@ -1786,6 +1797,8 @@ function AdManager() {
       formDataObj.append("link", formData.link || "");
       formDataObj.append("isActive", String(formData.isActive));
       formDataObj.append("position", String(formData.position));
+      formDataObj.append("placement", formData.placement);
+      formDataObj.append("categoryId", formData.categoryId || "");
       if (!selectedFile) {
         formDataObj.append("imageUrl", formData.imageUrl);
         formDataObj.append("imagePublicId", formData.imagePublicId || "");
@@ -1809,7 +1822,7 @@ function AdManager() {
       queryClient.invalidateQueries({ queryKey: ["/api/ads"] });
       setEditingId(null);
       setSelectedFile(null);
-      setFormData({ titleEn: "", titleHi: "", imageUrl: "", imagePublicId: "", link: "", isActive: true, position: 0 });
+      setFormData({ titleEn: "", titleHi: "", imageUrl: "", imagePublicId: "", link: "", isActive: true, position: 0, placement: "blog_post_top", categoryId: "" });
     },
     onError: () => {
       toast({ title: "Failed to save", variant: "destructive" });
@@ -1838,6 +1851,8 @@ function AdManager() {
       link: ad.link || "",
       isActive: ad.isActive,
       position: ad.position,
+      placement: ad.placement || "blog_post_top",
+      categoryId: ad.categoryId || "",
     });
   };
 
@@ -1887,6 +1902,36 @@ function AdManager() {
             />
           </div>
           <div className="space-y-2">
+            <Label>Placement *</Label>
+            <Select value={formData.placement} onValueChange={(value) => setFormData({ ...formData, placement: value })}>
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="blog_listing">Blog Listing Page</SelectItem>
+                <SelectItem value="blog_post_top">Blog Post - Top</SelectItem>
+                <SelectItem value="blog_post_sidebar">Blog Post - Sidebar</SelectItem>
+                <SelectItem value="blog_post_bottom">Blog Post - Bottom</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="space-y-2">
+            <Label>Category (Optional)</Label>
+            <Select value={formData.categoryId || "all"} onValueChange={(value) => setFormData({ ...formData, categoryId: value === "all" ? "" : value })}>
+              <SelectTrigger>
+                <SelectValue placeholder="All Categories" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Categories</SelectItem>
+                {categories.map((cat) => (
+                  <SelectItem key={cat.id} value={cat.id}>
+                    {cat.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="space-y-2">
             <Label>Position (Order)</Label>
             <Input
               type="number"
@@ -1909,7 +1954,7 @@ function AdManager() {
               <Button variant="outline" onClick={() => {
                 setEditingId(null);
                 setSelectedFile(null);
-                setFormData({ titleEn: "", titleHi: "", imageUrl: "", imagePublicId: "", link: "", isActive: true, position: 0 });
+                setFormData({ titleEn: "", titleHi: "", imageUrl: "", imagePublicId: "", link: "", isActive: true, position: 0, placement: "blog_post_top", categoryId: "" });
               }}>
                 Cancel
               </Button>

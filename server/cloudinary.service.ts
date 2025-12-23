@@ -21,10 +21,13 @@ export async function uploadToCloudinary(
   filename: string
 ): Promise<UploadResponse> {
   return new Promise((resolve, reject) => {
+    const sanitizedFilename = filename
+      .replace(/\.[^/.]+$/, "")
+      .replace(/[^a-zA-Z0-9_-]/g, "_");
     const stream = cloudinary.uploader.upload_stream(
       {
         resource_type: "auto",
-        public_id: filename.replace(/\.[^/.]+$/, ""),
+        public_id: sanitizedFilename,
         overwrite: false,
       },
       (error, result) => {

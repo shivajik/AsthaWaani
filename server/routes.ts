@@ -467,7 +467,7 @@ export async function registerRoutes(
     }
   });
 
-  // Get single post with categories
+  // Get single post with categories and ads
   app.get("/api/blog/post/:slug", async (req, res) => {
     try {
       const { slug } = req.params;
@@ -478,7 +478,16 @@ export async function registerRoutes(
       }
 
       const categories = await storage.getPostCategories(post.id);
-      res.json({ post, categories });
+      const allAds = await storage.getAllAds();
+      
+      // Get ads for blog post by placement
+      const blogPostAds = {
+        top: allAds.filter(a => a.isActive && a.placement === "blog_post_top" && (!a.categoryId || a.categoryId === post.categoryId)).sort((a, b) => a.position - b.position),
+        sidebar: allAds.filter(a => a.isActive && a.placement === "blog_post_sidebar" && (!a.categoryId || a.categoryId === post.categoryId)).sort((a, b) => a.position - b.position),
+        bottom: allAds.filter(a => a.isActive && a.placement === "blog_post_bottom" && (!a.categoryId || a.categoryId === post.categoryId)).sort((a, b) => a.position - b.position),
+      };
+      
+      res.json({ post, categories, ads: blogPostAds });
     } catch (error) {
       console.error("Error fetching post:", error);
       res.status(500).json({ error: "Failed to fetch post" });
@@ -774,8 +783,18 @@ export async function registerRoutes(
 
   app.get("/api/ads", async (req, res) => {
     try {
+      const { placement, categoryId } = req.query;
       const activeAds = await storage.getActiveAds();
-      res.json(activeAds);
+      
+      let filtered = activeAds;
+      if (placement) {
+        filtered = filtered.filter(ad => ad.placement === placement);
+      }
+      if (categoryId) {
+        filtered = filtered.filter(ad => !ad.categoryId || ad.categoryId === categoryId);
+      }
+      
+      res.json(filtered);
     } catch (error) {
       console.error("Error fetching active ads:", error);
       res.status(500).json({ error: "Failed to fetch ads" });
@@ -804,6 +823,8 @@ export async function registerRoutes(
         titleHi: req.body.titleHi || null,
         link: req.body.link || null,
         isActive: req.body.isActive === "true" || req.body.isActive === true,
+        placement: req.body.placement || "blog_listing",
+        categoryId: req.body.categoryId || null,
         position: parseInt(req.body.position || "0", 10),
         imageUrl,
         imagePublicId,
@@ -834,6 +855,8 @@ export async function registerRoutes(
       if (req.body.titleHi) parsedData.titleHi = req.body.titleHi;
       if (req.body.link) parsedData.link = req.body.link;
       if (req.body.isActive !== undefined) parsedData.isActive = req.body.isActive === "true" || req.body.isActive === true;
+      if (req.body.placement) parsedData.placement = req.body.placement;
+      if (req.body.categoryId !== undefined) parsedData.categoryId = req.body.categoryId || null;
       if (req.body.position !== undefined) parsedData.position = parseInt(req.body.position, 10);
 
       if (req.file) {
