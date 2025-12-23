@@ -108,12 +108,18 @@ export default function BlogPostDetail() {
             <div className="sticky top-4 space-y-8">
               {/* Sidebar Ads */}
               {data?.ads?.sidebar && data.ads.sidebar.length > 0 && (
-                <div className="space-y-3">
-                  {data?.ads?.sidebar.map((ad) => (
-                    <a key={ad.id} href={ensureProtocol(ad.link)} target="_blank" rel="noopener noreferrer" data-testid={`ad-sidebar-${ad.id}`} className="block">
-                      <img src={ad.imageUrl} alt={ad.titleEn} className="w-full max-h-48 object-cover rounded-lg hover:opacity-90 transition-opacity" />
-                    </a>
-                  ))}
+                <div className="space-y-4">
+                  {data?.ads?.sidebar.map((ad) => {
+                    const adTitle = language === "hi" ? ad.titleHi || ad.titleEn : ad.titleEn;
+                    return (
+                      <div key={ad.id}>
+                        <a href={ensureProtocol(ad.link)} target="_blank" rel="noopener noreferrer" data-testid={`ad-sidebar-${ad.id}`} className="block">
+                          <img src={ad.imageUrl} alt={adTitle} className="w-full max-h-48 object-cover rounded-lg hover:opacity-90 transition-opacity" />
+                        </a>
+                        {adTitle && <p className="mt-2 text-sm font-semibold text-foreground">{adTitle}</p>}
+                      </div>
+                    );
+                  })}
                 </div>
               )}
 
@@ -163,12 +169,18 @@ export default function BlogPostDetail() {
 
             {/* Top Ads */}
             {data?.ads?.top && data.ads.top.length > 0 && (
-              <div className="flex justify-center mb-6">
-                {data?.ads?.top.map((ad) => (
-                  <a key={ad.id} href={ensureProtocol(ad.link)} target="_blank" rel="noopener noreferrer" data-testid={`ad-top-${ad.id}`} className="block max-w-2xl">
-                    <img src={ad.imageUrl} alt={ad.titleEn} className="w-full max-h-32 object-cover rounded-lg hover:opacity-90 transition-opacity" />
-                  </a>
-                ))}
+              <div className="mb-6 space-y-2">
+                {data?.ads?.top.map((ad) => {
+                  const adTitle = language === "hi" ? ad.titleHi || ad.titleEn : ad.titleEn;
+                  return (
+                    <div key={ad.id} className="flex flex-col items-center">
+                      <a href={ensureProtocol(ad.link)} target="_blank" rel="noopener noreferrer" data-testid={`ad-top-${ad.id}`} className="block max-w-2xl w-full">
+                        <img src={ad.imageUrl} alt={adTitle} className="w-full max-h-32 object-cover rounded-lg hover:opacity-90 transition-opacity" />
+                      </a>
+                      {adTitle && <p className="mt-2 text-sm font-semibold text-foreground text-center">{adTitle}</p>}
+                    </div>
+                  );
+                })}
               </div>
             )}
 
@@ -233,12 +245,18 @@ export default function BlogPostDetail() {
 
             {/* Bottom Ads */}
             {data?.ads?.bottom && data.ads.bottom.length > 0 && (
-              <div className="flex justify-center my-6">
-                {data?.ads?.bottom.map((ad) => (
-                  <a key={ad.id} href={ensureProtocol(ad.link)} target="_blank" rel="noopener noreferrer" data-testid={`ad-bottom-${ad.id}`} className="block max-w-2xl">
-                    <img src={ad.imageUrl} alt={ad.titleEn} className="w-full max-h-32 object-cover rounded-lg hover:opacity-90 transition-opacity" />
-                  </a>
-                ))}
+              <div className="my-6 space-y-2">
+                {data?.ads?.bottom.map((ad) => {
+                  const adTitle = language === "hi" ? ad.titleHi || ad.titleEn : ad.titleEn;
+                  return (
+                    <div key={ad.id} className="flex flex-col items-center">
+                      <a href={ensureProtocol(ad.link)} target="_blank" rel="noopener noreferrer" data-testid={`ad-bottom-${ad.id}`} className="block max-w-2xl w-full">
+                        <img src={ad.imageUrl} alt={adTitle} className="w-full max-h-32 object-cover rounded-lg hover:opacity-90 transition-opacity" />
+                      </a>
+                      {adTitle && <p className="mt-2 text-sm font-semibold text-foreground text-center">{adTitle}</p>}
+                    </div>
+                  );
+                })}
               </div>
             )}
 

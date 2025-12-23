@@ -87,32 +87,32 @@ export default function Blog() {
             {/* Ads Section - Below Sticky Sidebar */}
             {listingAds.length > 0 && (
               <div className="mt-6 space-y-3">
-                {listingAds.map((ad: any) => (
-                  <a
-                    key={ad.id}
-                    href={ensureProtocol(ad.link)}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="block group"
-                    data-testid={`ad-card-${ad.id}`}
-                  >
-                    <Card className="overflow-hidden hover-elevate cursor-pointer">
-                      <div className="w-full h-48 bg-gray-200 dark:bg-gray-800">
-                        <img
-                          src={ad.imageUrl}
-                          alt={ad.titleEn}
-                          className="w-full h-full object-cover"
-                        />
-                      </div>
-                      <div className="p-3">
-                        <p className="font-semibold text-sm">{ad.titleEn}</p>
-                        {ad.titleHi && (
-                          <p className="text-xs text-muted-foreground">{ad.titleHi}</p>
-                        )}
-                      </div>
-                    </Card>
-                  </a>
-                ))}
+                {listingAds.map((ad: any) => {
+                  const adTitle = language === "hi" ? ad.titleHi || ad.titleEn : ad.titleEn;
+                  return (
+                    <a
+                      key={ad.id}
+                      href={ensureProtocol(ad.link)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="block group"
+                      data-testid={`ad-card-${ad.id}`}
+                    >
+                      <Card className="overflow-hidden hover-elevate cursor-pointer">
+                        <div className="w-full h-48 bg-gray-200 dark:bg-gray-800">
+                          <img
+                            src={ad.imageUrl}
+                            alt={adTitle}
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                        <div className="p-3">
+                          <p className="font-semibold text-sm">{adTitle}</p>
+                        </div>
+                      </Card>
+                    </a>
+                  );
+                })}
               </div>
             )}
           </aside>
