@@ -784,10 +784,8 @@ export async function registerRoutes(
 
   app.post("/api/cms/ads", upload.single("image"), async (req, res) => {
     try {
-      const validated = insertAdSchema.parse(req.body);
-      
-      let imageUrl = validated.imageUrl;
-      let imagePublicId = validated.imagePublicId;
+      let imageUrl = "";
+      let imagePublicId = "";
 
       if (req.file) {
         const uploadResponse = await uploadToCloudinary(
@@ -796,13 +794,24 @@ export async function registerRoutes(
         );
         imageUrl = uploadResponse.secure_url;
         imagePublicId = uploadResponse.public_id;
+      } else {
+        imageUrl = req.body.imageUrl || "";
+        imagePublicId = req.body.imagePublicId || "";
       }
 
-      const ad = await storage.createAd({
-        ...validated,
+      const parsedData = {
+        titleEn: req.body.titleEn || "",
+        titleHi: req.body.titleHi || null,
+        link: req.body.link || null,
+        isActive: req.body.isActive === "true" || req.body.isActive === true,
+        position: parseInt(req.body.position || "0", 10),
         imageUrl,
         imagePublicId,
-      });
+      };
+
+      const validated = insertAdSchema.parse(parsedData);
+
+      const ad = await storage.createAd(validated);
 
       res.json(ad);
     } catch (error) {
@@ -820,9 +829,12 @@ export async function registerRoutes(
         return res.status(404).json({ error: "Ad not found" });
       }
 
-      const validated = insertAdSchema.partial().parse(req.body);
-      
-      let updateData = { ...validated };
+      const parsedData: any = {};
+      if (req.body.titleEn) parsedData.titleEn = req.body.titleEn;
+      if (req.body.titleHi) parsedData.titleHi = req.body.titleHi;
+      if (req.body.link) parsedData.link = req.body.link;
+      if (req.body.isActive !== undefined) parsedData.isActive = req.body.isActive === "true" || req.body.isActive === true;
+      if (req.body.position !== undefined) parsedData.position = parseInt(req.body.position, 10);
 
       if (req.file) {
         if (ad.imagePublicId) {
@@ -832,11 +844,12 @@ export async function registerRoutes(
           req.file.buffer,
           req.file.originalname
         );
-        updateData.imageUrl = uploadResponse.secure_url;
-        updateData.imagePublicId = uploadResponse.public_id;
+        parsedData.imageUrl = uploadResponse.secure_url;
+        parsedData.imagePublicId = uploadResponse.public_id;
       }
 
-      const updated = await storage.updateAd(req.params.id, updateData);
+      const validated = insertAdSchema.partial().parse(parsedData);
+      const updated = await storage.updateAd(req.params.id, validated);
       res.json(updated);
     } catch (error) {
       console.error("Error updating ad:", error);
