@@ -1334,10 +1334,11 @@ function OfferingManager() {
                 <Label>Slug</Label>
                 <Input value={offering.slug} onChange={(e) => updateField("slug", e.target.value)} placeholder="daily-satsang" />
               </div>
-              <div className="space-y-2">
+              {/* Icon Name input - commented out */}
+              {/* <div className="space-y-2">
                 <Label>Icon Name</Label>
                 <Input value={offering.icon} onChange={(e) => updateField("icon", e.target.value)} placeholder="Heart" />
-              </div>
+              </div> */}
             </div>
             <div className="grid md:grid-cols-2 gap-4">
               <div className="space-y-2">
