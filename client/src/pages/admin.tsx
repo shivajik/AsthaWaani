@@ -12,7 +12,8 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { MediaUpload } from "@/components/media-upload";
 import { 
   RefreshCw, Youtube, LogOut, FileText, 
-  Image, Settings, LayoutDashboard, PenSquare, Trash2, Plus, Save, Phone, Megaphone, FileCheck
+  Image, Settings, LayoutDashboard, PenSquare, Trash2, Plus, Save, Phone, Megaphone, FileCheck,
+  ChevronLeft
 } from "lucide-react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
@@ -340,10 +341,18 @@ function PageManager() {
     return (
       <div className="space-y-4">
         <div className="flex justify-between items-center">
-          <h2 className="text-2xl font-bold">{editingPage ? "Edit Page" : "Create Page"}</h2>
-          <Button variant="outline" onClick={() => { setEditingPage(null); setIsCreating(false); }}>
-            Cancel
-          </Button>
+          <div className="flex items-center gap-3">
+            <Button 
+              variant="ghost" 
+              size="icon"
+              onClick={() => { setEditingPage(null); setIsCreating(false); }}
+              data-testid="button-back"
+              className="cursor-pointer"
+            >
+              <ChevronLeft className="w-5 h-5 cursor-pointer" />
+            </Button>
+            <h2 className="text-2xl font-bold">{editingPage ? "Edit Page" : "Create Page"}</h2>
+          </div>
         </div>
         <Card>
           <CardContent className="pt-6 space-y-4">
@@ -619,10 +628,18 @@ function PostManager() {
     return (
       <div className="space-y-4">
         <div className="flex justify-between items-center">
-          <h2 className="text-2xl font-bold">{editingPost ? "Edit Post" : "Create Post"}</h2>
-          <Button variant="outline" onClick={() => { setEditingPost(null); setIsCreating(false); }}>
-            Cancel
-          </Button>
+          <div className="flex items-center gap-3">
+            <Button 
+              variant="ghost" 
+              size="icon"
+              onClick={() => { setEditingPost(null); setIsCreating(false); }}
+              data-testid="button-back"
+              className="cursor-pointer"
+            >
+              <ChevronLeft className="w-5 h-5 cursor-pointer" />
+            </Button>
+            <h2 className="text-2xl font-bold">{editingPost ? "Edit Post" : "Create Post"}</h2>
+          </div>
         </div>
         <Card>
           <CardContent className="pt-6 space-y-4">
@@ -1019,8 +1036,18 @@ function ContactInfoManager() {
     return (
       <div className="space-y-4">
         <div className="flex justify-between items-center">
-          <h2 className="text-2xl font-bold">Edit Contact Information</h2>
-          <Button variant="outline" onClick={() => setEditing(false)}>Cancel</Button>
+          <div className="flex items-center gap-3">
+            <Button 
+              variant="ghost" 
+              size="icon"
+              onClick={() => setEditing(false)}
+              data-testid="button-back"
+              className="cursor-pointer"
+            >
+              <ChevronLeft className="w-5 h-5 cursor-pointer" />
+            </Button>
+            <h2 className="text-2xl font-bold">Edit Contact Information</h2>
+          </div>
         </div>
         <Card>
           <CardContent className="pt-6 space-y-4">
@@ -1287,10 +1314,18 @@ function OfferingManager() {
     return (
       <div className="space-y-4">
         <div className="flex justify-between items-center">
-          <h2 className="text-2xl font-bold">{editingOffering ? "Edit Offering" : "Create Offering"}</h2>
-          <Button variant="outline" onClick={() => { setEditingOffering(null); setIsCreating(false); }}>
-            Cancel
-          </Button>
+          <div className="flex items-center gap-3">
+            <Button 
+              variant="ghost" 
+              size="icon"
+              onClick={() => { setEditingOffering(null); setIsCreating(false); }}
+              data-testid="button-back"
+              className="cursor-pointer"
+            >
+              <ChevronLeft className="w-5 h-5 cursor-pointer" />
+            </Button>
+            <h2 className="text-2xl font-bold">{editingOffering ? "Edit Offering" : "Create Offering"}</h2>
+          </div>
         </div>
         <Card>
           <CardContent className="pt-6 space-y-4">
@@ -1537,11 +1572,17 @@ function NewsTickerManager() {
               {editingId ? "Update" : "Add"} News Item
             </Button>
             {editingId && (
-              <Button variant="outline" onClick={() => {
-                setEditingId(null);
-                setFormData({ titleEn: "", titleHi: "", order: 0, isActive: true });
-              }}>
-                Cancel
+              <Button 
+                variant="ghost" 
+                size="icon"
+                onClick={() => {
+                  setEditingId(null);
+                  setFormData({ titleEn: "", titleHi: "", order: 0, isActive: true });
+                }}
+                data-testid="button-back"
+                className="cursor-pointer"
+              >
+                <ChevronLeft className="w-5 h-5 cursor-pointer" />
               </Button>
             )}
           </div>
@@ -1642,10 +1683,18 @@ function LegalPageManager() {
     return (
       <div className="space-y-4">
         <div className="flex justify-between items-center">
-          <h2 className="text-2xl font-bold">Edit Legal Page</h2>
-          <Button variant="outline" onClick={() => setEditingPage(null)}>
-            Cancel
-          </Button>
+          <div className="flex items-center gap-3">
+            <Button 
+              variant="ghost" 
+              size="icon"
+              onClick={() => setEditingPage(null)}
+              data-testid="button-back"
+              className="cursor-pointer"
+            >
+              <ChevronLeft className="w-5 h-5 cursor-pointer" />
+            </Button>
+            <h2 className="text-2xl font-bold">Edit Legal Page</h2>
+          </div>
         </div>
         <Card>
           <CardContent className="pt-6 space-y-4">
@@ -1965,12 +2014,18 @@ function AdManager() {
               {editingId ? "Update" : "Add"} Ad
             </Button>
             {editingId && (
-              <Button variant="outline" onClick={() => {
-                setEditingId(null);
-                setSelectedFile(null);
-                setFormData({ titleEn: "", titleHi: "", imageUrl: "", imagePublicId: "", link: "", isActive: true, position: 0, placement: "blog_post_top", categoryId: "" });
-              }}>
-                Cancel
+              <Button 
+                variant="ghost" 
+                size="icon"
+                onClick={() => {
+                  setEditingId(null);
+                  setSelectedFile(null);
+                  setFormData({ titleEn: "", titleHi: "", imageUrl: "", imagePublicId: "", link: "", isActive: true, position: 0, placement: "blog_post_top", categoryId: "" });
+                }}
+                data-testid="button-back"
+                className="cursor-pointer"
+              >
+                <ChevronLeft className="w-5 h-5 cursor-pointer" />
               </Button>
             )}
           </div>
