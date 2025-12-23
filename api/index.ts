@@ -827,10 +827,20 @@ app.delete("/api/cms/news-tickers/:id", isAuthenticated, async (req: Request, re
 
 app.get("/api/ads", async (req, res) => {
   try {
-    const adsList = await storage.getActiveAds();
-    res.json(adsList);
+    const { placement, categoryId } = req.query;
+    const activeAds = await storage.getActiveAds();
+    
+    let filtered = activeAds;
+    if (placement) {
+      filtered = filtered.filter(ad => ad.placement === placement);
+    }
+    if (categoryId) {
+      filtered = filtered.filter(ad => !ad.categoryId || ad.categoryId === categoryId);
+    }
+    
+    res.json(filtered);
   } catch (error) {
-    console.error("Error fetching ads:", error);
+    console.error("Error fetching active ads:", error);
     res.status(500).json({ error: "Failed to fetch ads" });
   }
 });
