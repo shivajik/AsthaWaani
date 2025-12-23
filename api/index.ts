@@ -322,6 +322,8 @@ const ads = pgTable("ads", {
   titleHi: text("title_hi"),
   imageUrl: text("image_url").notNull(),
   imagePublicId: text("image_public_id"),
+  imageWidth: integer("image_width"),
+  imageHeight: integer("image_height"),
   link: text("link"),
   isActive: boolean("is_active").notNull().default(true),
   placement: text("placement").notNull().default("blog_listing"),
@@ -1064,8 +1066,8 @@ app.put("/api/cms/pages/:id", isAuthenticated, async (req: Request, res: Respons
       return res.status(404).json({ error: "Page not found" });
     }
     const validated = updatePageSchema.parse(req.body);
-    if (validated.slug) {
-      const existingSlug = await storage.getPageBySlug(validated.slug);
+    if ("slug" in validated && validated.slug) {
+      const existingSlug = await storage.getPageBySlug(validated.slug as string);
       if (existingSlug && existingSlug.id !== req.params.id) {
         return res.status(400).json({ error: "A page with this slug already exists. Please use a different slug." });
       }
@@ -1572,6 +1574,179 @@ app.get("/api/blog/post/:slug", async (req: Request, res: Response) => {
   } catch (error) {
     console.error("Error fetching post:", error);
     res.status(500).json({ error: "Failed to fetch post" });
+  }
+});
+
+// ============================================
+// ADS ENDPOINTS
+// ============================================
+
+// Admin: Get all ads
+app.get("/api/cms/ads", isAuthenticated, async (req: Request, res: Response) => {
+  try {
+    const allAds = await db.select().from(ads).orderBy(ads.position);
+    res.json(allAds);
+  } catch (error) {
+    console.error("Error fetching ads:", error);
+    res.status(500).json({ error: "Failed to fetch ads" });
+  }
+});
+
+// Public: Get active ads by placement and category
+app.get("/api/ads", async (req: Request, res: Response) => {
+  try {
+    const { placement, categoryId } = req.query;
+    let query = db.select().from(ads).where(eq(ads.isActive, true));
+    
+    const activeAds = await query;
+    let filtered = activeAds;
+    
+    if (placement) {
+      filtered = filtered.filter(ad => ad.placement === placement);
+    }
+    if (categoryId) {
+      filtered = filtered.filter(ad => !ad.categoryId || ad.categoryId === categoryId);
+    }
+    
+    res.json(filtered);
+  } catch (error) {
+    console.error("Error fetching active ads:", error);
+    res.status(500).json({ error: "Failed to fetch ads" });
+  }
+});
+
+// Admin: Create ad
+app.post("/api/cms/ads", isAuthenticated, upload.single("image"), async (req: Request, res: Response) => {
+  try {
+    let imageUrl = "";
+    let imagePublicId = "";
+    let imageWidth: number | null = null;
+    let imageHeight: number | null = null;
+
+    if (req.file) {
+      const uploadResponse = await new Promise<any>((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream(
+          {
+            resource_type: "auto",
+            public_id: req.file!.originalname.replace(/\.[^/.]+$/, ""),
+            overwrite: false,
+          },
+          (error, result) => {
+            if (error) {
+              reject(error);
+            } else {
+              resolve(result);
+            }
+          }
+        );
+        stream.end(req.file!.buffer);
+      });
+      imageUrl = uploadResponse.secure_url;
+      imagePublicId = uploadResponse.public_id;
+      imageWidth = uploadResponse.width;
+      imageHeight = uploadResponse.height;
+    } else {
+      imageUrl = req.body.imageUrl || "";
+      imagePublicId = req.body.imagePublicId || "";
+    }
+
+    const parsedData = {
+      titleEn: req.body.titleEn || "",
+      titleHi: req.body.titleHi || null,
+      link: req.body.link || null,
+      isActive: req.body.isActive === "true" || req.body.isActive === true,
+      placement: req.body.placement || "blog_listing",
+      categoryId: req.body.categoryId || null,
+      position: parseInt(req.body.position || "0", 10),
+      imageUrl,
+      imagePublicId,
+      imageWidth,
+      imageHeight,
+    };
+
+    const validated = insertAdSchema.parse(parsedData);
+    const [newAd] = await db.insert(ads).values(validated).returning();
+    res.json(newAd);
+  } catch (error) {
+    console.error("Error creating ad:", error);
+    res.status(500).json({ error: "Failed to create ad" });
+  }
+});
+
+// Admin: Update ad
+app.put("/api/cms/ads/:id", isAuthenticated, upload.single("image"), async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const [ad] = await db.select().from(ads).where(eq(ads.id, id));
+    
+    if (!ad) {
+      return res.status(404).json({ error: "Ad not found" });
+    }
+
+    const parsedData: any = {};
+    if (req.body.titleEn) parsedData.titleEn = req.body.titleEn;
+    if (req.body.titleHi) parsedData.titleHi = req.body.titleHi;
+    if (req.body.link !== undefined) parsedData.link = req.body.link || null;
+    if (req.body.isActive !== undefined) parsedData.isActive = req.body.isActive === "true" || req.body.isActive === true;
+    if (req.body.placement) parsedData.placement = req.body.placement;
+    if (req.body.categoryId !== undefined) parsedData.categoryId = req.body.categoryId || null;
+    if (req.body.position !== undefined) parsedData.position = parseInt(req.body.position, 10);
+
+    if (req.file) {
+      if (ad.imagePublicId) {
+        await cloudinary.uploader.destroy(ad.imagePublicId);
+      }
+      const uploadResponse = await new Promise<any>((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream(
+          {
+            resource_type: "auto",
+            public_id: req.file!.originalname.replace(/\.[^/.]+$/, ""),
+            overwrite: false,
+          },
+          (error, result) => {
+            if (error) {
+              reject(error);
+            } else {
+              resolve(result);
+            }
+          }
+        );
+        stream.end(req.file!.buffer);
+      });
+      parsedData.imageUrl = uploadResponse.secure_url;
+      parsedData.imagePublicId = uploadResponse.public_id;
+      parsedData.imageWidth = uploadResponse.width;
+      parsedData.imageHeight = uploadResponse.height;
+    }
+
+    const validated = insertAdSchema.partial().parse(parsedData);
+    const [updatedAd] = await db.update(ads).set({ ...validated, updatedAt: new Date() }).where(eq(ads.id, id)).returning();
+    res.json(updatedAd);
+  } catch (error) {
+    console.error("Error updating ad:", error);
+    res.status(500).json({ error: "Failed to update ad" });
+  }
+});
+
+// Admin: Delete ad
+app.delete("/api/cms/ads/:id", isAuthenticated, async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const [ad] = await db.select().from(ads).where(eq(ads.id, id));
+    
+    if (!ad) {
+      return res.status(404).json({ error: "Ad not found" });
+    }
+
+    if (ad.imagePublicId) {
+      await cloudinary.uploader.destroy(ad.imagePublicId);
+    }
+
+    await db.delete(ads).where(eq(ads.id, id));
+    res.json({ success: true });
+  } catch (error) {
+    console.error("Error deleting ad:", error);
+    res.status(500).json({ error: "Failed to delete ad" });
   }
 });
 
