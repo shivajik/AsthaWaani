@@ -3,8 +3,8 @@ import {
   type Admin, type InsertAdmin, type Page, type InsertPage, type Post, type InsertPost,
   type Media, type InsertMedia, type SeoMeta, type InsertSeoMeta, type SiteSettings, type InsertSiteSettings,
   type ContactInfo, type InsertContactInfo, type Category, type InsertCategory, type PostCategory,
-  type Offering, type InsertOffering, type NewsTicker, type InsertNewsTicker,
-  videos, youtubeChannels, users, admins, pages, posts, media, seoMeta, siteSettings, contactInfo, categories, postCategories, offerings, newsTickers
+  type Offering, type InsertOffering, type NewsTicker, type InsertNewsTicker, type Ad, type InsertAd,
+  videos, youtubeChannels, users, admins, pages, posts, media, seoMeta, siteSettings, contactInfo, categories, postCategories, offerings, newsTickers, ads
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, desc, and } from "drizzle-orm";
@@ -103,6 +103,13 @@ export interface IStorage {
   createNewsTicker(ticker: InsertNewsTicker): Promise<NewsTicker>;
   updateNewsTicker(id: string, ticker: Partial<InsertNewsTicker>): Promise<NewsTicker>;
   deleteNewsTicker(id: string): Promise<void>;
+
+  // Ad operations
+  getAllAds(): Promise<Ad[]>;
+  getActiveAds(): Promise<Ad[]>;
+  createAd(ad: InsertAd): Promise<Ad>;
+  updateAd(id: string, ad: Partial<InsertAd>): Promise<Ad>;
+  deleteAd(id: string): Promise<void>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -539,6 +546,29 @@ export class DatabaseStorage implements IStorage {
 
   async deleteNewsTicker(id: string): Promise<void> {
     await db.delete(newsTickers).where(eq(newsTickers.id, id));
+  }
+
+  // Ad operations
+  async getAllAds(): Promise<Ad[]> {
+    return await db.select().from(ads).orderBy(ads.position);
+  }
+
+  async getActiveAds(): Promise<Ad[]> {
+    return await db.select().from(ads).where(eq(ads.isActive, true)).orderBy(ads.position);
+  }
+
+  async createAd(ad: InsertAd): Promise<Ad> {
+    const [newAd] = await db.insert(ads).values(ad).returning();
+    return newAd;
+  }
+
+  async updateAd(id: string, ad: Partial<InsertAd>): Promise<Ad> {
+    const [updated] = await db.update(ads).set({ ...ad, updatedAt: new Date() }).where(eq(ads.id, id)).returning();
+    return updated;
+  }
+
+  async deleteAd(id: string): Promise<void> {
+    await db.delete(ads).where(eq(ads.id, id));
   }
 }
 

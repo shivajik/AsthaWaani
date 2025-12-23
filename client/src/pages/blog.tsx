@@ -21,6 +21,11 @@ export default function Blog() {
     queryKey: ["/api/blog/posts"],
   }) as { data: Post[] };
 
+  // Fetch ads
+  const { data: ads = [] } = useQuery({
+    queryKey: ["/api/ads"],
+  }) as { data: any[] };
+
   // Filter posts by selected category
   const filteredPosts = selectedCategory
     ? (allPosts as Post[]).filter((post: Post) => post.categoryId === selectedCategory)
@@ -39,34 +44,69 @@ export default function Blog() {
         </h1>
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-          {/* Categories Sidebar */}
+          {/* Sidebar */}
           <aside className="md:col-span-1">
-            <div className="sticky top-4">
-              <h2 className="text-lg font-semibold mb-4">
-                {language === "hi" ? "श्रेणियां" : "Categories"}
-              </h2>
-              <div className="space-y-3">
-                <Button
-                  variant={selectedCategory === null ? "default" : "outline"}
-                  onClick={() => setSelectedCategory(null)}
-                  className="w-full justify-start"
-                  data-testid="button-category-all"
-                >
-                  {allText}
-                </Button>
-                {(categories as Category[]).map((category: Category) => (
+            <div className="sticky top-4 space-y-6">
+              {/* Ads Section */}
+              {ads.length > 0 && (
+                <div className="space-y-3">
+                  {ads.map((ad: any) => (
+                    <a
+                      key={ad.id}
+                      href={ad.link || "#"}
+                      target={ad.link ? "_blank" : "_self"}
+                      rel={ad.link ? "noopener noreferrer" : ""}
+                      className="block group"
+                      data-testid={`ad-card-${ad.id}`}
+                    >
+                      <Card className="overflow-hidden hover-elevate cursor-pointer">
+                        <div className="w-full h-48 bg-gray-200 dark:bg-gray-800">
+                          <img
+                            src={ad.imageUrl}
+                            alt={ad.titleEn}
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                        <div className="p-3">
+                          <p className="font-semibold text-sm">{ad.titleEn}</p>
+                          {ad.titleHi && (
+                            <p className="text-xs text-muted-foreground">{ad.titleHi}</p>
+                          )}
+                        </div>
+                      </Card>
+                    </a>
+                  ))}
+                </div>
+              )}
+
+              {/* Categories */}
+              <div>
+                <h2 className="text-lg font-semibold mb-4">
+                  {language === "hi" ? "श्रेणियां" : "Categories"}
+                </h2>
+                <div className="space-y-3">
                   <Button
-                    key={category.id}
-                    variant={
-                      selectedCategory === category.id ? "default" : "outline"
-                    }
-                    onClick={() => setSelectedCategory(category.id)}
+                    variant={selectedCategory === null ? "default" : "outline"}
+                    onClick={() => setSelectedCategory(null)}
                     className="w-full justify-start"
-                    data-testid={`button-category-${category.slug}`}
+                    data-testid="button-category-all"
                   >
-                    {language === "hi" ? category.nameHi || category.name : category.name}
+                    {allText}
                   </Button>
-                ))}
+                  {(categories as Category[]).map((category: Category) => (
+                    <Button
+                      key={category.id}
+                      variant={
+                        selectedCategory === category.id ? "default" : "outline"
+                      }
+                      onClick={() => setSelectedCategory(category.id)}
+                      className="w-full justify-start"
+                      data-testid={`button-category-${category.slug}`}
+                    >
+                      {language === "hi" ? category.nameHi || category.name : category.name}
+                    </Button>
+                  ))}
+                </div>
               </div>
             </div>
           </aside>

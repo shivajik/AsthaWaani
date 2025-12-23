@@ -1750,6 +1750,226 @@ function LegalPageManager() {
   );
 }
 
+function AdManager() {
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [deletingAdId, setDeletingAdId] = useState<string | null>(null);
+  const [formData, setFormData] = useState({ titleEn: "", titleHi: "", imageUrl: "", imagePublicId: "", link: "", isActive: true, position: 0 });
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+
+  interface AdItem {
+    id: string;
+    titleEn: string;
+    titleHi: string | null;
+    imageUrl: string;
+    imagePublicId: string | null;
+    link: string | null;
+    isActive: boolean;
+    position: number;
+  }
+
+  const { data: ads = [] } = useQuery<AdItem[]>({
+    queryKey: ["/api/cms/ads"],
+    queryFn: async () => {
+      const res = await fetch("/api/cms/ads", { credentials: "include" });
+      if (!res.ok) return [];
+      return res.json();
+    },
+  });
+
+  const saveMutation = useMutation({
+    mutationFn: async () => {
+      const formDataObj = new FormData();
+      formDataObj.append("titleEn", formData.titleEn);
+      formDataObj.append("titleHi", formData.titleHi || "");
+      formDataObj.append("link", formData.link || "");
+      formDataObj.append("isActive", String(formData.isActive));
+      formDataObj.append("position", String(formData.position));
+      if (!selectedFile) {
+        formDataObj.append("imageUrl", formData.imageUrl);
+        formDataObj.append("imagePublicId", formData.imagePublicId || "");
+      } else {
+        formDataObj.append("image", selectedFile);
+      }
+
+      const url = editingId ? `/api/cms/ads/${editingId}` : "/api/cms/ads";
+      const method = editingId ? "PUT" : "POST";
+      const res = await fetch(url, {
+        method,
+        body: formDataObj,
+        credentials: "include",
+      });
+      if (!res.ok) throw new Error("Failed to save");
+      return res.json();
+    },
+    onSuccess: () => {
+      toast({ title: editingId ? "Updated" : "Created" });
+      queryClient.invalidateQueries({ queryKey: ["/api/cms/ads"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/ads"] });
+      setEditingId(null);
+      setSelectedFile(null);
+      setFormData({ titleEn: "", titleHi: "", imageUrl: "", imagePublicId: "", link: "", isActive: true, position: 0 });
+    },
+    onError: () => {
+      toast({ title: "Failed to save", variant: "destructive" });
+    },
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: async (id: string) => {
+      const res = await fetch(`/api/cms/ads/${id}`, { method: "DELETE", credentials: "include" });
+      if (!res.ok) throw new Error("Failed to delete");
+    },
+    onSuccess: () => {
+      toast({ title: "Deleted" });
+      queryClient.invalidateQueries({ queryKey: ["/api/cms/ads"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/ads"] });
+    },
+  });
+
+  const handleEdit = (ad: AdItem) => {
+    setEditingId(ad.id);
+    setFormData({
+      titleEn: ad.titleEn,
+      titleHi: ad.titleHi || "",
+      imageUrl: ad.imageUrl,
+      imagePublicId: ad.imagePublicId || "",
+      link: ad.link || "",
+      isActive: ad.isActive,
+      position: ad.position,
+    });
+  };
+
+  return (
+    <div className="space-y-6">
+      <h2 className="text-2xl font-bold">Blog Ads</h2>
+      <Card>
+        <CardHeader>
+          <CardTitle>{editingId ? "Edit Ad" : "Add Ad"}</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="space-y-2">
+            <Label>Title (English) *</Label>
+            <Input
+              value={formData.titleEn}
+              onChange={(e) => setFormData({ ...formData, titleEn: e.target.value })}
+              placeholder="Ad title in English"
+            />
+          </div>
+          <div className="space-y-2">
+            <Label>Title (Hindi)</Label>
+            <Input
+              value={formData.titleHi || ""}
+              onChange={(e) => setFormData({ ...formData, titleHi: e.target.value })}
+              placeholder="विज्ञापन शीर्षक"
+            />
+          </div>
+          <div className="space-y-2">
+            <Label>Ad Image *</Label>
+            {formData.imageUrl && !selectedFile && (
+              <div className="mb-2">
+                <img src={formData.imageUrl} alt="Ad" className="h-32 object-cover rounded" />
+              </div>
+            )}
+            <Input
+              type="file"
+              accept="image/*"
+              onChange={(e) => setSelectedFile(e.target.files?.[0] || null)}
+            />
+          </div>
+          <div className="space-y-2">
+            <Label>Link URL</Label>
+            <Input
+              value={formData.link || ""}
+              onChange={(e) => setFormData({ ...formData, link: e.target.value })}
+              placeholder="https://example.com"
+            />
+          </div>
+          <div className="space-y-2">
+            <Label>Position (Order)</Label>
+            <Input
+              type="number"
+              value={formData.position}
+              onChange={(e) => setFormData({ ...formData, position: parseInt(e.target.value) })}
+            />
+          </div>
+          <div className="flex items-center gap-2">
+            <Switch
+              checked={formData.isActive}
+              onCheckedChange={(checked) => setFormData({ ...formData, isActive: checked })}
+            />
+            <Label>Active</Label>
+          </div>
+          <div className="flex gap-2">
+            <Button onClick={() => saveMutation.mutate()} disabled={saveMutation.isPending}>
+              {editingId ? "Update" : "Add"} Ad
+            </Button>
+            {editingId && (
+              <Button variant="outline" onClick={() => {
+                setEditingId(null);
+                setSelectedFile(null);
+                setFormData({ titleEn: "", titleHi: "", imageUrl: "", imagePublicId: "", link: "", isActive: true, position: 0 });
+              }}>
+                Cancel
+              </Button>
+            )}
+          </div>
+        </CardContent>
+      </Card>
+
+      <div className="space-y-2">
+        <h3 className="font-semibold">All Ads</h3>
+        {ads.map((ad) => (
+          <Card key={ad.id}>
+            <CardContent className="pt-6 flex items-center justify-between gap-4">
+              <div className="flex items-center gap-4 flex-1">
+                <img src={ad.imageUrl} alt={ad.titleEn} className="h-20 w-20 object-cover rounded" />
+                <div>
+                  <p className="font-medium">{ad.titleEn}</p>
+                  <p className="text-sm text-muted-foreground">{ad.titleHi}</p>
+                  <p className="text-xs text-muted-foreground">{ad.link}</p>
+                </div>
+              </div>
+              <div className="flex gap-2">
+                <Button variant="outline" size="sm" onClick={() => handleEdit(ad)}>
+                  Edit
+                </Button>
+                <Button variant="destructive" size="sm" onClick={() => setDeletingAdId(ad.id)} data-testid="button-delete-ad">
+                  Delete
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+      
+      <AlertDialog open={!!deletingAdId} onOpenChange={(open) => !open && setDeletingAdId(null)}>
+        <AlertDialogContent>
+          <AlertDialogTitle>Delete Ad</AlertDialogTitle>
+          <AlertDialogDescription>
+            Are you sure you want to delete this ad? This action cannot be undone.
+          </AlertDialogDescription>
+          <div className="flex gap-2 justify-end">
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => {
+                if (deletingAdId) {
+                  deleteMutation.mutate(deletingAdId);
+                  setDeletingAdId(null);
+                }
+              }}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Delete
+            </AlertDialogAction>
+          </div>
+        </AlertDialogContent>
+      </AlertDialog>
+    </div>
+  );
+}
+
 function YouTubeSync() {
   const [channelId, setChannelId] = useState("");
   const { toast } = useToast();
@@ -1891,6 +2111,7 @@ export default function Admin() {
     { id: "legal", label: "Legal Pages", icon: FileCheck },
     { id: "posts", label: "Blog Posts", icon: PenSquare },
     { id: "offerings", label: "Offerings", icon: PenSquare },
+    { id: "ads", label: "Blog Ads", icon: Megaphone },
     { id: "media", label: "Media", icon: Image },
     { id: "contact", label: "Contact Info", icon: Phone },
     { id: "news-ticker", label: "News Ticker", icon: Megaphone },
@@ -1942,6 +2163,7 @@ export default function Admin() {
           {activeTab === "legal" && <LegalPageManager />}
           {activeTab === "posts" && <PostManager />}
           {activeTab === "offerings" && <OfferingManager />}
+          {activeTab === "ads" && <AdManager />}
           {activeTab === "media" && <MediaManager />}
           {activeTab === "contact" && <ContactInfoManager />}
           {activeTab === "news-ticker" && <NewsTickerManager />}

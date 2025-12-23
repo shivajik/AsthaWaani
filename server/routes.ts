@@ -2,7 +2,7 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { YouTubeService } from "./youtube.service";
-import { insertYoutubeChannelSchema, insertVideoSchema, insertContactInfoSchema, insertCategorySchema, insertOfferingSchema, insertNewsTickerSchema, insertMediaSchema, insertPageSchema } from "@shared/schema";
+import { insertYoutubeChannelSchema, insertVideoSchema, insertContactInfoSchema, insertCategorySchema, insertOfferingSchema, insertNewsTickerSchema, insertMediaSchema, insertPageSchema, insertAdSchema } from "@shared/schema";
 import multer from "multer";
 import { uploadToCloudinary, deleteFromCloudinary } from "./cloudinary.service";
 import { sendContactFormNotification } from "./email.service";
@@ -758,6 +758,110 @@ export async function registerRoutes(
     } catch (error) {
       console.error("Error seeding blog data:", error);
       res.status(500).json({ error: "Failed to seed blog data" });
+    }
+  });
+
+  // Ad management endpoints
+  app.get("/api/cms/ads", async (req, res) => {
+    try {
+      const allAds = await storage.getAllAds();
+      res.json(allAds);
+    } catch (error) {
+      console.error("Error fetching ads:", error);
+      res.status(500).json({ error: "Failed to fetch ads" });
+    }
+  });
+
+  app.get("/api/ads", async (req, res) => {
+    try {
+      const activeAds = await storage.getActiveAds();
+      res.json(activeAds);
+    } catch (error) {
+      console.error("Error fetching active ads:", error);
+      res.status(500).json({ error: "Failed to fetch ads" });
+    }
+  });
+
+  app.post("/api/cms/ads", upload.single("image"), async (req, res) => {
+    try {
+      const validated = insertAdSchema.parse(req.body);
+      
+      let imageUrl = validated.imageUrl;
+      let imagePublicId = validated.imagePublicId;
+
+      if (req.file) {
+        const uploadResponse = await uploadToCloudinary(
+          req.file.buffer,
+          req.file.originalname
+        );
+        imageUrl = uploadResponse.secure_url;
+        imagePublicId = uploadResponse.public_id;
+      }
+
+      const ad = await storage.createAd({
+        ...validated,
+        imageUrl,
+        imagePublicId,
+      });
+
+      res.json(ad);
+    } catch (error) {
+      console.error("Error creating ad:", error);
+      res.status(500).json({ error: "Failed to create ad" });
+    }
+  });
+
+  app.put("/api/cms/ads/:id", upload.single("image"), async (req, res) => {
+    try {
+      const allAds = await storage.getAllAds();
+      const ad = allAds.find(a => a.id === req.params.id);
+      
+      if (!ad) {
+        return res.status(404).json({ error: "Ad not found" });
+      }
+
+      const validated = insertAdSchema.partial().parse(req.body);
+      
+      let updateData = { ...validated };
+
+      if (req.file) {
+        if (ad.imagePublicId) {
+          await deleteFromCloudinary(ad.imagePublicId);
+        }
+        const uploadResponse = await uploadToCloudinary(
+          req.file.buffer,
+          req.file.originalname
+        );
+        updateData.imageUrl = uploadResponse.secure_url;
+        updateData.imagePublicId = uploadResponse.public_id;
+      }
+
+      const updated = await storage.updateAd(req.params.id, updateData);
+      res.json(updated);
+    } catch (error) {
+      console.error("Error updating ad:", error);
+      res.status(500).json({ error: "Failed to update ad" });
+    }
+  });
+
+  app.delete("/api/cms/ads/:id", async (req, res) => {
+    try {
+      const allAds = await storage.getAllAds();
+      const ad = allAds.find(a => a.id === req.params.id);
+      
+      if (!ad) {
+        return res.status(404).json({ error: "Ad not found" });
+      }
+
+      if (ad.imagePublicId) {
+        await deleteFromCloudinary(ad.imagePublicId);
+      }
+
+      await storage.deleteAd(req.params.id);
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Error deleting ad:", error);
+      res.status(500).json({ error: "Failed to delete ad" });
     }
   });
 
