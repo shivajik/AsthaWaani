@@ -89,8 +89,6 @@ export default function Blog() {
               <div className="mt-6 space-y-3">
                 {listingAds.map((ad) => {
                   const adTitle = language === "hi" ? ad.titleHi || ad.titleEn : ad.titleEn;
-                  const maxWidth = 200;
-                  const height = ad.imageHeight ? (ad.imageHeight / (ad.imageWidth || 1)) * maxWidth : 250;
                   
                   return (
                     <a
@@ -101,23 +99,23 @@ export default function Blog() {
                       className="block group"
                       data-testid={`ad-card-${ad.id}`}
                     >
-                      <Card className="overflow-hidden hover-elevate cursor-pointer">
-                        <div className="relative">
+                      <div className="rounded-md overflow-hidden hover-elevate cursor-pointer">
+                        <div className="relative inline-block">
                           <span className="absolute top-2 right-2 bg-blue-500 text-white text-xs font-semibold px-2 py-1 rounded-md z-10">
                             {language === "hi" ? "विज्ञापन" : "Advertisement"}
                           </span>
-                          <div className="w-full rounded-lg overflow-hidden" style={{ height: `${height}px` }}>
-                            <img
-                              src={ad.imageUrl}
-                              alt={adTitle}
-                              className="w-full h-full object-contain"
-                            />
-                          </div>
+                          <img
+                            src={ad.imageUrl}
+                            alt={adTitle}
+                            style={{
+                              width: `${ad.imageWidth}px`,
+                              height: `${ad.imageHeight}px`,
+                              display: "block"
+                            }}
+                          />
                         </div>
-                        <div className="p-3">
-                          <p className="font-semibold text-sm">{adTitle}</p>
-                        </div>
-                      </Card>
+                      </div>
+                      {adTitle && <p className="mt-2 text-xs font-semibold text-foreground">{adTitle}</p>}
                     </a>
                   );
                 })}

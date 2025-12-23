@@ -146,22 +146,26 @@ export default function BlogPostDetail() {
                 <div className="space-y-4">
                   {data?.ads?.sidebar.map((ad) => {
                     const adTitle = language === "hi" ? ad.titleHi || ad.titleEn : ad.titleEn;
-                    const maxWidth = 200;
-                    const height = ad.imageHeight ? (ad.imageHeight / (ad.imageWidth || 1)) * maxWidth : 250;
                     
                     return (
                       <div key={ad.id}>
                         <a href={ensureProtocol(ad.link)} target="_blank" rel="noopener noreferrer" data-testid={`ad-sidebar-${ad.id}`} className="block">
-                          <div className="relative">
+                          <div className="relative inline-block rounded-md overflow-hidden">
                             <span className="absolute top-2 right-2 bg-blue-500 text-white text-xs font-semibold px-2 py-1 rounded-md z-10">
                               {language === "hi" ? "विज्ञापन" : "Ad"}
                             </span>
-                            <div className="w-full rounded-lg overflow-hidden" style={{ height: `${height}px` }}>
-                              <img src={ad.imageUrl} alt={adTitle} className="w-full h-full object-contain hover:opacity-90 transition-opacity" />
-                            </div>
+                            <img 
+                              src={ad.imageUrl} 
+                              alt={adTitle} 
+                              className="hover:opacity-90 transition-opacity block"
+                              style={{
+                                width: `${ad.imageWidth}px`,
+                                height: `${ad.imageHeight}px`
+                              }}
+                            />
                           </div>
                         </a>
-                        {adTitle && <p className="mt-2 text-sm font-semibold text-foreground">{adTitle}</p>}
+                        {adTitle && <p className="mt-2 text-xs font-semibold text-foreground">{adTitle}</p>}
                       </div>
                     );
                   })}
@@ -184,22 +188,26 @@ export default function BlogPostDetail() {
               <div className="mb-3 space-y-2">
                 {data?.ads?.top.map((ad) => {
                   const adTitle = language === "hi" ? ad.titleHi || ad.titleEn : ad.titleEn;
-                  const maxWidth = 500;
-                  const height = ad.imageHeight ? (ad.imageHeight / (ad.imageWidth || 1)) * maxWidth : 250;
                   
                   return (
                     <div key={ad.id} className="flex flex-col items-center">
-                      <a href={ensureProtocol(ad.link)} target="_blank" rel="noopener noreferrer" data-testid={`ad-top-${ad.id}`} className="block max-w-2xl w-full">
-                        <div className="relative">
+                      <a href={ensureProtocol(ad.link)} target="_blank" rel="noopener noreferrer" data-testid={`ad-top-${ad.id}`} className="block">
+                        <div className="relative inline-block rounded-md overflow-hidden">
                           <span className="absolute top-2 right-2 bg-blue-500 text-white text-xs font-semibold px-2 py-1 rounded-md z-10">
                             {language === "hi" ? "विज्ञापन" : "Advertisement"}
                           </span>
-                          <div className="w-full rounded-lg overflow-hidden" style={{ height: `${height}px` }}>
-                            <img src={ad.imageUrl} alt={adTitle} className="w-full h-full object-contain hover:opacity-90 transition-opacity" />
-                          </div>
+                          <img 
+                            src={ad.imageUrl} 
+                            alt={adTitle} 
+                            className="hover:opacity-90 transition-opacity block"
+                            style={{
+                              width: `${ad.imageWidth}px`,
+                              height: `${ad.imageHeight}px`
+                            }}
+                          />
                         </div>
                       </a>
-                      {adTitle && <p className="mt-2 text-sm font-semibold text-foreground text-center">{adTitle}</p>}
+                      {adTitle && <p className="mt-2 text-xs font-semibold text-foreground text-center">{adTitle}</p>}
                     </div>
                   );
                 })}
@@ -270,22 +278,26 @@ export default function BlogPostDetail() {
               <div className="my-2 space-y-2">
                 {data?.ads?.bottom.map((ad) => {
                   const adTitle = language === "hi" ? ad.titleHi || ad.titleEn : ad.titleEn;
-                  const maxWidth = 500;
-                  const height = ad.imageHeight ? (ad.imageHeight / (ad.imageWidth || 1)) * maxWidth : 250;
                   
                   return (
                     <div key={ad.id} className="flex flex-col items-center">
-                      <a href={ensureProtocol(ad.link)} target="_blank" rel="noopener noreferrer" data-testid={`ad-bottom-${ad.id}`} className="block max-w-2xl w-full">
-                        <div className="relative">
+                      <a href={ensureProtocol(ad.link)} target="_blank" rel="noopener noreferrer" data-testid={`ad-bottom-${ad.id}`} className="block">
+                        <div className="relative inline-block rounded-md overflow-hidden">
                           <span className="absolute top-2 right-2 bg-blue-500 text-white text-xs font-semibold px-2 py-1 rounded-md z-10">
                             {language === "hi" ? "विज्ञापन" : "Advertisement"}
                           </span>
-                          <div className="w-full rounded-lg overflow-hidden" style={{ height: `${height}px` }}>
-                            <img src={ad.imageUrl} alt={adTitle} className="w-full h-full object-contain hover:opacity-90 transition-opacity" />
-                          </div>
+                          <img 
+                            src={ad.imageUrl} 
+                            alt={adTitle} 
+                            className="hover:opacity-90 transition-opacity block"
+                            style={{
+                              width: `${ad.imageWidth}px`,
+                              height: `${ad.imageHeight}px`
+                            }}
+                          />
                         </div>
                       </a>
-                      {adTitle && <p className="mt-2 text-sm font-semibold text-foreground text-center">{adTitle}</p>}
+                      {adTitle && <p className="mt-2 text-xs font-semibold text-foreground text-center">{adTitle}</p>}
                     </div>
                   );
                 })}
