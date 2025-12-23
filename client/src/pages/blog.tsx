@@ -47,38 +47,6 @@ export default function Blog() {
           {/* Sidebar */}
           <aside className="md:col-span-1">
             <div className="sticky top-4 space-y-6">
-              {/* Ads Section */}
-              {ads.length > 0 && (
-                <div className="space-y-3">
-                  {ads.map((ad: any) => (
-                    <a
-                      key={ad.id}
-                      href={ad.link || "#"}
-                      target={ad.link ? "_blank" : "_self"}
-                      rel={ad.link ? "noopener noreferrer" : ""}
-                      className="block group"
-                      data-testid={`ad-card-${ad.id}`}
-                    >
-                      <Card className="overflow-hidden hover-elevate cursor-pointer">
-                        <div className="w-full h-48 bg-gray-200 dark:bg-gray-800">
-                          <img
-                            src={ad.imageUrl}
-                            alt={ad.titleEn}
-                            className="w-full h-full object-cover"
-                          />
-                        </div>
-                        <div className="p-3">
-                          <p className="font-semibold text-sm">{ad.titleEn}</p>
-                          {ad.titleHi && (
-                            <p className="text-xs text-muted-foreground">{ad.titleHi}</p>
-                          )}
-                        </div>
-                      </Card>
-                    </a>
-                  ))}
-                </div>
-              )}
-
               {/* Categories */}
               <div>
                 <h2 className="text-lg font-semibold mb-4">
@@ -109,6 +77,38 @@ export default function Blog() {
                 </div>
               </div>
             </div>
+
+            {/* Ads Section - Below Sticky Sidebar */}
+            {ads.length > 0 && (
+              <div className="mt-6 space-y-3">
+                {ads.map((ad: any) => (
+                  <a
+                    key={ad.id}
+                    href={ad.link || "#"}
+                    target="_self"
+                    rel="noreferrer"
+                    className="block group"
+                    data-testid={`ad-card-${ad.id}`}
+                  >
+                    <Card className="overflow-hidden hover-elevate cursor-pointer">
+                      <div className="w-full h-48 bg-gray-200 dark:bg-gray-800">
+                        <img
+                          src={ad.imageUrl}
+                          alt={ad.titleEn}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                      <div className="p-3">
+                        <p className="font-semibold text-sm">{ad.titleEn}</p>
+                        {ad.titleHi && (
+                          <p className="text-xs text-muted-foreground">{ad.titleHi}</p>
+                        )}
+                      </div>
+                    </Card>
+                  </a>
+                ))}
+              </div>
+            )}
           </aside>
 
           {/* Blog Posts Grid */}
