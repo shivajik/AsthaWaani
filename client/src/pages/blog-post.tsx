@@ -8,6 +8,7 @@ import { ChevronLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { Post, Category } from "@shared/schema";
 import { useState } from "react";
+import { ensureProtocol } from "@/lib/utils";
 
 interface Ad {
   id: string;
@@ -106,13 +107,15 @@ export default function BlogPostDetail() {
           <aside className="md:col-span-1">
             <div className="sticky top-4 space-y-8">
               {/* Sidebar Ads */}
-              <div className="space-y-4">
-                {data?.ads?.sidebar.map((ad) => (
-                  <a key={ad.id} href={ad.link || "#"} target="_blank" rel="noopener noreferrer" data-testid={`ad-sidebar-${ad.id}`}>
-                    <img src={ad.imageUrl} alt={ad.titleEn} className="w-full rounded-lg hover:opacity-90 transition-opacity" />
-                  </a>
-                ))}
-              </div>
+              {data?.ads?.sidebar && data.ads.sidebar.length > 0 && (
+                <div className="space-y-3">
+                  {data?.ads?.sidebar.map((ad) => (
+                    <a key={ad.id} href={ensureProtocol(ad.link)} target="_blank" rel="noopener noreferrer" data-testid={`ad-sidebar-${ad.id}`} className="block">
+                      <img src={ad.imageUrl} alt={ad.titleEn} className="w-full max-h-48 object-cover rounded-lg hover:opacity-90 transition-opacity" />
+                    </a>
+                  ))}
+                </div>
+              )}
 
               <div>
                 <h2 className="text-lg font-semibold mb-6">
@@ -159,13 +162,15 @@ export default function BlogPostDetail() {
             </Link>
 
             {/* Top Ads */}
-            <div className="space-y-4">
-              {data?.ads?.top.map((ad) => (
-                <a key={ad.id} href={ad.link || "#"} target="_blank" rel="noopener noreferrer" data-testid={`ad-top-${ad.id}`}>
-                  <img src={ad.imageUrl} alt={ad.titleEn} className="w-full rounded-lg hover:opacity-90 transition-opacity" />
-                </a>
-              ))}
-            </div>
+            {data?.ads?.top && data.ads.top.length > 0 && (
+              <div className="flex justify-center mb-6">
+                {data?.ads?.top.map((ad) => (
+                  <a key={ad.id} href={ensureProtocol(ad.link)} target="_blank" rel="noopener noreferrer" data-testid={`ad-top-${ad.id}`} className="block max-w-2xl">
+                    <img src={ad.imageUrl} alt={ad.titleEn} className="w-full max-h-32 object-cover rounded-lg hover:opacity-90 transition-opacity" />
+                  </a>
+                ))}
+              </div>
+            )}
 
             <article className="space-y-6">
               {post.featuredImage && (
@@ -227,13 +232,15 @@ export default function BlogPostDetail() {
             </article>
 
             {/* Bottom Ads */}
-            <div className="space-y-4">
-              {data?.ads?.bottom.map((ad) => (
-                <a key={ad.id} href={ad.link || "#"} target="_blank" rel="noopener noreferrer" data-testid={`ad-bottom-${ad.id}`}>
-                  <img src={ad.imageUrl} alt={ad.titleEn} className="w-full rounded-lg hover:opacity-90 transition-opacity" />
-                </a>
-              ))}
-            </div>
+            {data?.ads?.bottom && data.ads.bottom.length > 0 && (
+              <div className="flex justify-center my-6">
+                {data?.ads?.bottom.map((ad) => (
+                  <a key={ad.id} href={ensureProtocol(ad.link)} target="_blank" rel="noopener noreferrer" data-testid={`ad-bottom-${ad.id}`} className="block max-w-2xl">
+                    <img src={ad.imageUrl} alt={ad.titleEn} className="w-full max-h-32 object-cover rounded-lg hover:opacity-90 transition-opacity" />
+                  </a>
+                ))}
+              </div>
+            )}
 
             <div className="mt-12 pt-8 border-t border-border">
               <Link href="/blog">

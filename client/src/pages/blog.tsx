@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/lib/context";
 import { Link } from "wouter";
 import type { Category, Post } from "@shared/schema";
+import { ensureProtocol } from "@/lib/utils";
 
 export default function Blog() {
   const { language } = useLanguage();
@@ -21,9 +22,14 @@ export default function Blog() {
     queryKey: ["/api/blog/posts"],
   }) as { data: Post[] };
 
-  // Fetch ads
-  const { data: ads = [] } = useQuery({
-    queryKey: ["/api/ads"],
+  // Fetch ads for blog listing placement only
+  const { data: listingAds = [] } = useQuery({
+    queryKey: ["/api/ads", { placement: "blog_listing" }],
+    queryFn: async () => {
+      const res = await fetch("/api/ads?placement=blog_listing");
+      if (!res.ok) return [];
+      return res.json();
+    },
   }) as { data: any[] };
 
   // Filter posts by selected category
@@ -79,14 +85,14 @@ export default function Blog() {
             </div>
 
             {/* Ads Section - Below Sticky Sidebar */}
-            {ads.length > 0 && (
+            {listingAds.length > 0 && (
               <div className="mt-6 space-y-3">
-                {ads.map((ad: any) => (
+                {listingAds.map((ad: any) => (
                   <a
                     key={ad.id}
-                    href={ad.link || "#"}
-                    target="_self"
-                    rel="noreferrer"
+                    href={ensureProtocol(ad.link)}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="block group"
                     data-testid={`ad-card-${ad.id}`}
                   >
