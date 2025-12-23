@@ -316,6 +316,19 @@ const newsTickers = pgTable("news_tickers", {
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
 
+const ads = pgTable("ads", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  titleEn: text("title_en").notNull(),
+  titleHi: text("title_hi"),
+  imageUrl: text("image_url").notNull(),
+  imagePublicId: text("image_public_id"),
+  link: text("link"),
+  isActive: boolean("is_active").notNull().default(true),
+  position: integer("position").notNull().default(0),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
+
 const insertPageSchema = createInsertSchema(pages).omit({ id: true, createdAt: true, updatedAt: true });
 const insertPostSchema = createInsertSchema(posts).omit({ id: true, createdAt: true, updatedAt: true });
 const insertCategorySchema = createInsertSchema(categories).omit({ id: true, createdAt: true, updatedAt: true });
@@ -323,6 +336,7 @@ const insertSeoMetaSchema = createInsertSchema(seoMeta).omit({ id: true, created
 const insertContactInfoSchema = createInsertSchema(contactInfo).omit({ id: true, createdAt: true, updatedAt: true });
 const insertOfferingSchema = createInsertSchema(offerings).omit({ id: true, createdAt: true, updatedAt: true });
 const insertNewsTickerSchema = createInsertSchema(newsTickers).omit({ id: true, createdAt: true, updatedAt: true });
+const insertAdSchema = createInsertSchema(ads).omit({ id: true, createdAt: true, updatedAt: true });
 
 class DatabaseStorage {
   async getAllVideos() {
@@ -552,6 +566,28 @@ class DatabaseStorage {
 
   async deleteNewsTicker(id: string) {
     await db.delete(newsTickers).where(eq(newsTickers.id, id));
+  }
+
+  async getActiveAds() {
+    return await db.select().from(ads).where(eq(ads.isActive, true)).orderBy(ads.position);
+  }
+
+  async getAllAds() {
+    return await db.select().from(ads).orderBy(ads.position);
+  }
+
+  async createAd(ad: any) {
+    const [newAd] = await db.insert(ads).values(ad).returning();
+    return newAd;
+  }
+
+  async updateAd(id: string, ad: any) {
+    const [updatedAd] = await db.update(ads).set({ ...ad, updatedAt: new Date() }).where(eq(ads.id, id)).returning();
+    return updatedAd;
+  }
+
+  async deleteAd(id: string) {
+    await db.delete(ads).where(eq(ads.id, id));
   }
 }
 
@@ -784,6 +820,115 @@ app.delete("/api/cms/news-tickers/:id", isAuthenticated, async (req: Request, re
   } catch (error) {
     console.error("Error deleting news ticker:", error);
     res.status(500).json({ error: "Failed to delete news ticker" });
+  }
+});
+
+app.get("/api/ads", async (req, res) => {
+  try {
+    const adsList = await storage.getActiveAds();
+    res.json(adsList);
+  } catch (error) {
+    console.error("Error fetching ads:", error);
+    res.status(500).json({ error: "Failed to fetch ads" });
+  }
+});
+
+app.get("/api/cms/ads", isAuthenticated, async (req: Request, res: Response) => {
+  try {
+    const adsList = await storage.getAllAds();
+    res.json(adsList);
+  } catch (error) {
+    console.error("Error fetching ads:", error);
+    res.status(500).json({ error: "Failed to fetch ads" });
+  }
+});
+
+app.post("/api/cms/ads", isAuthenticated, upload.single("image"), async (req: Request, res: Response) => {
+  try {
+    let imageUrl = req.body.imageUrl || "";
+    let imagePublicId = req.body.imagePublicId || "";
+
+    if (req.file) {
+      const base64 = req.file.buffer.toString('base64');
+      const dataURI = `data:${req.file.mimetype};base64,${base64}`;
+      const result: any = await cloudinary.uploader.upload(dataURI, { resource_type: "auto" });
+      imageUrl = result.secure_url;
+      imagePublicId = result.public_id;
+    }
+
+    const parsedData = {
+      titleEn: req.body.titleEn || "",
+      titleHi: req.body.titleHi || null,
+      link: req.body.link || null,
+      isActive: req.body.isActive === "true" || req.body.isActive === true,
+      position: parseInt(req.body.position || "0", 10),
+      imageUrl,
+      imagePublicId,
+    };
+
+    const validated = insertAdSchema.parse(parsedData);
+    const ad = await storage.createAd(validated);
+    res.json(ad);
+  } catch (error) {
+    console.error("Error creating ad:", error);
+    res.status(500).json({ error: "Failed to create ad" });
+  }
+});
+
+app.put("/api/cms/ads/:id", isAuthenticated, upload.single("image"), async (req: Request, res: Response) => {
+  try {
+    const allAds = await storage.getAllAds();
+    const ad = allAds.find((a: any) => a.id === req.params.id);
+    
+    if (!ad) {
+      return res.status(404).json({ error: "Ad not found" });
+    }
+
+    const parsedData: any = {};
+    if (req.body.titleEn) parsedData.titleEn = req.body.titleEn;
+    if (req.body.titleHi) parsedData.titleHi = req.body.titleHi;
+    if (req.body.link) parsedData.link = req.body.link;
+    if (req.body.isActive !== undefined) parsedData.isActive = req.body.isActive === "true" || req.body.isActive === true;
+    if (req.body.position !== undefined) parsedData.position = parseInt(req.body.position, 10);
+
+    if (req.file) {
+      if (ad.imagePublicId) {
+        await cloudinary.uploader.destroy(ad.imagePublicId);
+      }
+      const base64 = req.file.buffer.toString('base64');
+      const dataURI = `data:${req.file.mimetype};base64,${base64}`;
+      const result: any = await cloudinary.uploader.upload(dataURI, { resource_type: "auto" });
+      parsedData.imageUrl = result.secure_url;
+      parsedData.imagePublicId = result.public_id;
+    }
+
+    const validated = insertAdSchema.partial().parse(parsedData);
+    const updated = await storage.updateAd(req.params.id, validated);
+    res.json(updated);
+  } catch (error) {
+    console.error("Error updating ad:", error);
+    res.status(500).json({ error: "Failed to update ad" });
+  }
+});
+
+app.delete("/api/cms/ads/:id", isAuthenticated, async (req: Request, res: Response) => {
+  try {
+    const allAds = await storage.getAllAds();
+    const ad = allAds.find((a: any) => a.id === req.params.id);
+    
+    if (!ad) {
+      return res.status(404).json({ error: "Ad not found" });
+    }
+
+    if (ad.imagePublicId) {
+      await cloudinary.uploader.destroy(ad.imagePublicId);
+    }
+
+    await storage.deleteAd(req.params.id);
+    res.json({ success: true });
+  } catch (error) {
+    console.error("Error deleting ad:", error);
+    res.status(500).json({ error: "Failed to delete ad" });
   }
 });
 
