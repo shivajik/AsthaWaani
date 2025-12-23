@@ -30,7 +30,7 @@ export default function Blog() {
       if (!res.ok) return [];
       return res.json();
     },
-  }) as { data: any[] };
+  }) as { data: Array<{ id: string; titleEn: string; titleHi?: string; imageUrl: string; imageWidth?: number; imageHeight?: number; link?: string }> };
 
   // Filter posts by selected category
   const filteredPosts = selectedCategory
@@ -87,8 +87,12 @@ export default function Blog() {
             {/* Ads Section - Below Sticky Sidebar */}
             {listingAds.length > 0 && (
               <div className="mt-6 space-y-3">
-                {listingAds.map((ad: any) => {
+                {listingAds.map((ad) => {
                   const adTitle = language === "hi" ? ad.titleHi || ad.titleEn : ad.titleEn;
+                  const aspectRatio = ad.imageWidth && ad.imageHeight ? ad.imageWidth / ad.imageHeight : 1;
+                  const maxWidth = 200;
+                  const calculatedHeight = maxWidth / aspectRatio;
+                  
                   return (
                     <a
                       key={ad.id}
@@ -99,11 +103,11 @@ export default function Blog() {
                       data-testid={`ad-card-${ad.id}`}
                     >
                       <Card className="overflow-hidden hover-elevate cursor-pointer">
-                        <div className="w-full h-48 bg-gray-200 dark:bg-gray-800">
+                        <div className="w-full bg-gray-200 dark:bg-gray-800" style={{ height: `${calculatedHeight}px` }}>
                           <img
                             src={ad.imageUrl}
                             alt={adTitle}
-                            className="w-full h-full object-cover"
+                            className="w-full h-full object-contain"
                           />
                         </div>
                         <div className="p-3">

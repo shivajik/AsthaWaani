@@ -15,6 +15,8 @@ interface Ad {
   titleEn: string;
   titleHi?: string;
   imageUrl: string;
+  imageWidth?: number;
+  imageHeight?: number;
   link?: string;
   placement: string;
   categoryId?: string;
@@ -144,10 +146,16 @@ export default function BlogPostDetail() {
                 <div className="space-y-4">
                   {data?.ads?.sidebar.map((ad) => {
                     const adTitle = language === "hi" ? ad.titleHi || ad.titleEn : ad.titleEn;
+                    const aspectRatio = ad.imageWidth && ad.imageHeight ? ad.imageWidth / ad.imageHeight : 1;
+                    const maxWidth = 200;
+                    const calculatedHeight = maxWidth / aspectRatio;
+                    
                     return (
                       <div key={ad.id}>
                         <a href={ensureProtocol(ad.link)} target="_blank" rel="noopener noreferrer" data-testid={`ad-sidebar-${ad.id}`} className="block">
-                          <img src={ad.imageUrl} alt={adTitle} className="w-full max-h-48 object-cover rounded-lg hover:opacity-90 transition-opacity" />
+                          <div className="w-full bg-gray-200 dark:bg-gray-800 rounded-lg overflow-hidden" style={{ height: `${calculatedHeight}px` }}>
+                            <img src={ad.imageUrl} alt={adTitle} className="w-full h-full object-contain hover:opacity-90 transition-opacity" />
+                          </div>
                         </a>
                         {adTitle && <p className="mt-2 text-sm font-semibold text-foreground">{adTitle}</p>}
                       </div>
@@ -172,10 +180,16 @@ export default function BlogPostDetail() {
               <div className="mb-6 space-y-2">
                 {data?.ads?.top.map((ad) => {
                   const adTitle = language === "hi" ? ad.titleHi || ad.titleEn : ad.titleEn;
+                  const aspectRatio = ad.imageWidth && ad.imageHeight ? ad.imageWidth / ad.imageHeight : 1;
+                  const maxWidth = 500;
+                  const calculatedHeight = maxWidth / aspectRatio;
+                  
                   return (
                     <div key={ad.id} className="flex flex-col items-center">
                       <a href={ensureProtocol(ad.link)} target="_blank" rel="noopener noreferrer" data-testid={`ad-top-${ad.id}`} className="block max-w-2xl w-full">
-                        <img src={ad.imageUrl} alt={adTitle} className="w-full max-h-32 object-cover rounded-lg hover:opacity-90 transition-opacity" />
+                        <div className="w-full bg-gray-200 dark:bg-gray-800 rounded-lg overflow-hidden" style={{ height: `${calculatedHeight}px` }}>
+                          <img src={ad.imageUrl} alt={adTitle} className="w-full h-full object-contain hover:opacity-90 transition-opacity" />
+                        </div>
                       </a>
                       {adTitle && <p className="mt-2 text-sm font-semibold text-foreground text-center">{adTitle}</p>}
                     </div>
@@ -248,10 +262,16 @@ export default function BlogPostDetail() {
               <div className="my-6 space-y-2">
                 {data?.ads?.bottom.map((ad) => {
                   const adTitle = language === "hi" ? ad.titleHi || ad.titleEn : ad.titleEn;
+                  const aspectRatio = ad.imageWidth && ad.imageHeight ? ad.imageWidth / ad.imageHeight : 1;
+                  const maxWidth = 500;
+                  const calculatedHeight = maxWidth / aspectRatio;
+                  
                   return (
                     <div key={ad.id} className="flex flex-col items-center">
                       <a href={ensureProtocol(ad.link)} target="_blank" rel="noopener noreferrer" data-testid={`ad-bottom-${ad.id}`} className="block max-w-2xl w-full">
-                        <img src={ad.imageUrl} alt={adTitle} className="w-full max-h-32 object-cover rounded-lg hover:opacity-90 transition-opacity" />
+                        <div className="w-full bg-gray-200 dark:bg-gray-800 rounded-lg overflow-hidden" style={{ height: `${calculatedHeight}px` }}>
+                          <img src={ad.imageUrl} alt={adTitle} className="w-full h-full object-contain hover:opacity-90 transition-opacity" />
+                        </div>
                       </a>
                       {adTitle && <p className="mt-2 text-sm font-semibold text-foreground text-center">{adTitle}</p>}
                     </div>

@@ -818,7 +818,7 @@ export async function registerRoutes(
         imagePublicId = req.body.imagePublicId || "";
       }
 
-      const parsedData = {
+      const parsedData: any = {
         titleEn: req.body.titleEn || "",
         titleHi: req.body.titleHi || null,
         link: req.body.link || null,
@@ -829,6 +829,15 @@ export async function registerRoutes(
         imageUrl,
         imagePublicId,
       };
+
+      if (req.file) {
+        const uploadResponse = await uploadToCloudinary(
+          req.file.buffer,
+          req.file.originalname
+        );
+        parsedData.imageWidth = uploadResponse.width;
+        parsedData.imageHeight = uploadResponse.height;
+      }
 
       const validated = insertAdSchema.parse(parsedData);
 
@@ -869,6 +878,8 @@ export async function registerRoutes(
         );
         parsedData.imageUrl = uploadResponse.secure_url;
         parsedData.imagePublicId = uploadResponse.public_id;
+        parsedData.imageWidth = uploadResponse.width;
+        parsedData.imageHeight = uploadResponse.height;
       }
 
       const validated = insertAdSchema.partial().parse(parsedData);

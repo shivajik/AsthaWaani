@@ -323,6 +323,8 @@ export const ads = pgTable("ads", {
   titleHi: text("title_hi"),
   imageUrl: text("image_url").notNull(),
   imagePublicId: text("image_public_id"),
+  imageWidth: integer("image_width"),
+  imageHeight: integer("image_height"),
   link: text("link"),
   isActive: boolean("is_active").notNull().default(true),
   placement: text("placement").notNull().default("blog_listing"), // blog_listing, blog_post_top, blog_post_sidebar, blog_post_bottom

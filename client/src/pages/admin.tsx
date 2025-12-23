@@ -1826,6 +1826,8 @@ function AdManager() {
     titleHi: string | null;
     imageUrl: string;
     imagePublicId: string | null;
+    imageWidth?: number | null;
+    imageHeight?: number | null;
     link: string | null;
     isActive: boolean;
     position: number;
@@ -2034,28 +2036,44 @@ function AdManager() {
 
       <div className="space-y-2">
         <h3 className="font-semibold">All Ads</h3>
-        {ads.map((ad) => (
-          <Card key={ad.id}>
-            <CardContent className="pt-6 flex items-center justify-between gap-4">
-              <div className="flex items-center gap-4 flex-1">
-                <img src={ad.imageUrl} alt={ad.titleEn} className="h-20 w-20 object-cover rounded" />
-                <div>
-                  <p className="font-medium">{ad.titleEn}</p>
-                  <p className="text-sm text-muted-foreground">{ad.titleHi}</p>
-                  <p className="text-xs text-muted-foreground">{ad.link}</p>
+        {ads.map((ad) => {
+          const aspectRatio = ad.imageWidth && ad.imageHeight ? ad.imageWidth / ad.imageHeight : 1;
+          const maxWidth = Math.min(150, ad.imageWidth || 150);
+          const maxHeight = maxWidth / aspectRatio;
+          
+          return (
+            <Card key={ad.id}>
+              <CardContent className="pt-6 flex items-center justify-between gap-4">
+                <div className="flex items-center gap-4 flex-1 min-w-0">
+                  <div style={{ flex: `0 0 ${maxWidth}px` }}>
+                    <img 
+                      src={ad.imageUrl} 
+                      alt={ad.titleEn} 
+                      className="w-full h-auto object-contain rounded"
+                      style={{ maxHeight: `${maxHeight}px` }}
+                    />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="font-medium truncate">{ad.titleEn}</p>
+                    <p className="text-sm text-muted-foreground truncate">{ad.titleHi}</p>
+                    <p className="text-xs text-muted-foreground truncate">{ad.link}</p>
+                    {ad.imageWidth && ad.imageHeight && (
+                      <p className="text-xs text-muted-foreground">{ad.imageWidth}×{ad.imageHeight}</p>
+                    )}
+                  </div>
                 </div>
-              </div>
-              <div className="flex gap-2">
-                <Button variant="outline" size="sm" onClick={() => handleEdit(ad)}>
-                  Edit
-                </Button>
-                <Button variant="destructive" size="sm" onClick={() => setDeletingAdId(ad.id)} data-testid="button-delete-ad">
-                  Delete
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
+                <div className="flex gap-2 flex-shrink-0">
+                  <Button variant="outline" size="sm" onClick={() => handleEdit(ad)}>
+                    Edit
+                  </Button>
+                  <Button variant="destructive" size="sm" onClick={() => setDeletingAdId(ad.id)} data-testid="button-delete-ad">
+                    Delete
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          );
+        })}
       </div>
       
       <AlertDialog open={!!deletingAdId} onOpenChange={(open) => !open && setDeletingAdId(null)}>
