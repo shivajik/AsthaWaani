@@ -74,7 +74,7 @@ export default function Blog() {
           {/* Blog Posts Grid */}
           <main className="md:col-span-3">
             {filteredPosts.length > 0 ? (
-              <div className="grid grid-cols-1 gap-6">
+              <div className="grid grid-cols-2 gap-6">
                 {(filteredPosts as Post[]).map((post: Post) => (
                   <Link key={post.id} href={`/blog/${post.slug}`}>
                     <Card
