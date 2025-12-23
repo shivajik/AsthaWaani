@@ -859,6 +859,8 @@ app.post("/api/cms/ads", isAuthenticated, upload.single("image"), async (req: Re
   try {
     let imageUrl = req.body.imageUrl || "";
     let imagePublicId = req.body.imagePublicId || "";
+    let imageWidth: number | null = null;
+    let imageHeight: number | null = null;
 
     if (req.file) {
       const base64 = req.file.buffer.toString('base64');
@@ -866,9 +868,11 @@ app.post("/api/cms/ads", isAuthenticated, upload.single("image"), async (req: Re
       const result: any = await cloudinary.uploader.upload(dataURI, { resource_type: "auto" });
       imageUrl = result.secure_url;
       imagePublicId = result.public_id;
+      imageWidth = result.width;
+      imageHeight = result.height;
     }
 
-    const parsedData = {
+    const parsedData: any = {
       titleEn: req.body.titleEn || "",
       titleHi: req.body.titleHi || null,
       link: req.body.link || null,
@@ -879,6 +883,9 @@ app.post("/api/cms/ads", isAuthenticated, upload.single("image"), async (req: Re
       imageUrl,
       imagePublicId,
     };
+
+    if (imageWidth !== null) parsedData.imageWidth = imageWidth;
+    if (imageHeight !== null) parsedData.imageHeight = imageHeight;
 
     const validated = insertAdSchema.parse(parsedData);
     const ad = await storage.createAd(validated);
@@ -916,6 +923,8 @@ app.put("/api/cms/ads/:id", isAuthenticated, upload.single("image"), async (req:
       const result: any = await cloudinary.uploader.upload(dataURI, { resource_type: "auto" });
       parsedData.imageUrl = result.secure_url;
       parsedData.imagePublicId = result.public_id;
+      parsedData.imageWidth = result.width;
+      parsedData.imageHeight = result.height;
     }
 
     const validated = insertAdSchema.partial().parse(parsedData);
