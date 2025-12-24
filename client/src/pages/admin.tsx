@@ -787,95 +787,12 @@ function PostManager() {
               </div>
             </div>
             <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <Label>Category</Label>
-                <Button
-                  size="sm"
-                  variant="outline"
-                  onClick={() => setShowCategoryForm(!showCategoryForm)}
-                  data-testid="button-add-category"
-                >
-                  <Plus className="w-4 h-4 mr-1" />
-                  New Category
-                </Button>
-              </div>
-              {showCategoryForm && (
-                <Card className="p-3 bg-muted/30">
-                  <div className="space-y-3">
-                    <div className="grid md:grid-cols-2 gap-3">
-                      <div className="space-y-1">
-                        <Label className="text-xs">Slug</Label>
-                        <Input
-                          placeholder="category-slug"
-                          value={newCategory.slug}
-                          onChange={(e) => setNewCategory({ ...newCategory, slug: e.target.value })}
-                          className="h-8 text-sm"
-                          data-testid="input-category-slug"
-                        />
-                      </div>
-                      <div className="space-y-1">
-                        <Label className="text-xs">Name (English)</Label>
-                        <Input
-                          placeholder="Category Name"
-                          value={newCategory.name}
-                          onChange={(e) => setNewCategory({ ...newCategory, name: e.target.value })}
-                          className="h-8 text-sm"
-                          data-testid="input-category-name"
-                        />
-                      </div>
-                    </div>
-                    <div className="space-y-1">
-                      <Label className="text-xs">Name (Hindi)</Label>
-                      <Input
-                        placeholder="श्रेणी का नाम"
-                        value={newCategory.nameHi}
-                        onChange={(e) => setNewCategory({ ...newCategory, nameHi: e.target.value })}
-                        className="h-8 text-sm"
-                        data-testid="input-category-name-hi"
-                      />
-                    </div>
-                    <div className="flex gap-2">
-                      <Button
-                        size="sm"
-                        onClick={() => createCategoryMutation.mutate(newCategory)}
-                        disabled={!newCategory.slug || !newCategory.name || createCategoryMutation.isPending}
-                        data-testid="button-create-category"
-                      >
-                        {createCategoryMutation.isPending ? "Creating..." : "Create Category"}
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => setShowCategoryForm(false)}
-                        data-testid="button-cancel-category"
-                      >
-                        Cancel
-                      </Button>
-                    </div>
-                  </div>
-                </Card>
-              )}
-              {categories && categories.length > 0 && (
-                <div className="space-y-2">
-                  <Label className="text-xs font-semibold">Manage Categories</Label>
-                  <div className="grid gap-2">
-                    {categories.map((cat) => (
-                      <div key={cat.id} className="flex items-center justify-between p-2 border rounded-md text-sm" data-testid={`item-category-${cat.id}`}>
-                        <span>{cat.name}</span>
-                        <Button size="sm" variant="ghost" onClick={() => deleteCategoryMutation.mutate(cat.id)} data-testid={`button-delete-category-${cat.id}`}>
-                          <Trash2 className="w-4 h-4 text-destructive" />
-                        </Button>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-              <Select value={post.categoryId || "none"} onValueChange={(value) => updateField("categoryId", value === "none" ? null : value)}>
+              <Label>Category <span className="text-red-500">*</span></Label>
+              <Select value={post.categoryId || ""} onValueChange={(value) => updateField("categoryId", value || null)}>
                 <SelectTrigger>
-                  <SelectValue placeholder="Select a category" />
+                  <SelectValue placeholder="Select a category (required)" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="none">No category</SelectItem>
                   {categories?.map((cat) => (
                     <SelectItem key={cat.id} value={cat.id}>
                       {cat.name}
@@ -883,6 +800,7 @@ function PostManager() {
                   ))}
                 </SelectContent>
               </Select>
+              <p className="text-xs text-muted-foreground">Manage categories in the <strong>Categories</strong> menu item</p>
             </div>
             <div className="grid md:grid-cols-2 gap-4">
               <div className="space-y-2">
@@ -2399,6 +2317,140 @@ function YouTubeSync() {
   );
 }
 
+function CategoryManager() {
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
+  const [newCategory, setNewCategory] = useState({ slug: "", name: "", nameHi: "" });
+
+  const { data: categories } = useQuery<Category[]>({
+    queryKey: ["/api/categories"],
+    queryFn: async () => {
+      const res = await fetch("/api/categories", { credentials: "include" });
+      if (!res.ok) return [];
+      return res.json();
+    },
+  });
+
+  const createCategoryMutation = useMutation({
+    mutationFn: async (category: { slug: string; name: string; nameHi?: string }) => {
+      const res = await fetch("/api/cms/categories", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(category),
+        credentials: "include",
+      });
+      if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.error || "Failed to create category");
+      }
+      return res.json();
+    },
+    onSuccess: () => {
+      toast({ title: "Category created successfully" });
+      queryClient.invalidateQueries({ queryKey: ["/api/categories"] });
+      setNewCategory({ slug: "", name: "", nameHi: "" });
+    },
+    onError: (error: Error) => {
+      toast({ title: error.message || "Failed to create category", variant: "destructive" });
+    },
+  });
+
+  const deleteCategoryMutation = useMutation({
+    mutationFn: async (id: string) => {
+      const res = await fetch(`/api/cms/categories/${id}`, { method: "DELETE", credentials: "include" });
+      if (!res.ok) throw new Error("Failed to delete category");
+      return res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/categories"] });
+      toast({ title: "Category deleted successfully" });
+    },
+  });
+
+  return (
+    <div className="space-y-6">
+      <h2 className="text-2xl font-bold">Blog Categories</h2>
+      
+      <Card>
+        <CardHeader>
+          <CardTitle>Create New Category</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="grid md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label>Slug (URL path)</Label>
+              <Input
+                placeholder="category-slug"
+                value={newCategory.slug}
+                onChange={(e) => setNewCategory({ ...newCategory, slug: e.target.value })}
+                data-testid="input-category-slug"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>Name (English)</Label>
+              <Input
+                placeholder="Category Name"
+                value={newCategory.name}
+                onChange={(e) => setNewCategory({ ...newCategory, name: e.target.value })}
+                data-testid="input-category-name"
+              />
+            </div>
+          </div>
+          <div className="space-y-2">
+            <Label>Name (Hindi)</Label>
+            <Input
+              placeholder="श्रेणी का नाम"
+              value={newCategory.nameHi}
+              onChange={(e) => setNewCategory({ ...newCategory, nameHi: e.target.value })}
+              data-testid="input-category-name-hi"
+            />
+          </div>
+          <Button
+            onClick={() => createCategoryMutation.mutate(newCategory)}
+            disabled={!newCategory.slug || !newCategory.name || createCategoryMutation.isPending}
+            className="gap-2"
+            data-testid="button-create-category"
+          >
+            <Plus className="w-4 h-4" />
+            {createCategoryMutation.isPending ? "Creating..." : "Create Category"}
+          </Button>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>All Categories ({categories?.length || 0})</CardTitle>
+        </CardHeader>
+        <CardContent>
+          {categories && categories.length > 0 ? (
+            <div className="space-y-2">
+              {categories.map((cat) => (
+                <div key={cat.id} className="flex items-center justify-between p-3 border rounded-md hover:bg-muted/50" data-testid={`item-category-${cat.id}`}>
+                  <div>
+                    <p className="font-medium">{cat.name}</p>
+                    {cat.nameHi && <p className="text-sm text-muted-foreground">{cat.nameHi}</p>}
+                    <p className="text-xs text-muted-foreground">/{cat.slug}</p>
+                  </div>
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={() => deleteCategoryMutation.mutate(cat.id)}
+                    data-testid={`button-delete-category-${cat.id}`}
+                  >
+                    <Trash2 className="w-4 h-4 text-destructive" />
+                  </Button>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="text-muted-foreground">No categories yet. Create one to get started.</p>
+          )}
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+
 export default function Admin() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [admin, setAdmin] = useState<Admin | null>(null);
@@ -2446,6 +2498,7 @@ export default function Admin() {
     { id: "pages", label: "Pages", icon: FileText },
     { id: "legal", label: "Legal Pages", icon: FileCheck },
     { id: "posts", label: "Blog Posts", icon: PenSquare },
+    { id: "categories", label: "Categories", icon: FileText },
     { id: "offerings", label: "Offerings", icon: PenSquare },
     { id: "ads", label: "Blog Ads", icon: Megaphone },
     { id: "media", label: "Media", icon: Image },
@@ -2499,6 +2552,7 @@ export default function Admin() {
           {activeTab === "pages" && <PageManager />}
           {activeTab === "legal" && <LegalPageManager />}
           {activeTab === "posts" && <PostManager />}
+          {activeTab === "categories" && <CategoryManager />}
           {activeTab === "offerings" && <OfferingManager />}
           {activeTab === "ads" && <AdManager />}
           {activeTab === "contacts" && <ContactsManager />}
