@@ -547,7 +547,7 @@ function ContactsManager() {
   });
 
   // Client-side filtering (no API calls)
-  const filteredContacts = contacts.filter((contact) => {
+  let filteredContacts = contacts.filter((contact) => {
     const searchLower = debouncedSearchTerm.toLowerCase();
     const matchesSearch = !searchLower || 
       contact.name.toLowerCase().includes(searchLower) ||
@@ -555,15 +555,17 @@ function ContactsManager() {
       contact.subject.toLowerCase().includes(searchLower) ||
       contact.message.toLowerCase().includes(searchLower);
 
-    let matchesStatus = true;
-    if (statusFilter === "new") {
-      matchesStatus = contact.status === "new";
-    } else if (statusFilter === "old") {
-      matchesStatus = contact.status !== "new";
-    }
-
-    return matchesSearch && matchesStatus;
+    return matchesSearch;
   });
+
+  // Sort by date based on filter
+  if (statusFilter === "new") {
+    // Newest first (most recent dates)
+    filteredContacts = [...filteredContacts].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+  } else if (statusFilter === "old") {
+    // Oldest first (least recent dates)
+    filteredContacts = [...filteredContacts].sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+  }
 
   return (
     <div className="space-y-6">
@@ -2587,12 +2589,12 @@ export default function Admin() {
     <div className="min-h-screen bg-background">
       <div className="flex">
         {/* Sidebar */}
-        <div className="w-64 bg-stone-900 min-h-screen p-4 text-white fixed left-0 top-0">
-          <div className="mb-8">
+        <div className="w-64 bg-stone-900 min-h-screen p-4 text-white fixed left-0 top-0 flex flex-col">
+          <div className="mb-8 flex-shrink-0">
             <h1 className="text-xl font-serif font-bold text-amber-400">Asthawaani CMS</h1>
             <p className="text-sm text-stone-400">{admin?.name}</p>
           </div>
-          <nav className="space-y-2">
+          <nav className="space-y-2 flex-1 overflow-y-auto pr-2">
             {menuItems.map((item) => (
               <button
                 key={item.id}
@@ -2608,7 +2610,7 @@ export default function Admin() {
               </button>
             ))}
           </nav>
-          <div className="absolute bottom-4 left-4 right-4">
+          <div className="mt-4 flex-shrink-0 pt-4 border-t border-stone-700">
             <Button
               variant="ghost"
               className="w-full text-stone-400 hover:text-white hover:bg-stone-800"
