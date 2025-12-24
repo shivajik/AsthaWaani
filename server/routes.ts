@@ -145,11 +145,48 @@ export async function registerRoutes(
     }
   });
 
-  // Get all contacts (admin endpoint)
+  // Get all contacts (admin endpoint) with pagination, filters, and search
   app.get("/api/cms/contacts", async (req, res) => {
     try {
-      const allContacts = await storage.getAllContacts();
-      res.json(allContacts);
+      const page = parseInt(req.query.page as string) || 1;
+      const limit = parseInt(req.query.limit as string) || 10;
+      const status = req.query.status as string;
+      const search = req.query.search as string;
+
+      let allContacts = await storage.getAllContacts();
+
+      // Apply status filter
+      if (status && status !== "all") {
+        allContacts = allContacts.filter((c: any) => c.status === status);
+      }
+
+      // Apply search filter
+      if (search) {
+        const searchLower = search.toLowerCase();
+        allContacts = allContacts.filter((c: any) =>
+          c.name.toLowerCase().includes(searchLower) ||
+          c.email.toLowerCase().includes(searchLower) ||
+          c.subject.toLowerCase().includes(searchLower)
+        );
+      }
+
+      // Sort by created date (newest first)
+      allContacts.sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+
+      // Pagination
+      const total = allContacts.length;
+      const offset = (page - 1) * limit;
+      const paginatedContacts = allContacts.slice(offset, offset + limit);
+
+      res.json({
+        data: paginatedContacts,
+        pagination: {
+          page,
+          limit,
+          total,
+          totalPages: Math.ceil(total / limit),
+        },
+      });
     } catch (error) {
       console.error("Error fetching contacts:", error);
       res.status(500).json({ error: "Failed to fetch contacts" });

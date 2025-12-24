@@ -1527,8 +1527,43 @@ app.delete("/api/cms/offerings/:id", isAuthenticated, async (req: Request, res: 
 
 app.get("/api/cms/contacts", isAuthenticated, async (req: Request, res: Response) => {
   try {
-    const allContacts = await db.select().from(contacts).orderBy(sql`created_at DESC`);
-    res.json(allContacts);
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 10;
+    const statusFilter = req.query.status as string;
+    const search = req.query.search as string;
+
+    // Get all contacts with filters applied in memory
+    let allContacts = await db.select().from(contacts).orderBy(sql`created_at DESC`);
+
+    // Apply status filter
+    if (statusFilter && statusFilter !== "all") {
+      allContacts = allContacts.filter((c) => c.status === statusFilter);
+    }
+
+    // Apply search filter
+    if (search) {
+      const searchLower = search.toLowerCase();
+      allContacts = allContacts.filter((c) =>
+        c.name.toLowerCase().includes(searchLower) ||
+        c.email.toLowerCase().includes(searchLower) ||
+        c.subject.toLowerCase().includes(searchLower)
+      );
+    }
+
+    // Pagination
+    const total = allContacts.length;
+    const offset = (page - 1) * limit;
+    const paginatedContacts = allContacts.slice(offset, offset + limit);
+
+    res.json({
+      data: paginatedContacts,
+      pagination: {
+        page,
+        limit,
+        total,
+        totalPages: Math.ceil(total / limit),
+      },
+    });
   } catch (error) {
     console.error("Error fetching contacts:", error);
     res.status(500).json({ error: "Failed to fetch contacts" });
