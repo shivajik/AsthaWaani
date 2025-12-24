@@ -94,6 +94,7 @@ interface ContactSubmission {
   phone: string | null;
   subject: string;
   message: string;
+  status: string;
   createdAt: string;
 }
 
@@ -512,15 +513,27 @@ function ContactsManager() {
   const queryClient = useQueryClient();
   const { toast } = useToast();
   const [selectedContact, setSelectedContact] = useState<ContactSubmission | null>(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState<"all" | "new" | "old">("all");
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
 
-  const { data: contacts } = useQuery<ContactSubmission[]>({
+  const { data: contacts = [] } = useQuery<ContactSubmission[]>({
     queryKey: ["/api/cms/contacts"],
     queryFn: async () => {
       const res = await fetch("/api/cms/contacts", { credentials: "include" });
       if (!res.ok) return [];
-      return res.json();
+      const data = await res.json();
+      return Array.isArray(data) ? data : (data?.contacts || []);
     },
   });
+
+  // Debounce search - only update after user stops typing for 500ms
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm);
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [searchTerm]);
 
   const deleteContactMutation = useMutation({
     mutationFn: async (id: string) => {
@@ -533,16 +546,67 @@ function ContactsManager() {
     },
   });
 
+  // Client-side filtering (no API calls)
+  const filteredContacts = contacts.filter((contact) => {
+    const searchLower = debouncedSearchTerm.toLowerCase();
+    const matchesSearch = !searchLower || 
+      contact.name.toLowerCase().includes(searchLower) ||
+      contact.email.toLowerCase().includes(searchLower) ||
+      contact.subject.toLowerCase().includes(searchLower) ||
+      contact.message.toLowerCase().includes(searchLower);
+
+    let matchesStatus = true;
+    if (statusFilter === "new") {
+      matchesStatus = contact.status === "new";
+    } else if (statusFilter === "old") {
+      matchesStatus = contact.status !== "new";
+    }
+
+    return matchesSearch && matchesStatus;
+  });
+
   return (
     <div className="space-y-6">
       <h2 className="text-2xl font-bold">Contact Form Submissions</h2>
+      
+      <div className="flex gap-4 items-end flex-wrap">
+        <div className="flex-1 min-w-48">
+          <Label className="text-sm mb-2 block">Search</Label>
+          <Input
+            placeholder="Search by name, email, subject..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            data-testid="input-contact-search"
+          />
+        </div>
+        <div className="w-48">
+          <Label className="text-sm mb-2 block">Status Filter</Label>
+          <Select value={statusFilter} onValueChange={(value) => setStatusFilter(value as "all" | "new" | "old")}>
+            <SelectTrigger data-testid="select-contact-status">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All</SelectItem>
+              <SelectItem value="new">New</SelectItem>
+              <SelectItem value="old">Old</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+        <div className="text-sm text-muted-foreground">
+          {filteredContacts.length} submission{filteredContacts.length !== 1 ? "s" : ""}
+        </div>
+      </div>
+
       <div className="grid gap-4">
-        {contacts?.map((contact) => (
+        {filteredContacts?.map((contact) => (
           <Card key={contact.id} className="hover-elevate cursor-pointer" onClick={() => setSelectedContact(contact)} data-testid={`card-contact-${contact.id}`}>
             <CardContent className="pt-6">
               <div className="flex justify-between items-start gap-4">
                 <div className="flex-1">
-                  <p className="font-semibold">{contact.name}</p>
+                  <div className="flex items-center gap-2 mb-1">
+                    <p className="font-semibold">{contact.name}</p>
+                    {contact.status === "new" && <span className="text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded">New</span>}
+                  </div>
                   <p className="text-sm text-muted-foreground">{contact.email}</p>
                   <p className="font-medium mt-2">{contact.subject}</p>
                   <p className="text-sm text-muted-foreground">{new Date(contact.createdAt).toLocaleString()}</p>
@@ -554,7 +618,7 @@ function ContactsManager() {
             </CardContent>
           </Card>
         ))}
-        {contacts?.length === 0 && <p className="text-muted-foreground text-center py-8">No contact submissions yet</p>}
+        {filteredContacts?.length === 0 && <p className="text-muted-foreground text-center py-8">No contact submissions found</p>}
       </div>
       <AlertDialog open={!!selectedContact} onOpenChange={() => setSelectedContact(null)}>
         <AlertDialogContent className="max-w-2xl">
