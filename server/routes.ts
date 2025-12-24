@@ -145,48 +145,11 @@ export async function registerRoutes(
     }
   });
 
-  // Get all contacts (admin endpoint) with pagination, filters, and search
+  // Get all contacts (admin endpoint)
   app.get("/api/cms/contacts", async (req, res) => {
     try {
-      const page = parseInt(req.query.page as string) || 1;
-      const limit = parseInt(req.query.limit as string) || 10;
-      const status = req.query.status as string;
-      const search = req.query.search as string;
-
-      let allContacts = await storage.getAllContacts();
-
-      // Apply status filter
-      if (status && status !== "all") {
-        allContacts = allContacts.filter((c: any) => c.status === status);
-      }
-
-      // Apply search filter
-      if (search) {
-        const searchLower = search.toLowerCase();
-        allContacts = allContacts.filter((c: any) =>
-          c.name.toLowerCase().includes(searchLower) ||
-          c.email.toLowerCase().includes(searchLower) ||
-          c.subject.toLowerCase().includes(searchLower)
-        );
-      }
-
-      // Sort by created date (newest first)
-      allContacts.sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-
-      // Pagination
-      const total = allContacts.length;
-      const offset = (page - 1) * limit;
-      const paginatedContacts = allContacts.slice(offset, offset + limit);
-
-      res.json({
-        data: paginatedContacts,
-        pagination: {
-          page,
-          limit,
-          total,
-          totalPages: Math.ceil(total / limit),
-        },
-      });
+      const allContacts = await storage.getAllContacts();
+      res.json(allContacts);
     } catch (error) {
       console.error("Error fetching contacts:", error);
       res.status(500).json({ error: "Failed to fetch contacts" });
@@ -209,8 +172,18 @@ export async function registerRoutes(
     try {
       await storage.deleteCategory(req.params.id);
       res.json({ success: true });
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error deleting category:", error);
+      
+      // Check if it's a foreign key constraint error
+      if (error.message?.includes("violates foreign key constraint") || 
+          error.code === "23503" ||
+          error.message?.includes("categoryId")) {
+        return res.status(409).json({ 
+          error: "This category cannot be deleted as it is already used in some blogs. First delete those blogs, then delete this category." 
+        });
+      }
+      
       res.status(500).json({ error: "Failed to delete category" });
     }
   });
@@ -703,7 +676,7 @@ export async function registerRoutes(
           subtitle: "Spiritual Discourse & Guidance",
           subtitleHi: "आध्यात्मिक प्रवचन और मार्गदर्शन",
           description: "Join our daily satsang sessions for profound spiritual teachings and guidance on the path of bhakti.",
-          descriptionHi: "भक्ति के मार्ग पर गहन आध्यात्मिक शिक्षा और मार्गदर्शन के लिए हमारे दैनिक सत्संग में शामिल हों।",
+          descriptionHi: "���क्ति के मार्ग पर गहन आध्यात्मिक शिक्षा और मार्गदर्शन के लिए हमारे दैनिक सत्संग में शामिल हों।",
           keywords: "satsang, spiritual discourse, bhakti path",
           icon: "BookOpen",
           isPublished: true,
@@ -841,7 +814,7 @@ export async function registerRoutes(
         excerpt: "Discover the spiritual significance of Vrindavan",
         excerptHi: "वृंदावन के आध्यात्मिक महत्व की खोज करें",
         content: "Vrindavan, the land of Lord Krishna's divine pastimes, holds immense spiritual significance. Every corner resonates with divine energy.",
-        contentHi: "वृंदावन, भगवान कृष्ण की दिव्य लीलाओं की भूमि, अपार आध्यात्मिक महत्व रखती है। हर कोने में दिव्य ऊर्जा गूँजती है।",
+        contentHi: "वृंदावन, भगवान कृष्ण की दिव्य लीलाओं की भू ��ि, अपार आध्यात्मिक महत्व रखती है। हर कोने में दिव्य ऊर्जा गूँजती है।",
         status: "published",
         publishedAt: new Date(Date.now() - 259200000),
         featuredImage: featuredImageUrl,

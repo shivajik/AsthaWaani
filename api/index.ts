@@ -1527,43 +1527,8 @@ app.delete("/api/cms/offerings/:id", isAuthenticated, async (req: Request, res: 
 
 app.get("/api/cms/contacts", isAuthenticated, async (req: Request, res: Response) => {
   try {
-    const page = parseInt(req.query.page as string) || 1;
-    const limit = parseInt(req.query.limit as string) || 10;
-    const statusFilter = req.query.status as string;
-    const search = req.query.search as string;
-
-    // Get all contacts with filters applied in memory
-    let allContacts = await db.select().from(contacts).orderBy(sql`created_at DESC`);
-
-    // Apply status filter
-    if (statusFilter && statusFilter !== "all") {
-      allContacts = allContacts.filter((c) => c.status === statusFilter);
-    }
-
-    // Apply search filter
-    if (search) {
-      const searchLower = search.toLowerCase();
-      allContacts = allContacts.filter((c) =>
-        c.name.toLowerCase().includes(searchLower) ||
-        c.email.toLowerCase().includes(searchLower) ||
-        c.subject.toLowerCase().includes(searchLower)
-      );
-    }
-
-    // Pagination
-    const total = allContacts.length;
-    const offset = (page - 1) * limit;
-    const paginatedContacts = allContacts.slice(offset, offset + limit);
-
-    res.json({
-      data: paginatedContacts,
-      pagination: {
-        page,
-        limit,
-        total,
-        totalPages: Math.ceil(total / limit),
-      },
-    });
+    const allContacts = await db.select().from(contacts).orderBy(sql`created_at DESC`);
+    res.json(allContacts);
   } catch (error) {
     console.error("Error fetching contacts:", error);
     res.status(500).json({ error: "Failed to fetch contacts" });
@@ -1642,8 +1607,18 @@ app.delete("/api/cms/categories/:id", isAuthenticated, async (req: Request, res:
   try {
     await db.delete(categories).where(eq(categories.id, req.params.id));
     res.json({ success: true });
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error deleting category:", error);
+    
+    // Check if it's a foreign key constraint error
+    if (error.message?.includes("violates foreign key constraint") || 
+        error.code === "23503" ||
+        error.message?.includes("categoryId")) {
+      return res.status(409).json({ 
+        error: "This category cannot be deleted as it is already used in some blogs. First delete those blogs, then delete this category." 
+      });
+    }
+    
     res.status(500).json({ error: "Failed to delete category" });
   }
 });

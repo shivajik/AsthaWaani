@@ -94,7 +94,6 @@ interface ContactSubmission {
   phone: string | null;
   subject: string;
   message: string;
-  status: string;
   createdAt: string;
 }
 
@@ -513,47 +512,15 @@ function ContactsManager() {
   const queryClient = useQueryClient();
   const { toast } = useToast();
   const [selectedContact, setSelectedContact] = useState<ContactSubmission | null>(null);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [statusFilter, setStatusFilter] = useState("all");
-  const [searchQuery, setSearchQuery] = useState("");
-  const limit = 10;
 
-  interface ContactsResponse {
-    data: ContactSubmission[];
-    pagination: {
-      page: number;
-      limit: number;
-      total: number;
-      totalPages: number;
-    };
-  }
-
-  const { data: contactsData } = useQuery<ContactsResponse>({
-    queryKey: ["/api/cms/contacts", currentPage, statusFilter, searchQuery],
+  const { data: contacts } = useQuery<ContactSubmission[]>({
+    queryKey: ["/api/cms/contacts"],
     queryFn: async () => {
-      const params = new URLSearchParams();
-      params.set("page", currentPage.toString());
-      params.set("limit", limit.toString());
-      params.set("status", statusFilter);
-      if (searchQuery) params.set("search", searchQuery);
-      
-      const res = await fetch(`/api/cms/contacts?${params}`, { credentials: "include" });
-      if (!res.ok) return { data: [], pagination: { page: 1, limit, total: 0, totalPages: 0 } };
-      const json = await res.json();
-      
-      // Handle both array format (legacy) and paginated object format
-      if (Array.isArray(json)) {
-        return { 
-          data: json, 
-          pagination: { page: 1, limit, total: json.length, totalPages: 1 } 
-        };
-      }
-      return json;
+      const res = await fetch("/api/cms/contacts", { credentials: "include" });
+      if (!res.ok) return [];
+      return res.json();
     },
   });
-
-  const contacts = contactsData?.data || [];
-  const pagination = contactsData?.pagination;
 
   const deleteContactMutation = useMutation({
     mutationFn: async (id: string) => {
@@ -562,132 +529,44 @@ function ContactsManager() {
     },
     onSuccess: () => {
       toast({ title: "Contact deleted" });
-      setCurrentPage(1);
       queryClient.invalidateQueries({ queryKey: ["/api/cms/contacts"] });
     },
   });
 
-  const truncateText = (text: string, length: number) => {
-    if (text.length > length) return text.substring(0, length) + "...";
-    return text;
-  };
-
   return (
     <div className="space-y-6">
       <h2 className="text-2xl font-bold">Contact Form Submissions</h2>
-      
-      {/* Filters and Search */}
-      <Card>
-        <CardContent className="pt-6 space-y-4">
-          <div className="grid md:grid-cols-3 gap-4">
-            <div className="space-y-2">
-              <Label>Search</Label>
-              <Input
-                placeholder="Search by name, email, or subject..."
-                value={searchQuery}
-                onChange={(e) => {
-                  setSearchQuery(e.target.value);
-                  setCurrentPage(1);
-                }}
-                data-testid="input-search-contacts"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label>Status Filter</Label>
-              <Select value={statusFilter} onValueChange={(value) => {
-                setStatusFilter(value);
-                setCurrentPage(1);
-              }}>
-                <SelectTrigger data-testid="select-status-filter">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All</SelectItem>
-                  <SelectItem value="new">New</SelectItem>
-                  <SelectItem value="read">Read</SelectItem>
-                  <SelectItem value="replied">Replied</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="flex items-end">
-              <p className="text-sm text-muted-foreground">
-                {pagination ? `${pagination.total} total submissions` : "Loading..."}
-              </p>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Contact List */}
-      <div className="grid gap-3">
-        {contacts.length > 0 ? contacts.map((contact) => (
+      <div className="grid gap-4">
+        {contacts?.map((contact) => (
           <Card key={contact.id} className="hover-elevate cursor-pointer" onClick={() => setSelectedContact(contact)} data-testid={`card-contact-${contact.id}`}>
-            <CardContent className="pt-4 pb-4">
-              <div className="flex justify-between items-start gap-3">
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2">
-                    <p className="font-semibold truncate">{contact.name}</p>
-                    <span className="text-xs bg-muted px-2 py-1 rounded-full whitespace-nowrap">{contact.status}</span>
-                  </div>
-                  <p className="text-sm text-muted-foreground truncate">{contact.email}</p>
-                  <p className="font-medium text-sm mt-1 truncate">{truncateText(contact.subject, 50)}</p>
-                  <p className="text-xs text-muted-foreground">{new Date(contact.createdAt).toLocaleString()}</p>
+            <CardContent className="pt-6">
+              <div className="flex justify-between items-start gap-4">
+                <div className="flex-1">
+                  <p className="font-semibold">{contact.name}</p>
+                  <p className="text-sm text-muted-foreground">{contact.email}</p>
+                  <p className="font-medium mt-2">{contact.subject}</p>
+                  <p className="text-sm text-muted-foreground">{new Date(contact.createdAt).toLocaleString()}</p>
                 </div>
-                <Button 
-                  size="sm" 
-                  variant="destructive" 
-                  onClick={(e) => { e.stopPropagation(); deleteContactMutation.mutate(contact.id); }} 
-                  data-testid={`button-delete-contact-${contact.id}`}
-                  className="flex-shrink-0"
-                >
+                <Button size="sm" variant="destructive" onClick={(e) => { e.stopPropagation(); deleteContactMutation.mutate(contact.id); }} data-testid={`button-delete-contact-${contact.id}`}>
                   <Trash2 className="w-4 h-4" />
                 </Button>
               </div>
             </CardContent>
           </Card>
-        )) : <p className="text-muted-foreground text-center py-8">No contact submissions found</p>}
+        ))}
+        {contacts?.length === 0 && <p className="text-muted-foreground text-center py-8">No contact submissions yet</p>}
       </div>
-
-      {/* Pagination */}
-      {pagination && pagination.totalPages > 1 && (
-        <div className="flex items-center justify-center gap-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
-            disabled={currentPage === 1}
-            data-testid="button-prev-page"
-          >
-            Previous
-          </Button>
-          <span className="text-sm text-muted-foreground">
-            Page {currentPage} of {pagination.totalPages}
-          </span>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setCurrentPage(Math.min(pagination.totalPages, currentPage + 1))}
-            disabled={currentPage === pagination.totalPages}
-            data-testid="button-next-page"
-          >
-            Next
-          </Button>
-        </div>
-      )}
-
-      {/* Details Popup */}
       <AlertDialog open={!!selectedContact} onOpenChange={() => setSelectedContact(null)}>
         <AlertDialogContent className="max-w-2xl">
           <AlertDialogTitle>Contact Details</AlertDialogTitle>
           {selectedContact && (
-            <div className="space-y-3 max-h-96 overflow-y-auto">
-              <div><p className="text-xs text-muted-foreground">Name</p><p className="font-semibold text-sm">{selectedContact.name}</p></div>
-              <div><p className="text-xs text-muted-foreground">Email</p><p className="text-sm">{selectedContact.email}</p></div>
-              {selectedContact.phone && <div><p className="text-xs text-muted-foreground">Phone</p><p className="text-sm">{selectedContact.phone}</p></div>}
-              <div><p className="text-xs text-muted-foreground">Subject</p><p className="font-semibold text-sm">{selectedContact.subject}</p></div>
-              <div><p className="text-xs text-muted-foreground">Status</p><p className="text-sm capitalize">{selectedContact.status}</p></div>
-              <div><p className="text-xs text-muted-foreground">Message</p><p className="text-sm whitespace-pre-wrap break-words">{selectedContact.message}</p></div>
-              <div><p className="text-xs text-muted-foreground">Submitted</p><p className="text-sm">{new Date(selectedContact.createdAt).toLocaleString()}</p></div>
+            <div className="space-y-4">
+              <div><p className="text-sm text-muted-foreground">Name</p><p className="font-semibold">{selectedContact.name}</p></div>
+              <div><p className="text-sm text-muted-foreground">Email</p><p>{selectedContact.email}</p></div>
+              {selectedContact.phone && <div><p className="text-sm text-muted-foreground">Phone</p><p>{selectedContact.phone}</p></div>}
+              <div><p className="text-sm text-muted-foreground">Subject</p><p>{selectedContact.subject}</p></div>
+              <div><p className="text-sm text-muted-foreground">Message</p><p className="whitespace-pre-wrap">{selectedContact.message}</p></div>
+              <div><p className="text-sm text-muted-foreground">Submitted</p><p>{new Date(selectedContact.createdAt).toLocaleString()}</p></div>
             </div>
           )}
           <div className="flex justify-end gap-2">
@@ -2479,12 +2358,22 @@ function CategoryManager() {
   const deleteCategoryMutation = useMutation({
     mutationFn: async (id: string) => {
       const res = await fetch(`/api/cms/categories/${id}`, { method: "DELETE", credentials: "include" });
-      if (!res.ok) throw new Error("Failed to delete category");
+      if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.error || "Failed to delete category");
+      }
       return res.json();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/categories"] });
       toast({ title: "Category deleted successfully" });
+    },
+    onError: (error: Error) => {
+      toast({ 
+        title: error.message,
+        variant: "destructive",
+        duration: 6000
+      });
     },
   });
 
