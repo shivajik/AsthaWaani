@@ -86,7 +86,7 @@ export default function Blog() {
 
             {/* Ads Section - Below Sticky Sidebar */}
             {listingAds.length > 0 && (
-              <div className="mt-6 space-y-3">
+              <div className="mt-6 space-y-3 flex flex-col items-center">
                 {listingAds.map((ad) => {
                   const adTitle = language === "hi" ? ad.titleHi || ad.titleEn : ad.titleEn;
                   

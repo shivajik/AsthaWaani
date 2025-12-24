@@ -143,7 +143,7 @@ export default function BlogPostDetail() {
 
               {/* Sidebar Ads - Inside Sticky Container */}
               {data?.ads?.sidebar && data.ads.sidebar.length > 0 && (
-                <div className="space-y-4">
+                <div className="space-y-4 flex flex-col items-center">
                   {data?.ads?.sidebar.map((ad) => {
                     const adTitle = language === "hi" ? ad.titleHi || ad.titleEn : ad.titleEn;
                     
