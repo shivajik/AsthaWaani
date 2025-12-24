@@ -1603,6 +1603,16 @@ app.post("/api/cms/categories", isAuthenticated, async (req: Request, res: Respo
   }
 });
 
+app.delete("/api/cms/categories/:id", isAuthenticated, async (req: Request, res: Response) => {
+  try {
+    await db.delete(categories).where(eq(categories.id, req.params.id));
+    res.json({ success: true });
+  } catch (error) {
+    console.error("Error deleting category:", error);
+    res.status(500).json({ error: "Failed to delete category" });
+  }
+});
+
 // ============================================
 // PUBLIC BLOG ENDPOINTS
 // ============================================

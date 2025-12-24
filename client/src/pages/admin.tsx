@@ -713,6 +713,18 @@ function PostManager() {
     },
   });
 
+  const deleteCategoryMutation = useMutation({
+    mutationFn: async (id: string) => {
+      const res = await fetch(`/api/cms/categories/${id}`, { method: "DELETE", credentials: "include" });
+      if (!res.ok) throw new Error("Failed to delete category");
+      return res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/categories"] });
+      toast({ title: "Category deleted successfully" });
+    },
+  });
+
   useEffect(() => {
     if (editingPost || isCreating) {
       const post = editingPost || newPost;
@@ -842,6 +854,21 @@ function PostManager() {
                     </div>
                   </div>
                 </Card>
+              )}
+              {categories && categories.length > 0 && (
+                <div className="space-y-2">
+                  <Label className="text-xs font-semibold">Manage Categories</Label>
+                  <div className="grid gap-2">
+                    {categories.map((cat) => (
+                      <div key={cat.id} className="flex items-center justify-between p-2 border rounded-md text-sm" data-testid={`item-category-${cat.id}`}>
+                        <span>{cat.name}</span>
+                        <Button size="sm" variant="ghost" onClick={() => deleteCategoryMutation.mutate(cat.id)} data-testid={`button-delete-category-${cat.id}`}>
+                          <Trash2 className="w-4 h-4 text-destructive" />
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               )}
               <Select value={post.categoryId || "none"} onValueChange={(value) => updateField("categoryId", value === "none" ? null : value)}>
                 <SelectTrigger>
