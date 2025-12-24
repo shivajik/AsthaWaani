@@ -272,6 +272,17 @@ const contactInfo = pgTable("contact_info", {
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
 
+const contacts = pgTable("contacts", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  name: text("name").notNull(),
+  email: text("email").notNull(),
+  phone: text("phone"),
+  subject: text("subject").notNull(),
+  message: text("message").notNull(),
+  status: text("status").notNull().default("new"),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
 const categories = pgTable("categories", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   slug: text("slug").notNull().unique(),
@@ -1507,6 +1518,61 @@ app.delete("/api/cms/offerings/:id", isAuthenticated, async (req: Request, res: 
   } catch (error) {
     console.error("Error deleting offering:", error);
     res.status(500).json({ error: "Failed to delete offering" });
+  }
+});
+
+// ============================================
+// ADMIN CONTACT ENDPOINTS
+// ============================================
+
+app.get("/api/cms/contacts", isAuthenticated, async (req: Request, res: Response) => {
+  try {
+    const allContacts = await db.select().from(contacts).orderBy(sql`created_at DESC`);
+    res.json(allContacts);
+  } catch (error) {
+    console.error("Error fetching contacts:", error);
+    res.status(500).json({ error: "Failed to fetch contacts" });
+  }
+});
+
+app.delete("/api/cms/contacts/:id", isAuthenticated, async (req: Request, res: Response) => {
+  try {
+    await db.delete(contacts).where(eq(contacts.id, req.params.id));
+    res.json({ success: true });
+  } catch (error) {
+    console.error("Error deleting contact:", error);
+    res.status(500).json({ error: "Failed to delete contact" });
+  }
+});
+
+app.post("/api/contact", async (req: Request, res: Response) => {
+  try {
+    const { name, email, subject, message, phone } = req.body;
+
+    if (!name || !email || !subject || !message) {
+      return res.status(400).json({ error: "All fields are required" });
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({ error: "Invalid email format" });
+    }
+
+    const [contact] = await db.insert(contacts).values({
+      name,
+      email,
+      phone: phone || "",
+      subject,
+      message,
+    }).returning();
+
+    res.json({
+      success: true,
+      message: "Your message has been sent successfully. We will get back to you soon!",
+    });
+  } catch (error) {
+    console.error("Contact form submission error:", error);
+    res.status(500).json({ error: "Failed to send message. Please try again later." });
   }
 });
 

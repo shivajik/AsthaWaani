@@ -4,7 +4,8 @@ import {
   type Media, type InsertMedia, type SeoMeta, type InsertSeoMeta, type SiteSettings, type InsertSiteSettings,
   type ContactInfo, type InsertContactInfo, type Category, type InsertCategory, type PostCategory,
   type Offering, type InsertOffering, type NewsTicker, type InsertNewsTicker, type Ad, type InsertAd,
-  videos, youtubeChannels, users, admins, pages, posts, media, seoMeta, siteSettings, contactInfo, categories, postCategories, offerings, newsTickers, ads
+  type Contact, type InsertContact,
+  videos, youtubeChannels, users, admins, pages, posts, media, seoMeta, siteSettings, contactInfo, categories, postCategories, offerings, newsTickers, ads, contacts
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, desc, and } from "drizzle-orm";
@@ -110,6 +111,11 @@ export interface IStorage {
   createAd(ad: InsertAd): Promise<Ad>;
   updateAd(id: string, ad: Partial<InsertAd>): Promise<Ad>;
   deleteAd(id: string): Promise<void>;
+
+  // Contact submissions operations
+  getAllContacts(): Promise<Contact[]>;
+  createContact(contact: InsertContact): Promise<Contact>;
+  deleteContact(id: string): Promise<void>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -569,6 +575,20 @@ export class DatabaseStorage implements IStorage {
 
   async deleteAd(id: string): Promise<void> {
     await db.delete(ads).where(eq(ads.id, id));
+  }
+
+  // Contact submissions operations
+  async getAllContacts(): Promise<Contact[]> {
+    return await db.select().from(contacts).orderBy(desc(contacts.createdAt));
+  }
+
+  async createContact(contact: InsertContact): Promise<Contact> {
+    const [newContact] = await db.insert(contacts).values(contact).returning();
+    return newContact;
+  }
+
+  async deleteContact(id: string): Promise<void> {
+    await db.delete(contacts).where(eq(contacts.id, id));
   }
 }
 

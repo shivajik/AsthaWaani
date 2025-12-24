@@ -13,7 +13,7 @@ import { MediaUpload } from "@/components/media-upload";
 import { 
   RefreshCw, Youtube, LogOut, FileText, 
   Image, Settings, LayoutDashboard, PenSquare, Trash2, Plus, Save, Phone, Megaphone, FileCheck,
-  ChevronLeft
+  ChevronLeft, Mail, X
 } from "lucide-react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
@@ -85,6 +85,16 @@ interface LegalPage {
   metaTitle: string | null;
   metaDescription: string | null;
   isPublished: boolean;
+}
+
+interface ContactSubmission {
+  id: string;
+  name: string;
+  email: string;
+  phone: string | null;
+  subject: string;
+  message: string;
+  createdAt: string;
 }
 
 interface SyncResult {
@@ -494,6 +504,77 @@ function PageManager() {
           )}
         </div>
       )}
+    </div>
+  );
+}
+
+function ContactsManager() {
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
+  const [selectedContact, setSelectedContact] = useState<ContactSubmission | null>(null);
+
+  const { data: contacts } = useQuery<ContactSubmission[]>({
+    queryKey: ["/api/cms/contacts"],
+    queryFn: async () => {
+      const res = await fetch("/api/cms/contacts", { credentials: "include" });
+      if (!res.ok) return [];
+      return res.json();
+    },
+  });
+
+  const deleteContactMutation = useMutation({
+    mutationFn: async (id: string) => {
+      const res = await fetch(`/api/cms/contacts/${id}`, { method: "DELETE", credentials: "include" });
+      if (!res.ok) throw new Error("Failed to delete contact");
+    },
+    onSuccess: () => {
+      toast({ title: "Contact deleted" });
+      queryClient.invalidateQueries({ queryKey: ["/api/cms/contacts"] });
+    },
+  });
+
+  return (
+    <div className="space-y-6">
+      <h2 className="text-2xl font-bold">Contact Form Submissions</h2>
+      <div className="grid gap-4">
+        {contacts?.map((contact) => (
+          <Card key={contact.id} className="hover-elevate cursor-pointer" onClick={() => setSelectedContact(contact)} data-testid={`card-contact-${contact.id}`}>
+            <CardContent className="pt-6">
+              <div className="flex justify-between items-start gap-4">
+                <div className="flex-1">
+                  <p className="font-semibold">{contact.name}</p>
+                  <p className="text-sm text-muted-foreground">{contact.email}</p>
+                  <p className="font-medium mt-2">{contact.subject}</p>
+                  <p className="text-sm text-muted-foreground">{new Date(contact.createdAt).toLocaleString()}</p>
+                </div>
+                <Button size="sm" variant="destructive" onClick={(e) => { e.stopPropagation(); deleteContactMutation.mutate(contact.id); }} data-testid={`button-delete-contact-${contact.id}`}>
+                  <Trash2 className="w-4 h-4" />
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+        {contacts?.length === 0 && <p className="text-muted-foreground text-center py-8">No contact submissions yet</p>}
+      </div>
+      <AlertDialog open={!!selectedContact} onOpenChange={() => setSelectedContact(null)}>
+        <AlertDialogContent className="max-w-2xl">
+          <AlertDialogTitle>Contact Details</AlertDialogTitle>
+          {selectedContact && (
+            <div className="space-y-4">
+              <div><p className="text-sm text-muted-foreground">Name</p><p className="font-semibold">{selectedContact.name}</p></div>
+              <div><p className="text-sm text-muted-foreground">Email</p><p>{selectedContact.email}</p></div>
+              {selectedContact.phone && <div><p className="text-sm text-muted-foreground">Phone</p><p>{selectedContact.phone}</p></div>}
+              <div><p className="text-sm text-muted-foreground">Subject</p><p>{selectedContact.subject}</p></div>
+              <div><p className="text-sm text-muted-foreground">Message</p><p className="whitespace-pre-wrap">{selectedContact.message}</p></div>
+              <div><p className="text-sm text-muted-foreground">Submitted</p><p>{new Date(selectedContact.createdAt).toLocaleString()}</p></div>
+            </div>
+          )}
+          <div className="flex justify-end gap-2">
+            <AlertDialogCancel>Close</AlertDialogCancel>
+            <AlertDialogAction onClick={() => { deleteContactMutation.mutate(selectedContact!.id); setSelectedContact(null); }} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">Delete</AlertDialogAction>
+          </div>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
@@ -2342,6 +2423,7 @@ export default function Admin() {
     { id: "ads", label: "Blog Ads", icon: Megaphone },
     { id: "media", label: "Media", icon: Image },
     { id: "contact", label: "Contact Info", icon: Phone },
+    { id: "contacts", label: "Contact Forms", icon: Mail },
     { id: "news-ticker", label: "News Ticker", icon: Megaphone },
     { id: "youtube", label: "YouTube", icon: Youtube },
     { id: "settings", label: "Settings", icon: Settings },
@@ -2392,6 +2474,7 @@ export default function Admin() {
           {activeTab === "posts" && <PostManager />}
           {activeTab === "offerings" && <OfferingManager />}
           {activeTab === "ads" && <AdManager />}
+          {activeTab === "contacts" && <ContactsManager />}
           {activeTab === "media" && <MediaManager />}
           {activeTab === "contact" && <ContactInfoManager />}
           {activeTab === "news-ticker" && <NewsTickerManager />}

@@ -119,6 +119,13 @@ export async function registerRoutes(
         return res.status(400).json({ error: "Invalid email format" });
       }
 
+      // Save contact to database
+      try {
+        await storage.createContact({ name, email, phone: phone || "", subject, message });
+      } catch (dbError) {
+        console.error("Error saving contact to database:", dbError);
+      }
+
       // Check if email service is configured
       if (!process.env.EMAIL || !process.env.PASS) {
         console.error("Email service not configured");
@@ -135,6 +142,39 @@ export async function registerRoutes(
     } catch (error) {
       console.error("Contact form submission error:", error);
       res.status(500).json({ error: "Failed to send message. Please try again later." });
+    }
+  });
+
+  // Get all contacts (admin endpoint)
+  app.get("/api/cms/contacts", async (req, res) => {
+    try {
+      const allContacts = await storage.getAllContacts();
+      res.json(allContacts);
+    } catch (error) {
+      console.error("Error fetching contacts:", error);
+      res.status(500).json({ error: "Failed to fetch contacts" });
+    }
+  });
+
+  // Delete contact (admin endpoint)
+  app.delete("/api/cms/contacts/:id", async (req, res) => {
+    try {
+      await storage.deleteContact(req.params.id);
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Error deleting contact:", error);
+      res.status(500).json({ error: "Failed to delete contact" });
+    }
+  });
+
+  // Delete category (admin endpoint)
+  app.delete("/api/cms/categories/:id", async (req, res) => {
+    try {
+      await storage.deleteCategory(req.params.id);
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Error deleting category:", error);
+      res.status(500).json({ error: "Failed to delete category" });
     }
   });
 
