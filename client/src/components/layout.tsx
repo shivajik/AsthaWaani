@@ -53,30 +53,33 @@ export function Header() {
           : "bg-white/95 backdrop-blur-md shadow-sm py-4 text-foreground"
       )}
     >
-      <div className="container mx-auto px-4 flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-3 group">
+      <div className="container mx-auto px-4 md:px-8 lg:px-12 flex items-center justify-between gap-4">
+        <Link href="/" className={cn(
+          "flex items-center gap-3 lg:gap-6 group",
+          language === 'en' && "md:max-lg:hidden"
+        )}>
           {/* 
              Logic for Logo Visibility:
              1. When Transparent (Dark BG): Use Horizontal White Logo
              2. When Scrolled (White BG): Use Horizontal Dark Logo
           */}
-          {isTransparent ? (
-            <img 
-              src={logoHorizontalWhite} 
-              alt="Asthawaani Logo" 
-              className="h-16 w-auto object-contain drop-shadow-lg transition-transform group-hover:scale-105" 
-            />
-          ) : (
+          {isScrolled ? (
             <img 
               src={logoHorizontal} 
               alt="Asthawaani Logo" 
-              className="h-16 w-auto object-contain transition-transform group-hover:scale-105" 
+              className="h-20 md:h-24 lg:h-28 w-auto object-contain transition-transform group-hover:scale-105" 
+            />
+          ) : (
+            <img 
+              src={logoHorizontalWhite} 
+              alt="Asthawaani Logo" 
+              className="h-20 md:h-24 lg:h-28 w-auto object-contain drop-shadow-lg transition-transform group-hover:scale-105" 
             />
           )}
         </Link>
 
         {/* Desktop Nav */}
-        <nav className="hidden md:flex items-center gap-6 lg:gap-8">
+        <nav className="hidden md:flex items-center gap-4 lg:gap-8">
           {navLinks.map((link) => (
             <Link 
               key={link.href} 
