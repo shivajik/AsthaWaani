@@ -106,3 +106,18 @@
     content: '';
   }
 }
+
+/* Hindi text spacing fix - prevent character overlap */
+body {
+  --font-line-height-hindi: 1.8;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  line-height: 1.5;
+  margin-top: 0.25em;
+}
+
+p {
+  line-height: 1.6;
+}
+

@@ -76,13 +76,13 @@ export function Header() {
         </Link>
 
         {/* Desktop Nav */}
-        <nav className="hidden md:flex items-center gap-8">
+        <nav className="hidden md:flex items-center gap-6 lg:gap-8">
           {navLinks.map((link) => (
             <Link 
               key={link.href} 
               href={link.href}
               className={cn(
-                "text-base font-medium transition-colors hover:text-secondary",
+                "text-sm md:text-base font-medium transition-colors hover:text-secondary whitespace-nowrap",
                 location === link.href 
                   ? "text-secondary font-bold" 
                   : (isTransparent ? "text-white/90 hover:text-white" : "text-foreground/80")
@@ -178,11 +178,11 @@ export function Footer() {
       <div className="container mx-auto px-4">
         <div className="grid md:grid-cols-4 gap-12">
           <div className="flex flex-col items-start">
-            <div className="mb-8 bg-white/10 backdrop-blur-sm rounded-2xl p-4 hover:bg-white/20 transition-colors">
+            <div className="mb-8 bg-white/10 backdrop-blur-sm rounded-2xl p-4 hover:bg-white/20 transition-colors h-48 md:h-48 lg:h-48 flex items-center justify-center">
               <img 
                 src={logoSquareWhite} 
                 alt="Asthawaani" 
-                className="h-48 w-auto rounded-xl" 
+                className="h-40 md:h-40 lg:h-48 w-auto rounded-xl" 
               />
             </div>
             <p className="opacity-90 max-w-sm mb-8 leading-relaxed text-lg">
@@ -206,8 +206,8 @@ export function Footer() {
                 <span>Ashirwad Palace, Swej Farm, Yamunapar, Laxminagar, Mathura, Uttar Pradesh</span>
               </li>
               <li className="flex items-center gap-3">
-                <Phone className="w-5 h-5 text-secondary" />
-                <span>+91 76684 09246</span>
+                <Phone className="w-5 h-5 shrink-0 text-secondary" />
+                <span className="whitespace-nowrap">+91 76684 09246</span>
               </li>
             </ul>
           </div>

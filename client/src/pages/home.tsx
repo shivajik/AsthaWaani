@@ -410,7 +410,7 @@ export default function Home() {
       </section>
 
       {/* Offerings */}
-      <section className="py-24 bg-gradient-to-br from-stone-900 via-stone-800 to-stone-900 text-white relative overflow-hidden">
+      <section className="py-24 md:py-32 bg-gradient-to-br from-stone-900 via-stone-800 to-stone-900 text-white relative overflow-hidden">
         {/* Decorative Background Elements */}
         <div className="absolute inset-0 overflow-hidden">
           <div className="absolute top-0 left-1/4 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl" />
@@ -516,7 +516,7 @@ export default function Home() {
           </motion.div>
 
           <motion.div 
-            className="grid md:grid-cols-5 gap-4"
+            className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4"
             variants={staggerContainer}
             initial="hidden"
             whileInView="visible"
@@ -537,19 +537,19 @@ export default function Home() {
                     whileHover={{ scale: 1.1 }}
                     transition={{ duration: 0.7 }}
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex items-end p-6">
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex items-end justify-center p-4">
                     <motion.div 
-                      className="text-white"
+                      className="text-white text-center w-full"
                       initial={{ y: 20, opacity: 0 }}
                       whileInView={{ y: 0, opacity: 1 }}
                       viewport={{ once: true }}
                       transition={{ delay: i * 0.1 }}
                     >
-                      <div className="flex items-center gap-2 mb-2 text-primary">
-                        <MapPin className="w-4 h-4" />
+                      <div className="flex items-center justify-center gap-2 mb-2 text-primary">
+                        <MapPin className="w-4 h-4 shrink-0" />
                         <span className="text-xs font-bold uppercase tracking-wider">Ashram</span>
                       </div>
-                      <h3 className="text-2xl font-serif font-bold">{loc.name}</h3>
+                      <h3 className="text-xl md:text-2xl font-serif font-bold line-clamp-2">{loc.name}</h3>
                     </motion.div>
                   </div>
                 </motion.div>
