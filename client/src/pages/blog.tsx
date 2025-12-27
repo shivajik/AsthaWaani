@@ -115,7 +115,7 @@ export default function Blog() {
                           />
                         </div>
                       </div>
-                      {adTitle && <p className="mt-2 text-xs font-semibold text-foreground">{adTitle}</p>}
+                      {/* {adTitle && <p className="mt-2 text-xs font-semibold text-foreground">{adTitle}</p>} */}
                     </a>
                   );
                 })}

@@ -165,7 +165,7 @@ export default function BlogPostDetail() {
                             />
                           </div>
                         </a>
-                        {adTitle && <p className="mt-2 text-xs font-semibold text-foreground">{adTitle}</p>}
+                        {/* {adTitle && <p className="mt-2 text-xs font-semibold text-foreground">{adTitle}</p>} */}
                       </div>
                     );
                   })}
@@ -207,7 +207,7 @@ export default function BlogPostDetail() {
                           />
                         </div>
                       </a>
-                      {adTitle && <p className="mt-2 text-xs font-semibold text-foreground text-center">{adTitle}</p>}
+                      {/* {adTitle && <p className="mt-2 text-xs font-semibold text-foreground text-center">{adTitle}</p>} */}
                     </div>
                   );
                 })}
@@ -297,7 +297,7 @@ export default function BlogPostDetail() {
                           />
                         </div>
                       </a>
-                      {adTitle && <p className="mt-2 text-xs font-semibold text-foreground text-center">{adTitle}</p>}
+                      {/* {adTitle && <p className="mt-2 text-xs font-semibold text-foreground text-center">{adTitle}</p>} */}
                     </div>
                   );
                 })}
