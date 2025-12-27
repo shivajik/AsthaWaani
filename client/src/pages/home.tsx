@@ -217,7 +217,7 @@ export default function Home() {
               <Sparkles className="w-8 h-8 text-amber-400" />
             </motion.div>
             
-            {/* Animated Title with Letter-by-Letter Animation */}
+            {/* Animated Title */}
             <motion.div className="relative">
               <motion.h1 
                 className="text-5xl md:text-7xl lg:text-8xl font-serif font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-white to-amber-200 drop-shadow-2xl"
@@ -225,23 +225,7 @@ export default function Home() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3, duration: 0.8, type: "spring" }}
               >
-                {"Asthawaani".split("").map((letter, i) => (
-                  <motion.span
-                    key={i}
-                    custom={i}
-                    variants={letterAnimation}
-                    initial="hidden"
-                    animate="visible"
-                    className="inline-block"
-                    whileHover={{ 
-                      scale: 1.2, 
-                      color: "#d4af37",
-                      transition: { duration: 0.2 } 
-                    }}
-                  >
-                    {letter}
-                  </motion.span>
-                ))}
+                Asthawaani
               </motion.h1>
               
               {/* Glowing underline */}
@@ -253,19 +237,14 @@ export default function Home() {
               />
             </motion.div>
             
-            {/* Subtitle with Typewriter Effect Feel */}
+            {/* Subtitle */}
             <motion.p 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.8, duration: 0.6 }}
               className="text-xl md:text-2xl font-light max-w-2xl text-white/90 drop-shadow-md leading-relaxed"
             >
-              <motion.span
-                animate={{ opacity: [0.7, 1, 0.7] }}
-                transition={{ duration: 3, repeat: Infinity }}
-              >
-                {t('hero.mission')}
-              </motion.span>
+              {t('hero.mission')}
             </motion.p>
             
             {/* CTA Button with Glow Effect */}
