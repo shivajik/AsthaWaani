@@ -53,9 +53,9 @@ export function Header() {
           : "bg-white/95 backdrop-blur-md shadow-sm py-4 text-foreground"
       )}
     >
-      <div className="container mx-auto px-4 md:px-8 lg:px-12 flex items-center justify-between gap-4">
+      <div className="container mx-auto px-4 md:px-6 lg:px-8 flex items-center justify-between gap-4">
         <Link href="/" className={cn(
-          "flex items-center gap-3 lg:gap-6 group",
+          "flex items-center gap-3 lg:gap-4 group",
           language === 'en' && "md:max-lg:hidden"
         )}>
           {/* 
@@ -67,13 +67,13 @@ export function Header() {
             <img 
               src={logoHorizontal} 
               alt="Asthawaani Logo" 
-              className="h-20 md:h-24 lg:h-28 w-auto object-contain transition-transform group-hover:scale-105" 
+              className="h-12 md:h-14 lg:h-16 w-auto object-contain transition-transform group-hover:scale-105" 
             />
           ) : (
             <img 
               src={logoHorizontalWhite} 
               alt="Asthawaani Logo" 
-              className="h-20 md:h-24 lg:h-28 w-auto object-contain drop-shadow-lg transition-transform group-hover:scale-105" 
+              className="h-12 md:h-14 lg:h-16 w-auto object-contain drop-shadow-lg transition-transform group-hover:scale-105" 
             />
           )}
         </Link>
