@@ -60,20 +60,20 @@ export function Header() {
         )}>
           {/* 
              Logic for Logo Visibility:
-             1. When Transparent (Dark BG): Use Horizontal White Logo
-             2. When Scrolled (White BG): Use Horizontal Dark Logo
+             1. When Transparent (Dark BG on Home): Use Horizontal White Logo
+             2. When Not Transparent (White BG): Use Horizontal Dark Logo
           */}
-          {isScrolled ? (
-            <img 
-              src={logoHorizontal} 
-              alt="Asthawaani Logo" 
-              className="h-12 md:h-14 lg:h-16 w-auto object-contain transition-transform group-hover:scale-105" 
-            />
-          ) : (
+          {isTransparent ? (
             <img 
               src={logoHorizontalWhite} 
               alt="Asthawaani Logo" 
               className="h-12 md:h-14 lg:h-16 w-auto object-contain drop-shadow-lg transition-transform group-hover:scale-105" 
+            />
+          ) : (
+            <img 
+              src={logoHorizontal} 
+              alt="Asthawaani Logo" 
+              className="h-12 md:h-14 lg:h-16 w-auto object-contain transition-transform group-hover:scale-105" 
             />
           )}
         </Link>
