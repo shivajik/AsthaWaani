@@ -348,7 +348,7 @@ export const ads = pgTable("ads", {
   imageHeight: integer("image_height"),
   link: text("link"),
   isActive: boolean("is_active").notNull().default(true),
-  placement: text("placement").notNull().default("blog_listing"), // blog_listing, blog_post_top, blog_post_sidebar, blog_post_bottom
+  placement: text("placement").notNull().default("blog_listing"), // blog_listing, blog_post_top, blog_post_sidebar, blog_post_bottom, home_page
   categoryId: varchar("category_id").references(() => categories.id), // Optional: specific category
   position: integer("position").notNull().default(0),
   createdAt: timestamp("created_at").notNull().defaultNow(),
