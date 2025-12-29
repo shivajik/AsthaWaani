@@ -5,6 +5,8 @@ import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { useQuery } from "@tanstack/react-query";
+import type { Ad } from "@shared/schema";
 // Using the provided logo files
 import logoHorizontal from "@assets/Asthawani-logo-h_1765886539362.png";
 import logoSquare from "@assets/Asthawani-logo_1765886539362.png";
@@ -167,7 +169,13 @@ export function Header() {
 }
 
 export function Footer() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const { data: ads = [] } = useQuery<Ad[]>({
+    queryKey: ["/api/cms/ads/active"],
+  });
+
+  const footerAd = ads.find(ad => ad.placement === "footer");
+
   const locations = [
     { label: 'Mathura', id: 'mathura', hi: 'मथुरा' },
     { label: 'Vrindavan', id: 'vrindavan', hi: 'वृंदावन' },
@@ -216,21 +224,44 @@ export function Footer() {
           </div>
           
           <div>
-            <h4 className="font-bold mb-6 text-secondary">Our Locations</h4>
-            <ul className="space-y-3">
-              {locations.map((location) => (
-                <li key={location.id}>
-                  <Link 
-                    href={`/brajbhoomi?location=${location.id}`}
-                    className="text-sm opacity-90 hover:opacity-100 hover:text-secondary transition-colors inline-flex items-center gap-2 group"
-                    data-testid={`link-location-${location.id}`}
-                  >
-                    <span className="w-1.5 h-1.5 rounded-full bg-secondary group-hover:scale-125 transition-transform" />
-                    <span>{location.label}</span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
+            {footerAd ? (
+              <div className="flex flex-col h-full">
+                <h4 className="font-bold mb-6 text-secondary">
+                  {language === 'hi' ? footerAd.titleHi || footerAd.titleEn : footerAd.titleEn}
+                </h4>
+                <a 
+                  href={footerAd.link || "#"} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="block group relative overflow-hidden rounded-lg border border-white/10 hover:border-secondary transition-colors"
+                >
+                  <img 
+                    src={footerAd.imageUrl} 
+                    alt={footerAd.titleEn}
+                    className="w-full h-auto aspect-video object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-colors" />
+                </a>
+              </div>
+            ) : (
+              <>
+                <h4 className="font-bold mb-6 text-secondary">Our Locations</h4>
+                <ul className="space-y-3">
+                  {locations.map((location) => (
+                    <li key={location.id}>
+                      <Link 
+                        href={`/brajbhoomi?location=${location.id}`}
+                        className="text-sm opacity-90 hover:opacity-100 hover:text-secondary transition-colors inline-flex items-center gap-2 group"
+                        data-testid={`link-location-${location.id}`}
+                      >
+                        <span className="w-1.5 h-1.5 rounded-full bg-secondary group-hover:scale-125 transition-transform" />
+                        <span>{location.label}</span>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </>
+            )}
           </div>
           
           <div>
