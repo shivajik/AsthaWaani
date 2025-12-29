@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -2074,6 +2075,9 @@ function AdManager() {
       queryClient.invalidateQueries({ queryKey: ["/api/ads"] });
       setEditingId(null);
       setSelectedFile(null);
+      // Reset file input if it exists
+      const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
+      if (fileInput) fileInput.value = "";
       setFormData({ titleEn: "", titleHi: "", imageUrl: "", imagePublicId: "", link: "", isActive: true, position: 0, placement: "blog_post_top", categoryId: "" });
     },
     onError: () => {
@@ -2166,6 +2170,9 @@ function AdManager() {
                 <SelectItem value="blog_post_sidebar">Blog Post - Sidebar</SelectItem>
                 <SelectItem value="blog_post_bottom">Blog Post - Bottom</SelectItem>
                 <SelectItem value="home_page">Home Page</SelectItem>
+                <SelectItem value="footer">Footer</SelectItem>
+                <SelectItem value="above_footer">Above Footer</SelectItem>
+                <SelectItem value="home_full_width">Home - Full Width</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -2211,6 +2218,9 @@ function AdManager() {
                 onClick={() => {
                   setEditingId(null);
                   setSelectedFile(null);
+                  // Reset file input if it exists
+                  const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
+                  if (fileInput) fileInput.value = "";
                   setFormData({ titleEn: "", titleHi: "", imageUrl: "", imagePublicId: "", link: "", isActive: true, position: 0, placement: "blog_post_top", categoryId: "" });
                 }}
                 data-testid="button-back"
@@ -2223,7 +2233,34 @@ function AdManager() {
         </CardContent>
       </Card>
 
-      <div className="space-y-2">
+      {/* <div className="space-y-6">
+        <h3 className="font-semibold text-lg">Active Ad Placements</h3>
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+          {[
+            { value: "blog_listing", label: "Blog Listing" },
+            { value: "blog_post_top", label: "Blog Post - Top" },
+            { value: "blog_post_sidebar", label: "Blog Post - Sidebar" },
+            { value: "blog_post_bottom", label: "Blog Post - Bottom" },
+            { value: "home_page", label: "Home Page" },
+            { value: "footer", label: "Footer" },
+          ].map((placement) => {
+            const adAtPlacement = ads.find(a => a.placement === placement.value && a.isActive);
+            return (
+              <Card key={placement.value} className={cn(
+                "p-3 text-center border-2 transition-colors",
+                adAtPlacement ? "border-primary/50 bg-primary/5" : "border-dashed opacity-50"
+              )}>
+                <p className="text-xs font-medium mb-1">{placement.label}</p>
+                <p className="text-[10px] text-muted-foreground truncate">
+                  {adAtPlacement ? adAtPlacement.titleEn : "Empty"}
+                </p>
+              </Card>
+            );
+          })}
+        </div>
+      </div> */}
+
+      <div className="space-y-2 pt-4">
         <h3 className="font-semibold">All Ads</h3>
         {ads.map((ad) => {
           const aspectRatio = ad.imageWidth && ad.imageHeight ? ad.imageWidth / ad.imageHeight : 1;
