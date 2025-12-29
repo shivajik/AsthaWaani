@@ -2169,6 +2169,7 @@ function AdManager() {
                 <SelectItem value="home_page">Home Page</SelectItem>
                 <SelectItem value="footer">Footer</SelectItem>
                 <SelectItem value="above_footer">Above Footer</SelectItem>
+                <SelectItem value="home_full_width">Home - Full Width</SelectItem>
               </SelectContent>
             </Select>
           </div>

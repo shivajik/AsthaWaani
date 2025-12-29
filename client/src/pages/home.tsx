@@ -148,13 +148,27 @@ export default function Home() {
   });
 
   const { data: homeAds } = useQuery<Ad[]>({
-    queryKey: ["/api/ads"],
+    queryKey: ["/api/ads", { placement: "home_page" }],
     queryFn: async () => {
-      const response = await fetch("/api/ads");
+      const response = await fetch("/api/ads?placement=home_page");
       if (!response.ok) return [];
-      const allAds = await response.json();
-      // Filter for active ads with home_page placement
-      return allAds.filter((ad: Ad) => ad.isActive && ad.placement === "home_page");
+      const ads = await response.json();
+      // Filter for active ads and sort by position
+      return ads
+        .filter((ad: Ad) => ad.isActive)
+        .sort((a: Ad, b: Ad) => (a.position || 0) - (b.position || 0));
+    },
+  });
+
+  const { data: homeFullAds } = useQuery<Ad[]>({
+    queryKey: ["/api/ads", { placement: "home_full_width" }],
+    queryFn: async () => {
+      const response = await fetch("/api/ads?placement=home_full_width");
+      if (!response.ok) return [];
+      const ads = await response.json();
+      return ads
+        .filter((ad: Ad) => ad.isActive)
+        .sort((a: Ad, b: Ad) => (a.position || 0) - (b.position || 0));
     },
   });
 
@@ -327,6 +341,46 @@ export default function Home() {
       {/* News Ticker */}
       <NewsTicker />
 
+      {/* Full Width Ads Section */}
+      {homeFullAds && homeFullAds.length > 0 && (
+        <section className="py-12 bg-background border-b border-border">
+          <div className="container mx-auto px-4">
+            <div className="flex flex-col gap-8 items-center">
+              {homeFullAds.map((ad) => (
+                <motion.div 
+                  key={ad.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  className="w-full flex justify-center"
+                >
+                  <a 
+                    href={ensureProtocol(ad.link || undefined)} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="block relative rounded-2xl overflow-hidden border border-border bg-card shadow-lg hover:shadow-xl transition-all duration-300 group"
+                    style={{ 
+                      width: '100%',
+                      maxWidth: ad.imageWidth ? `${ad.imageWidth}px` : '1152px',
+                      aspectRatio: ad.imageWidth && ad.imageHeight ? `${ad.imageWidth}/${ad.imageHeight}` : 'auto'
+                    }}
+                  >
+                    <img 
+                      src={ad.imageUrl} 
+                      alt={language === 'hi' ? ad.titleHi || ad.titleEn : ad.titleEn}
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+                    <div className="absolute top-4 right-4 bg-blue-500/90 backdrop-blur-sm text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-widest z-10 shadow-sm">
+                      {language === 'hi' ? 'विज्ञापन' : 'Ad'}
+                    </div>
+                  </a>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* About Preview */}
       <section className="py-24 bg-background relative overflow-hidden">
         <div className="container mx-auto px-4">
@@ -355,30 +409,39 @@ export default function Home() {
               transition={{ duration: 0.8 }}
               className="flex flex-col gap-6"
             >
-              {/* Ad Placement Above Text */}
+              {/* Home Page Ads Section */}
               {homeAds && homeAds.length > 0 && (
-                <motion.div 
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  className="w-full mb-2"
-                >
-                  <a 
-                    href={ensureProtocol(homeAds[0].link || undefined)} 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="block relative rounded-lg overflow-hidden border border-border bg-card shadow-sm hover:shadow-md transition-all duration-300 group"
-                  >
-                    <img 
-                      src={homeAds[0].imageUrl} 
-                      alt={language === 'hi' ? homeAds[0].titleHi || homeAds[0].titleEn : homeAds[0].titleEn}
-                      className="w-full h-auto object-cover max-h-[200px] transition-transform duration-500 group-hover:scale-105"
-                    />
-                    <div className="absolute top-2 right-2 bg-blue-500/90 backdrop-blur-sm text-white text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider z-10">
-                      {language === 'hi' ? 'विज्ञापन' : 'Ad'}
-                    </div>
-                  </a>
-                </motion.div>
+                <div className="flex flex-col gap-6 w-full mb-4">
+                  {homeAds.map((ad) => (
+                    <motion.div 
+                      key={ad.id}
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      className="w-full"
+                    >
+                      <a 
+                        href={ensureProtocol(ad.link || undefined)} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="block relative rounded-xl overflow-hidden border border-border bg-card shadow-sm hover:shadow-md transition-all duration-300 group"
+                        style={{ 
+                          maxWidth: ad.imageWidth ? `${ad.imageWidth}px` : '100%',
+                          aspectRatio: ad.imageWidth && ad.imageHeight ? `${ad.imageWidth}/${ad.imageHeight}` : 'auto'
+                        }}
+                      >
+                        <img 
+                          src={ad.imageUrl} 
+                          alt={language === 'hi' ? ad.titleHi || ad.titleEn : ad.titleEn}
+                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        />
+                        <div className="absolute top-2 right-2 bg-blue-500/90 backdrop-blur-sm text-white text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider z-10">
+                          {language === 'hi' ? 'विज्ञापन' : 'Ad'}
+                        </div>
+                      </a>
+                    </motion.div>
+                  ))}
+                </div>
               )}
 
               <div>
