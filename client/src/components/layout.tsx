@@ -1,12 +1,12 @@
 import { Link, useLocation } from "wouter";
 import { useLanguage } from "@/lib/context";
-import { Menu, X, Globe, Phone, MapPin, Instagram } from "lucide-react";
+import { Menu, X, Globe, Phone, MapPin, Instagram, ExternalLink } from "lucide-react";
 import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useQuery } from "@tanstack/react-query";
-import type { Ad } from "@shared/schema";
+import { Ad } from "@shared/schema";
 // Using the provided logo files
 import logoHorizontal from "@assets/Asthawani-logo-h_1765886539362.png";
 import logoSquare from "@assets/Asthawani-logo_1765886539362.png";
@@ -170,12 +170,6 @@ export function Header() {
 
 export function Footer() {
   const { t, language } = useLanguage();
-  const { data: ads = [] } = useQuery<Ad[]>({
-    queryKey: ["/api/cms/ads/active"],
-  });
-
-  const footerAd = ads.find(ad => ad.placement === "footer");
-
   const locations = [
     { label: 'Mathura', id: 'mathura', hi: 'मथुरा' },
     { label: 'Vrindavan', id: 'vrindavan', hi: 'वृंदावन' },
@@ -183,6 +177,18 @@ export function Footer() {
     { label: 'Govardhan', id: 'govardhan', hi: 'गोवर्धन' },
     { label: 'Mahavan', id: 'mahavan', hi: 'महावन' },
   ];
+
+  const { data: ads } = useQuery<Ad[]>({
+    queryKey: ["/api/ads?placement=footer"],
+    queryFn: async () => {
+      const res = await fetch("/api/ads?placement=footer");
+      if (!res.ok) throw new Error("Failed to fetch ads");
+      const data = await res.json();
+      return data;
+    }
+  });
+
+  const footerAds = Array.isArray(ads) ? ads : [];
   
   return (
     <footer className="bg-primary text-primary-foreground py-20">
@@ -224,27 +230,35 @@ export function Footer() {
           </div>
           
           <div>
-            {footerAd ? (
-              <div className="flex flex-col h-full">
-                <h4 className="font-bold mb-6 text-secondary">
-                  {language === 'hi' ? footerAd.titleHi || footerAd.titleEn : footerAd.titleEn}
-                </h4>
-                <a 
-                  href={footerAd.link || "#"} 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="block group relative overflow-hidden rounded-lg border border-white/10 hover:border-secondary transition-colors"
-                >
-                  <img 
-                    src={footerAd.imageUrl} 
-                    alt={footerAd.titleEn}
-                    className="w-full h-auto aspect-video object-cover transition-transform duration-500 group-hover:scale-105"
-                  />
-                  <div className="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-colors" />
-                </a>
+            {footerAds && footerAds.length > 0 ? (
+              <div className="flex flex-col gap-4">
+                <h4 className="font-bold text-secondary">{language === 'hi' ? 'प्रायोजित' : 'Sponsored'}</h4>
+                <div className="grid grid-cols-1 gap-4">
+                  {footerAds.map((ad) => (
+                    <a 
+                      key={ad.id}
+                      href={ad.link || "#"}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group relative rounded-xl overflow-hidden bg-white/5 border border-white/10 hover:border-secondary/50 transition-all duration-300 w-full"
+                    >
+                      <img 
+                        src={ad.imageUrl} 
+                        alt={language === 'hi' ? ad.titleHi || ad.titleEn : ad.titleEn}
+                        className="w-full h-auto object-cover aspect-video transition-transform duration-500 group-hover:scale-105"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-3">
+                        <p className="text-white text-xs font-medium flex items-center gap-1">
+                          {language === 'hi' ? ad.titleHi || ad.titleEn : ad.titleEn}
+                          <ExternalLink className="w-3 h-3" />
+                        </p>
+                      </div>
+                    </a>
+                  ))}
+                </div>
               </div>
             ) : (
-              <>
+              <div>
                 <h4 className="font-bold mb-6 text-secondary">Our Locations</h4>
                 <ul className="space-y-3">
                   {locations.map((location) => (
@@ -260,7 +274,7 @@ export function Footer() {
                     </li>
                   ))}
                 </ul>
-              </>
+              </div>
             )}
           </div>
           
