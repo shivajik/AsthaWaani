@@ -563,6 +563,10 @@ export class DatabaseStorage implements IStorage {
     return await db.select().from(ads).where(eq(ads.isActive, true)).orderBy(ads.position);
   }
 
+  async getAdsByPlacement(placement: string): Promise<Ad[]> {
+    return await db.select().from(ads).where(and(eq(ads.isActive, true), eq(ads.placement, placement))).orderBy(ads.position);
+  }
+
   async createAd(ad: InsertAd): Promise<Ad> {
     const [newAd] = await db.insert(ads).values(ad).returning();
     return newAd;
