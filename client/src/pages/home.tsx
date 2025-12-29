@@ -345,14 +345,14 @@ export default function Home() {
       {homeFullAds && homeFullAds.length > 0 && (
         <section className="py-12 bg-background border-b border-border">
           <div className="container mx-auto px-4">
-            <div className="flex flex-col gap-8 items-center">
+            <div className="flex flex-wrap gap-8 justify-center items-center">
               {homeFullAds.map((ad) => (
                 <motion.div 
                   key={ad.id}
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  className="w-full flex justify-center"
+                  className="flex justify-center"
                 >
                   <a 
                     href={ensureProtocol(ad.link || undefined)} 
@@ -360,8 +360,7 @@ export default function Home() {
                     rel="noopener noreferrer"
                     className="block relative rounded-2xl overflow-hidden border border-border bg-card shadow-lg hover:shadow-xl transition-all duration-300 group"
                     style={{ 
-                      width: '100%',
-                      maxWidth: ad.imageWidth ? `${ad.imageWidth}px` : '1152px',
+                      maxWidth: ad.imageWidth ? `${ad.imageWidth}px` : '100%',
                       aspectRatio: ad.imageWidth && ad.imageHeight ? `${ad.imageWidth}/${ad.imageHeight}` : 'auto'
                     }}
                   >
