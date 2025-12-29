@@ -2075,6 +2075,9 @@ function AdManager() {
       queryClient.invalidateQueries({ queryKey: ["/api/ads"] });
       setEditingId(null);
       setSelectedFile(null);
+      // Reset file input if it exists
+      const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
+      if (fileInput) fileInput.value = "";
       setFormData({ titleEn: "", titleHi: "", imageUrl: "", imagePublicId: "", link: "", isActive: true, position: 0, placement: "blog_post_top", categoryId: "" });
     },
     onError: () => {
@@ -2215,6 +2218,9 @@ function AdManager() {
                 onClick={() => {
                   setEditingId(null);
                   setSelectedFile(null);
+                  // Reset file input if it exists
+                  const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
+                  if (fileInput) fileInput.value = "";
                   setFormData({ titleEn: "", titleHi: "", imageUrl: "", imagePublicId: "", link: "", isActive: true, position: 0, placement: "blog_post_top", categoryId: "" });
                 }}
                 data-testid="button-back"
