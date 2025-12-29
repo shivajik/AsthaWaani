@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useQuery } from "@tanstack/react-query";
 import { Ad } from "@shared/schema";
+import { motion, AnimatePresence } from "framer-motion";
 // Using the provided logo files
 import logoHorizontal from "@assets/Asthawani-logo-h_1765886539362.png";
 import logoSquare from "@assets/Asthawani-logo_1765886539362.png";
@@ -193,43 +194,59 @@ export function Footer() {
     queryFn: async () => {
       const res = await fetch("/api/ads?placement=above_footer");
       if (!res.ok) throw new Error("Failed to fetch ads");
-      return res.json();
+      const data = await res.json();
+      return data;
     }
   });
 
-  const footerAds = Array.isArray(ads) ? ads : [];
-  const aboveFooterAdsList = Array.isArray(aboveFooterAds) ? aboveFooterAds : [];
+  const footerAds = Array.isArray(ads) ? ads.sort((a, b) => (a.position || 0) - (b.position || 0)) : [];
+  const aboveFooterAdsList = Array.isArray(aboveFooterAds) ? aboveFooterAds.sort((a, b) => (a.position || 0) - (b.position || 0)) : [];
   const [location] = useLocation();
   const isAdmin = location.startsWith("/admin");
   
   return (
     <>
-      {aboveFooterAdsList && aboveFooterAdsList.length > 0 && !isAdmin && (
-        <section className="py-12 bg-background border-t border-border">
-          <div className="container mx-auto px-4 md:px-6 lg:px-8">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {aboveFooterAdsList.map((ad) => (
-                <a 
-                  key={ad.id}
-                  href={ad.link || "#"}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group relative rounded-2xl overflow-hidden border border-border bg-card shadow-sm hover:shadow-lg transition-all duration-300"
-                >
-                  <img 
-                    src={ad.imageUrl} 
-                    alt={language === 'hi' ? ad.titleHi || ad.titleEn : ad.titleEn}
-                    className="w-full h-auto object-cover aspect-[16/9] transition-transform duration-500 group-hover:scale-105"
-                  />
-                  <div className="absolute top-3 right-3 bg-secondary/90 backdrop-blur-sm text-secondary-foreground text-xs font-bold px-3 py-1 rounded-full z-10">
-                    {language === 'hi' ? 'विज्ञापन' : 'Ad'}
-                  </div>
-                </a>
-              ))}
+      <AnimatePresence>
+        {aboveFooterAdsList && aboveFooterAdsList.length > 0 && !isAdmin && (
+          <motion.section 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 20 }}
+            className="py-12 bg-background border-t border-border"
+          >
+            <div className="container mx-auto px-4 md:px-6 lg:px-8">
+              <div className="flex flex-col items-center">
+                <div className={cn(
+                  "grid gap-8 w-full justify-items-center items-center",
+                  aboveFooterAdsList.length === 1 ? "grid-cols-1" : 
+                  aboveFooterAdsList.length === 2 ? "grid-cols-1 md:grid-cols-2 max-w-4xl" : 
+                  "grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+                )}>
+                  {aboveFooterAdsList.map((ad) => (
+                    <motion.a 
+                      key={ad.id}
+                      href={ad.link || "#"}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      whileHover={{ scale: 1.02 }}
+                      className="group relative rounded-2xl overflow-hidden border border-border bg-card shadow-sm hover:shadow-xl transition-all duration-300 w-full max-w-md"
+                    >
+                      <img 
+                        src={ad.imageUrl} 
+                        alt={language === 'hi' ? ad.titleHi || ad.titleEn : ad.titleEn}
+                        className="w-full h-auto object-cover aspect-[16/9] transition-transform duration-500 group-hover:scale-105"
+                      />
+                      <div className="absolute top-3 right-3 bg-secondary/90 backdrop-blur-sm text-secondary-foreground text-[10px] font-bold px-3 py-1 rounded-full z-10 uppercase tracking-tighter">
+                        {language === 'hi' ? 'विज्ञापन' : 'Ad'}
+                      </div>
+                    </motion.a>
+                  ))}
+                </div>
+              </div>
             </div>
-          </div>
-        </section>
-      )}
+          </motion.section>
+        )}
+      </AnimatePresence>
       <footer className="bg-primary text-primary-foreground py-20">
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-4 gap-12">

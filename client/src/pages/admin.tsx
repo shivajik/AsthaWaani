@@ -2168,6 +2168,7 @@ function AdManager() {
                 <SelectItem value="blog_post_bottom">Blog Post - Bottom</SelectItem>
                 <SelectItem value="home_page">Home Page</SelectItem>
                 <SelectItem value="footer">Footer</SelectItem>
+                <SelectItem value="above_footer">Above Footer</SelectItem>
               </SelectContent>
             </Select>
           </div>
