@@ -13,7 +13,7 @@ import { MediaUpload } from "@/components/media-upload";
 import { 
   RefreshCw, Youtube, LogOut, FileText, 
   Image, Settings, LayoutDashboard, PenSquare, Trash2, Plus, Save, Phone, Megaphone, FileCheck,
-  ChevronLeft, Mail, X
+  ChevronLeft, Mail, X, Layers
 } from "lucide-react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
@@ -2165,6 +2165,7 @@ function AdManager() {
                 <SelectItem value="blog_post_top">Blog Post - Top</SelectItem>
                 <SelectItem value="blog_post_sidebar">Blog Post - Sidebar</SelectItem>
                 <SelectItem value="blog_post_bottom">Blog Post - Bottom</SelectItem>
+                <SelectItem value="home_page">Home Page</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -2574,7 +2575,7 @@ export default function Admin() {
     { id: "pages", label: "Pages", icon: FileText },
     { id: "legal", label: "Legal Pages", icon: FileCheck },
     { id: "posts", label: "Blog Posts", icon: PenSquare },
-    { id: "categories", label: "Categories", icon: FileText },
+    { id: "categories", label: "Categories", icon: Layers },
     { id: "offerings", label: "Offerings", icon: PenSquare },
     { id: "ads", label: "Blog Ads", icon: Megaphone },
     { id: "media", label: "Media", icon: Image },

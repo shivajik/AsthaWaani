@@ -5,11 +5,12 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ArrowRight, Play, MapPin, Youtube, Sparkles } from "lucide-react";
 import { Link } from "wouter";
-import { cn } from "@/lib/utils";
+import { cn, ensureProtocol } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import { useRef, useState, useEffect } from "react";
 import { useCmsPage } from "@/lib/useCmsPage";
 import { NewsTicker } from "@/components/news-ticker";
+import type { Ad } from "@shared/schema";
 
 interface Video {
   id: string;
@@ -143,6 +144,17 @@ export default function Home() {
       const response = await fetch("/api/videos");
       if (!response.ok) return [];
       return response.json();
+    },
+  });
+
+  const { data: homeAds } = useQuery<Ad[]>({
+    queryKey: ["/api/ads"],
+    queryFn: async () => {
+      const response = await fetch("/api/ads");
+      if (!response.ok) return [];
+      const allAds = await response.json();
+      // Filter for active ads with home_page placement
+      return allAds.filter((ad: Ad) => ad.isActive && ad.placement === "home_page");
     },
   });
 
@@ -318,13 +330,13 @@ export default function Home() {
       {/* About Preview */}
       <section className="py-24 bg-background relative overflow-hidden">
         <div className="container mx-auto px-4">
-          <div className="grid md:grid-cols-2 gap-16 items-center">
+          <div className="grid md:grid-cols-2 gap-16 items-start">
             <motion.div 
               initial={{ opacity: 0, x: -50, rotate: -5 }}
               whileInView={{ opacity: 1, x: 0, rotate: 1 }}
               viewport={{ once: true, margin: "-100px" }}
               transition={{ duration: 0.8, type: "spring" as const }}
-              className="relative rounded-2xl overflow-hidden shadow-2xl"
+              className="relative rounded-2xl overflow-hidden shadow-2xl sticky top-24"
             >
               <motion.img 
                 src={assets.guru} 
@@ -341,7 +353,35 @@ export default function Home() {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true, margin: "-100px" }}
               transition={{ duration: 0.8 }}
+              className="flex flex-col gap-6"
             >
+              {/* Ad Placement Above Text */}
+              {homeAds && homeAds.length > 0 && (
+                <motion.div 
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  className="w-full mb-2"
+                >
+                  <a 
+                    href={ensureProtocol(homeAds[0].link || undefined)} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="block relative rounded-lg overflow-hidden border border-border bg-card shadow-sm hover:shadow-md transition-all duration-300 group"
+                  >
+                    <img 
+                      src={homeAds[0].imageUrl} 
+                      alt={language === 'hi' ? homeAds[0].titleHi || homeAds[0].titleEn : homeAds[0].titleEn}
+                      className="w-full h-auto object-cover max-h-[200px] transition-transform duration-500 group-hover:scale-105"
+                    />
+                    <div className="absolute top-2 right-2 bg-blue-500/90 backdrop-blur-sm text-white text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider z-10">
+                      {language === 'hi' ? 'विज्ञापन' : 'Ad'}
+                    </div>
+                  </a>
+                </motion.div>
+              )}
+
+              <div>
               <motion.h2 
                 className="text-4xl md:text-5xl font-serif font-bold text-secondary mb-6"
                 initial={{ opacity: 0, y: 20 }}
@@ -383,6 +423,7 @@ export default function Home() {
                   <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </Link>
               </motion.div>
+              </div>
             </motion.div>
           </div>
         </div>
