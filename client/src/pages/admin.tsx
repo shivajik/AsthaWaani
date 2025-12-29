@@ -2233,7 +2233,7 @@ function AdManager() {
         </CardContent>
       </Card>
 
-      <div className="space-y-6">
+      {/* <div className="space-y-6">
         <h3 className="font-semibold text-lg">Active Ad Placements</h3>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
           {[
@@ -2258,7 +2258,7 @@ function AdManager() {
             );
           })}
         </div>
-      </div>
+      </div> */}
 
       <div className="space-y-2 pt-4">
         <h3 className="font-semibold">All Ads</h3>
