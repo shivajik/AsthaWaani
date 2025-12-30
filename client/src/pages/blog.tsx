@@ -43,8 +43,8 @@ export default function Blog() {
     language === "hi" ? "कोई पोस्ट नहीं मिली" : "No posts found";
 
   return (
-    <div className="min-h-screen bg-white dark:bg-black">
-      <div className="container mx-auto px-4 pt-24 md:pt-32 pb-12 md:pb-16">
+    <div className="w-full bg-white dark:bg-black flex flex-col">
+      <div className="max-w-7xl mx-auto px-4 pt-24 md:pt-32 pb-12 md:pb-16 w-full flex-1">
         <h1 className="text-4xl md:text-5xl font-bold mb-12 text-center">
           {title}
         </h1>

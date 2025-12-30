@@ -102,8 +102,8 @@ export default function BlogPostDetail() {
     .slice(0, 5);
 
   return (
-    <div className="min-h-screen bg-white dark:bg-black">
-      <div className="container mx-auto px-4 pt-24 md:pt-32 pb-12 md:pb-16">
+    <div className="w-full bg-white dark:bg-black flex flex-col">
+      <div className="max-w-7xl mx-auto px-4 pt-24 md:pt-32 pb-12 md:pb-16 w-full flex-1">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Categories Sidebar */}
           <aside className="md:col-span-1">

@@ -49,9 +49,9 @@ function AppContent() {
   useScrollToTop();
 
   return (
-    <div className="min-h-screen flex flex-col font-sans">
+    <div className="min-h-screen flex flex-col bg-white dark:bg-black overflow-x-hidden">
       {!isAdmin && <Header />}
-      <main className="flex-1">
+      <main className="flex-1 w-full relative">
         <Router />
       </main>
       {!isAdmin && <Footer />}
