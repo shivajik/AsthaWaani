@@ -246,7 +246,7 @@ export default function Home() {
             {/* Animated Title */}
             <motion.div className="relative">
               <motion.h1 
-                className="text-5xl md:text-7xl lg:text-8xl font-serif font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-white to-amber-200 drop-shadow-2xl"
+                className="text-5xl md:text-7xl lg:text-8xl font-serif font-bold tracking-tight text-[#fee78c] drop-shadow-2xl"
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3, duration: 0.8, type: "spring" }}
