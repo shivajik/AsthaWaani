@@ -172,7 +172,29 @@ export default function Home() {
     },
   });
 
-  const displayVideos = videos?.slice(0, 3) || [];
+  const displayVideos = [
+    {
+      id: "1",
+      videoId: "8cAb1LM_cfo",
+      title: "ॐ शं शनैश्चराय नमः 108 बार | Shani Dev Mantra Jaap | शनि देव के चमत्कारी मंत्र",
+      thumbnailUrl: "https://img.youtube.com/vi/8cAb1LM_cfo/maxresdefault.jpg",
+      duration: "6:37",
+    },
+    {
+      id: "2",
+      videoId: "_R77olhRj74",
+      title: "How to stay happy forever | Real Happiness Formula by Motivational Speaker Urmil Jain",
+      thumbnailUrl: "https://img.youtube.com/vi/_R77olhRj74/sddefault.jpg",
+      duration: "4:31",
+    },
+    {
+      id: "3",
+      videoId: "hcEA17tEbLc",
+      title: "The feet of the devotee are the crown of the Lord - Prem Ras Bhajan",
+      thumbnailUrl: "https://img.youtube.com/vi/hcEA17tEbLc/sddefault.jpg",
+      duration: "1:25",
+    },
+  ];
 
   return (
     <div className="flex flex-col w-full overflow-hidden">
