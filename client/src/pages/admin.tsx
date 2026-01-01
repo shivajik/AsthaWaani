@@ -1,3 +1,4 @@
+import { Badge } from "@/components/ui/badge";
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
@@ -2279,8 +2280,16 @@ function AdManager() {
                       style={{ maxHeight: `${maxHeight}px` }}
                     />
                   </div>
-                  <div className="min-w-0 flex-1">
+                  <div className="min-w-0 flex-1 space-y-1">
                     <p className="font-medium truncate">{ad.titleEn}</p>
+                    <div className="flex flex-wrap gap-2 items-center">
+                      <Badge variant="outline" className="text-[10px] uppercase tracking-wider">
+                        {ad.placement?.replace(/_/g, ' ') || 'Unset'}
+                      </Badge>
+                      <Badge variant={ad.isActive ? "default" : "secondary"} className="text-[10px]">
+                        {ad.isActive ? "Active" : "Inactive"}
+                      </Badge>
+                    </div>
                     <p className="text-sm text-muted-foreground truncate">{ad.titleHi}</p>
                     <p className="text-xs text-muted-foreground truncate">{ad.link}</p>
                     {ad.imageWidth && ad.imageHeight && (
