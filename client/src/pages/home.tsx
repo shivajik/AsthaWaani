@@ -405,13 +405,13 @@ export default function Home() {
       {/* About Preview */}
       <section className="py-24 bg-background relative overflow-hidden">
         <div className="container mx-auto px-4">
-          <div className="grid md:grid-cols-2 gap-16 items-start">
+          <div className="grid md:grid-cols-2 gap-12 md:gap-16 items-start">
             <motion.div 
               initial={{ opacity: 0, x: -50, rotate: -5 }}
               whileInView={{ opacity: 1, x: 0, rotate: 1 }}
               viewport={{ once: true, margin: "-100px" }}
               transition={{ duration: 0.8, type: "spring" as const }}
-              className="relative rounded-2xl overflow-hidden shadow-2xl sticky top-24"
+              className="relative rounded-2xl overflow-hidden shadow-2xl md:sticky md:top-24 mb-10 md:mb-0"
             >
               <motion.img 
                 src={assets.guru} 
