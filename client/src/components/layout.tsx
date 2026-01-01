@@ -228,8 +228,7 @@ export function Footer() {
                       href={ad.link || "#"}
                       target="_blank"
                       rel="noopener noreferrer"
-                      whileHover={{ scale: 1.02 }}
-                      className="group relative rounded-2xl overflow-hidden border border-border bg-card shadow-sm hover:shadow-xl transition-all duration-300 w-full"
+                      className="group relative rounded-2xl overflow-hidden border border-border bg-card transition-all duration-300 w-full"
                       style={{ 
                         maxWidth: ad.imageWidth ? `${ad.imageWidth}px` : '448px',
                         aspectRatio: ad.imageWidth && ad.imageHeight ? `${ad.imageWidth}/${ad.imageHeight}` : '16/9'
@@ -238,7 +237,7 @@ export function Footer() {
                       <img 
                         src={ad.imageUrl} 
                         alt={language === 'hi' ? ad.titleHi || ad.titleEn : ad.titleEn}
-                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        className="w-full h-full object-cover transition-transform duration-500"
                       />
                       <div className="absolute top-3 right-3 bg-secondary/90 backdrop-blur-sm text-secondary-foreground text-[10px] font-bold px-3 py-1 rounded-full z-10 uppercase tracking-tighter">
                         {language === 'hi' ? 'विज्ञापन' : 'Ad'}
@@ -300,19 +299,19 @@ export function Footer() {
                         href={ad.link || "#"}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="group relative rounded-xl overflow-hidden bg-white/5 border border-white/10 hover:border-secondary/50 transition-all duration-300 w-full"
+                        className="group relative rounded-xl overflow-hidden bg-white/5 border border-white/10 transition-all duration-300 w-full"
                       >
                         <img 
                           src={ad.imageUrl} 
                           alt={language === 'hi' ? ad.titleHi || ad.titleEn : ad.titleEn}
-                          className="w-full h-auto object-cover aspect-video transition-transform duration-500 group-hover:scale-105"
+                          className="w-full h-auto object-cover aspect-video transition-transform duration-500"
                         />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-3">
+                        {/* <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-3">
                           <p className="text-white text-xs font-medium flex items-center gap-1">
                             {language === 'hi' ? ad.titleHi || ad.titleEn : ad.titleEn}
                             <ExternalLink className="w-3 h-3" />
                           </p>
-                        </div>
+                        </div> */}
                       </a>
                     ))}
                   </div>

@@ -358,7 +358,7 @@ export default function Home() {
                     href={ensureProtocol(ad.link || undefined)} 
                     target="_blank" 
                     rel="noopener noreferrer"
-                    className="block relative rounded-2xl overflow-hidden border border-border bg-card shadow-lg hover:shadow-xl transition-all duration-300 group"
+                    className="block relative rounded-2xl overflow-hidden border border-border bg-card transition-all duration-300 group"
                     style={{ 
                       maxWidth: ad.imageWidth ? `${ad.imageWidth}px` : '100%',
                       aspectRatio: ad.imageWidth && ad.imageHeight ? `${ad.imageWidth}/${ad.imageHeight}` : 'auto'
@@ -367,7 +367,7 @@ export default function Home() {
                     <img 
                       src={ad.imageUrl} 
                       alt={language === 'hi' ? ad.titleHi || ad.titleEn : ad.titleEn}
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      className="w-full h-full object-cover transition-transform duration-500"
                     />
                     <div className="absolute top-4 right-4 bg-blue-500/90 backdrop-blur-sm text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-widest z-10 shadow-sm">
                       {language === 'hi' ? 'विज्ञापन' : 'Ad'}
@@ -423,7 +423,7 @@ export default function Home() {
                         href={ensureProtocol(ad.link || undefined)} 
                         target="_blank" 
                         rel="noopener noreferrer"
-                        className="block relative rounded-xl overflow-hidden border border-border bg-card shadow-sm hover:shadow-md transition-all duration-300 group"
+                        className="block relative rounded-xl overflow-hidden border border-border bg-card transition-all duration-300 group"
                         style={{ 
                           maxWidth: ad.imageWidth ? `${ad.imageWidth}px` : '100%',
                           aspectRatio: ad.imageWidth && ad.imageHeight ? `${ad.imageWidth}/${ad.imageHeight}` : 'auto'
@@ -432,7 +432,7 @@ export default function Home() {
                         <img 
                           src={ad.imageUrl} 
                           alt={language === 'hi' ? ad.titleHi || ad.titleEn : ad.titleEn}
-                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                          className="w-full h-full object-cover transition-transform duration-500"
                         />
                         <div className="absolute top-2 right-2 bg-blue-500/90 backdrop-blur-sm text-white text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider z-10">
                           {language === 'hi' ? 'विज्ञापन' : 'Ad'}

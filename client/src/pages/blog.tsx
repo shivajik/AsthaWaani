@@ -99,7 +99,7 @@ export default function Blog() {
                       className="block group"
                       data-testid={`ad-card-${ad.id}`}
                     >
-                      <div className="rounded-md overflow-hidden hover-elevate cursor-pointer">
+                      <div className="rounded-md overflow-hidden cursor-pointer">
                         <div className="relative inline-block">
                           <span className="absolute top-2 right-2 bg-blue-500 text-white text-xs font-semibold px-2 py-1 rounded-md z-10">
                             {language === "hi" ? "विज्ञापन" : "Advertisement"}

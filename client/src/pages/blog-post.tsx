@@ -157,7 +157,7 @@ export default function BlogPostDetail() {
                             <img 
                               src={ad.imageUrl} 
                               alt={adTitle} 
-                              className="hover:opacity-90 transition-opacity block"
+                              className="transition-opacity block"
                               style={{
                                 width: `${ad.imageWidth}px`,
                                 height: `${ad.imageHeight}px`
@@ -199,7 +199,7 @@ export default function BlogPostDetail() {
                           <img 
                             src={ad.imageUrl} 
                             alt={adTitle} 
-                            className="hover:opacity-90 transition-opacity block"
+                            className="transition-opacity block"
                             style={{
                               width: `${ad.imageWidth}px`,
                               height: `${ad.imageHeight}px`
@@ -289,7 +289,7 @@ export default function BlogPostDetail() {
                           <img 
                             src={ad.imageUrl} 
                             alt={adTitle} 
-                            className="hover:opacity-90 transition-opacity block"
+                            className="transition-opacity block"
                             style={{
                               width: `${ad.imageWidth}px`,
                               height: `${ad.imageHeight}px`
