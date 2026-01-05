@@ -26,7 +26,7 @@ const translations: Record<string, Record<Language, string>> = {
   'about.subtitle': { en: 'A spiritual platform born from Mathura–Vrindavan.', hi: 'मथुरा-वृंदावन से जन्मा एक आध्यात्मिक मंच।' },
   
   // Sections
-  'offerings.title': { en: 'Daily Offerings', hi: 'दैनिक प्रस्तुतियाँ' },
+  'offerings.title': { en: 'Our Services', hi: 'हमारी सेवाएँ' },
   'locations.title': { en: 'Our Locations', hi: 'हमारे स्थान' },
   'gallery.title': { en: 'Divine Gallery', hi: 'दिव्य गैलरी' },
   'contact.title': { en: 'Contact Us', hi: 'संपर्क करें' },

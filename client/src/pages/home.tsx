@@ -407,8 +407,8 @@ export default function Home() {
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-2 gap-12 md:gap-16 items-start">
             <motion.div 
-              initial={{ opacity: 0, x: -50, rotate: -5 }}
-              whileInView={{ opacity: 1, x: 0, rotate: 1 }}
+              initial={{ opacity: 0, x: -50 }}
+              whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true, margin: "-100px" }}
               transition={{ duration: 0.8, type: "spring" as const }}
               className="relative rounded-2xl overflow-hidden shadow-2xl md:sticky md:top-24 mb-10 md:mb-0"
@@ -649,9 +649,9 @@ export default function Home() {
                       viewport={{ once: true }}
                       transition={{ delay: i * 0.1 }}
                     >
-                      <div className="flex items-center justify-center gap-2 mb-2 text-primary">
+                      <div className="flex items-center justify-center gap-2 mb-2 text-amber-500">
                         <MapPin className="w-4 h-4 shrink-0" />
-                        <span className="text-xs font-bold uppercase tracking-wider">Ashram</span>
+                        <span className="text-xs font-bold uppercase tracking-wider drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]">Ashram</span>
                       </div>
                       <h3 className="text-xl md:text-2xl font-serif font-bold line-clamp-2">{loc.name}</h3>
                     </motion.div>

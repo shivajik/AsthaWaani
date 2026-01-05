@@ -62,11 +62,11 @@ export default function Offerings() {
   }, [offerings, isLoading, error]);
 
   const pageTitle = language === 'en' 
-    ? "Daily Offerings - Spiritual Services | Asthawaani" 
-    : "दैनिक प्रसाद - आध्यात्मिक सेवाएं | आस्थावाणी";
+    ? "Our Services - Spiritual Services | Asthawaani" 
+    : "हमारी सेवाएँ - आध्यात्मिक सेवाएं | आस्थावाणी";
   
   const pageDescription = language === 'en'
-    ? "Explore Asthawaani's spiritual offerings including Daily Satsang, Katha Pravachan, Bhajan Kirtan, Mantra Jaap, Morning Aarti, and Community services from Vrindavan."
+    ? "Explore Asthawaani's spiritual services including Daily Satsang, Katha Pravachan, Bhajan Kirtan, Mantra Jaap, Morning Aarti, and Community services from Vrindavan."
     : "वृंदावन से आस्थावाणी की आध्यात्मिक सेवाओं का अन्वेषण करें - दैनिक सत्संग, कथा प्रवचन, भजन कीर्तन, मंत्र जाप, प्रातः आरती और समुदाय सेवाएं।";
 
   const getIcon = (iconName: string) => {
@@ -120,12 +120,12 @@ export default function Offerings() {
             >
               <Icons.HandHeart className="w-5 h-5 text-amber-400" />
               <span className="text-sm font-medium text-amber-200">
-                {language === 'en' ? 'Spiritual Offerings' : 'आध्यात्मिक प्रसाद'}
+                {language === 'en' ? 'Spiritual Services' : 'आध्यात्मिक सेवाएँ'}
               </span>
             </motion.div>
             
             <h1 className="text-4xl md:text-6xl font-serif font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-amber-200 via-white to-amber-200" data-testid="offerings-page-title">
-              {language === 'en' ? 'Daily Offerings' : 'दैनिक प्रसाद'}
+              {language === 'en' ? 'Our Services' : 'हमारी सेवाएँ'}
             </h1>
             <p className="text-xl md:text-2xl text-white/80 max-w-3xl mx-auto leading-relaxed">
               {language === 'en' 

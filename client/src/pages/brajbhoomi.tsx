@@ -228,7 +228,7 @@ export default function Brajbhoomi() {
                     className="border-amber-600 text-amber-600 hover:bg-amber-600 hover:text-white group w-fit"
                     data-testid={`location-cta-${selectedLocation.id}`}
                   >
-                    {language === 'en' ? 'Experience Satsang' : 'सत्संग का अनुभव करें'}
+                    {language === 'en' ? 'Get in touch' : 'संपर्क करें'}
                     <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
                   </Button>
                 </Link>
@@ -279,9 +279,9 @@ export default function Brajbhoomi() {
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex items-end p-5">
                       <div className="text-white">
-                        <div className="flex items-center gap-2 mb-2 text-amber-400">
+                        <div className="flex items-center gap-2 mb-2 text-amber-500">
                           <MapPin className="w-4 h-4" />
-                          <span className="text-xs font-bold uppercase tracking-wider">
+                          <span className="text-xs font-bold uppercase tracking-wider drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]">
                             {language === 'en' ? 'Ashram' : 'आश्रम'}
                           </span>
                         </div>
