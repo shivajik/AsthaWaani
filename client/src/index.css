@@ -92,13 +92,12 @@
   }
   
   .preserve-whitespace p {
-    margin: 0;
-    padding: 0;
+    margin-bottom: 1.5rem;
     line-height: 1.6;
   }
   
-  .preserve-whitespace p + p {
-    margin-top: 0.75em;
+  .preserve-whitespace p:last-child {
+    margin-bottom: 0;
   }
   
   .preserve-whitespace br {

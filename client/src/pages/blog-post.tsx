@@ -257,7 +257,7 @@ export default function BlogPostDetail() {
 
               {content && (
                 <div
-                  className="prose dark:prose-invert max-w-none
+                  className="prose dark:prose-invert max-w-none preserve-whitespace
                     prose-headings:font-bold prose-headings:text-foreground
                     prose-p:text-foreground/90 prose-p:leading-7
                     prose-a:text-primary prose-a:underline
