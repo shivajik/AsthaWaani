@@ -259,7 +259,7 @@ export default function BlogPostDetail() {
                 <div
                   className="prose dark:prose-invert max-w-none preserve-whitespace
                     prose-headings:font-bold prose-headings:text-foreground
-                    prose-p:text-foreground/90 prose-p:leading-7
+                    prose-p:text-foreground/90 prose-p:leading-7 prose-p:min-h-[1rem]
                     prose-a:text-primary prose-a:underline
                     prose-strong:font-semibold prose-strong:text-foreground
                     prose-img:rounded-lg prose-img:border prose-img:border-border
