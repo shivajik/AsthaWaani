@@ -92,12 +92,65 @@
   }
   
   .preserve-whitespace p {
-    margin-bottom: 1.5rem;
-    line-height: 1.6;
+    margin-top: 1.5em;
+    margin-bottom: 1.5em;
+    line-height: 1.7;
+    display: block;
+    clear: both;
+  }
+  
+  .preserve-whitespace p:first-child {
+    margin-top: 0;
   }
   
   .preserve-whitespace p:last-child {
     margin-bottom: 0;
+  }
+  
+  .preserve-whitespace {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+
+  /* Specific styles for the blog detail page content to ensure spacing matches admin */
+  .prose.preserve-whitespace p {
+    margin: 0 !important;
+    white-space: normal !important;
+    display: block !important;
+    min-height: 1.2em;
+    padding: 0 !important;
+  }
+  
+  .prose.preserve-whitespace {
+    white-space: normal !important;
+    line-height: 1.6 !important;
+  }
+
+  /* Remove any default spacing between elements in the prose container */
+  .prose.preserve-whitespace > * {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* Ensure standard br behavior - act as a single line break */
+  .prose.preserve-whitespace br {
+    display: block !important;
+    content: "" !important;
+    height: 1.2em !important;
+    margin: 0 !important;
+  }
+
+  /* Prevent extra spacing from empty paragraphs that are just wrappers for br */
+  .prose.preserve-whitespace p:has(> br:only-child) {
+    min-height: 0 !important;
+  }
+
+  /* Remove any pseudo-elements that might cause extra gaps */
+  .prose.preserve-whitespace p::after,
+  .prose.preserve-whitespace p::before {
+    display: none !important;
+    content: none !important;
   }
   
   .preserve-whitespace br {
