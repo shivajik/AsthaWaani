@@ -335,12 +335,19 @@ export function Footer() {
                         href={ad.link || "#"}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="group relative rounded-xl overflow-hidden bg-white/5 border border-white/10 transition-all duration-300 w-full"
+                        className="group relative rounded-xl overflow-hidden bg-white/5 border border-white/10 transition-all duration-300 w-full flex items-center justify-center mx-auto"
+                        style={{ 
+                          maxWidth: '300px',
+                          maxHeight: '300px'
+                        }}
                       >
                         <img 
                           src={ad.imageUrl} 
                           alt={language === 'hi' ? ad.titleHi || ad.titleEn : ad.titleEn}
-                          className="w-full h-[300px] object-cover transition-transform duration-500"
+                          className="w-full h-auto max-h-[300px] object-contain transition-transform duration-500"
+                          style={{
+                            aspectRatio: ad.imageWidth && ad.imageHeight ? `${ad.imageWidth}/${ad.imageHeight}` : 'auto'
+                          }}
                         />
                         {/* <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-3">
                           <p className="text-white text-xs font-medium flex items-center gap-1">
