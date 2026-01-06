@@ -335,7 +335,7 @@ export function Footer() {
                         href={ad.link || "#"}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="group relative rounded-xl overflow-hidden bg-white/5 border border-white/10 transition-all duration-300 w-full flex items-center justify-center mx-auto"
+                        className="group relative overflow-hidden transition-all duration-300 w-full flex items-center justify-center mx-auto"
                         style={{ 
                           maxWidth: '300px',
                           maxHeight: '300px'
