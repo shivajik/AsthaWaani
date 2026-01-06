@@ -20,6 +20,9 @@ import TermsOfService from "@/pages/terms-of-service";
 import PrivacyPolicy from "@/pages/privacy-policy";
 import DynamicPage from "@/pages/dynamic-page";
 
+import CommunityPage from "./pages/community";
+import JoinPartnersPage from "./pages/join-partners";
+
 function Router() {
   return (
     <Switch>
@@ -32,6 +35,8 @@ function Router() {
       <Route path="/blog" component={Blog} />
       <Route path="/blog/:slug" component={BlogPostDetail} />
       <Route path="/contact" component={Contact} />
+      <Route path="/community" component={CommunityPage} />
+      <Route path="/join-partners" component={JoinPartnersPage} />
       <Route path="/terms-of-service" component={TermsOfService} />
       <Route path="/privacy-policy" component={PrivacyPolicy} />
       <Route path="/admin" component={Admin} />

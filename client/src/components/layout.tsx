@@ -1,6 +1,6 @@
 import { Link, useLocation } from "wouter";
 import { useLanguage } from "@/lib/context";
-import { Menu, X, Globe, Phone, MapPin, Instagram, ExternalLink, Youtube, Facebook } from "lucide-react";
+import { Menu, X, Globe, Phone, MapPin, Instagram, ExternalLink, Youtube, Facebook, ChevronDown } from "lucide-react";
 import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -13,6 +13,14 @@ import logoHorizontal from "@assets/Asthawani-logo-h_1765886539362.png";
 import logoSquare from "@assets/Asthawani-logo_1765886539362.png";
 import logoHorizontalWhite from "@assets/Asthawani-logo-h-w_1765886987919.png";
 import logoSquareWhite from "@assets/Asthawani-logo-w_1765886987919.png";
+
+import { 
+  DropdownMenu, 
+  DropdownMenuContent, 
+  DropdownMenuItem, 
+  DropdownMenuTrigger,
+  DropdownMenuSeparator
+} from "@/components/ui/dropdown-menu";
 
 export function Header() {
   const { language, setLanguage, t } = useLanguage();
@@ -113,14 +121,29 @@ export function Header() {
             {language === 'en' ? 'HI' : 'EN'}
           </Button>
 
-          <Link href="/contact">
-            <Button 
-              size="lg"
-              className={cn("bg-secondary text-secondary-foreground hover:bg-secondary/90 font-serif font-bold px-6")}
-            >
-              {t('nav.join')}
-            </Button>
-          </Link>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button 
+                size="lg"
+                className={cn("bg-secondary text-secondary-foreground hover:bg-secondary/90 font-serif font-bold px-6 cursor-pointer gap-2")}
+              >
+                {t('nav.join')}
+                <ChevronDown className="h-4 w-4 opacity-70" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-56 bg-white dark:bg-zinc-950">
+              <DropdownMenuItem asChild className="cursor-pointer">
+                <Link href="/community" className="w-full">
+                  {t('nav.joinCommunity')}
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild className="cursor-pointer">
+                <Link href="/join-partners" className="w-full">
+                  {t('nav.joinPartners')}
+                </Link>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </nav>
 
         {/* Mobile Nav */}
@@ -154,6 +177,16 @@ export function Header() {
                       {link.label}
                   </Link>
                 ))}
+                
+                <div className="flex flex-col gap-4 mt-4">
+                  <p className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">{t('nav.join')}</p>
+                  <Link href="/community" className="text-xl font-medium hover:text-primary transition-colors">
+                    {t('nav.joinCommunity')}
+                  </Link>
+                  <Link href="/join-partners" className="text-xl font-medium hover:text-primary transition-colors">
+                    {t('nav.joinPartners')}
+                  </Link>
+                </div>
               </nav>
               <div className="flex items-center gap-4 mt-4">
                 <Button variant="outline" onClick={toggleLanguage} className="w-full text-lg py-6">
