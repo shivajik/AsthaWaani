@@ -5,7 +5,9 @@ let transporter: nodemailer.Transporter | null = null;
 function getTransporter() {
   if (!transporter) {
     transporter = nodemailer.createTransport({
-      service: "Gmail",
+      host: "smtp.gmail.com",
+      port: 465,
+      secure: true, // use SSL
       auth: {
         user: process.env.EMAIL,
         pass: process.env.PASS,
@@ -91,7 +93,17 @@ export const sendContactFormNotification = async (
 
   const emailTransporter = getTransporter();
   if (!emailTransporter) {
+    console.error("📧 Email transporter not initialized");
     throw new Error("Email transporter not initialized");
   }
-  await emailTransporter.sendMail(mailOptions);
+
+  try {
+    console.log(`📧 Attempting to send contact form email to: ${adminEmail}`);
+    const info = await emailTransporter.sendMail(mailOptions);
+    console.log("✅ Email sent successfully:", info.messageId);
+    return info;
+  } catch (error) {
+    console.error("❌ Failed to send email:", error);
+    throw error;
+  }
 };
