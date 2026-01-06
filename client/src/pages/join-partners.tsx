@@ -39,8 +39,15 @@ export default function JoinPartnersPage() {
 
   const mutation = useMutation({
     mutationFn: async (data: PartnerFormData) => {
-      // Reusing contact API for now as it handles similar data
-      const res = await apiRequest("POST", "/api/contact", data);
+      // Mapping fields to match backend expectations in server/routes.ts
+      const payload = {
+        name: data.name,
+        email: data.email,
+        subject: `Partnership Inquiry${data.organization ? ` from ${data.organization}` : ""}`,
+        message: data.message,
+        phone: data.phone,
+      };
+      const res = await apiRequest("POST", "/api/contact", payload);
       return res.json();
     },
     onSuccess: () => {
