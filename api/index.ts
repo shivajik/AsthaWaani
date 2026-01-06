@@ -1557,37 +1557,6 @@ app.delete("/api/cms/contacts/:id", isAuthenticated, async (req: Request, res: R
   }
 });
 
-app.post("/api/contact", async (req: Request, res: Response) => {
-  try {
-    const { name, email, subject, message, phone } = req.body;
-
-    if (!name || !email || !subject || !message) {
-      return res.status(400).json({ error: "All fields are required" });
-    }
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      return res.status(400).json({ error: "Invalid email format" });
-    }
-
-    const [contact] = await db.insert(contacts).values({
-      name,
-      email,
-      phone: phone || "",
-      subject,
-      message,
-    }).returning();
-
-    res.json({
-      success: true,
-      message: "Your message has been sent successfully. We will get back to you soon!",
-    });
-  } catch (error) {
-    console.error("Contact form submission error:", error);
-    res.status(500).json({ error: "Failed to send message. Please try again later." });
-  }
-});
-
 // ============================================
 // ADMIN CATEGORY ENDPOINTS
 // ============================================
@@ -1903,7 +1872,26 @@ app.post("/api/contact", contactRateLimit, async (req: Request, res: Response) =
     }
 
     // Send email notification to admin
-    await sendContactFormNotification(name, email, subject, message, phone);
+    try {
+      await sendContactFormNotification(name, email, subject, message, phone);
+    } catch (emailError) {
+      console.error("📧 Email sending failed:", emailError);
+      // We continue since we still want to save to DB
+    }
+
+    // Save contact to database
+    try {
+      await db.insert(contacts).values({
+        name,
+        email,
+        phone: phone || "",
+        subject,
+        message,
+      });
+    } catch (dbError) {
+      console.error("Error saving contact to database:", dbError);
+      return res.status(500).json({ error: "Failed to save your message. Please try again later." });
+    }
 
     res.json({
       success: true,
