@@ -112,6 +112,7 @@ export default function Services() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
+            {/* 
             <motion.div
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
@@ -123,6 +124,7 @@ export default function Services() {
                 {language === 'en' ? 'Spiritual Services' : 'आध्यात्मिक सेवाएँ'}
               </span>
             </motion.div>
+            */}
             
             <h1 className="text-4xl md:text-6xl font-serif font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-amber-200 via-white to-amber-200" data-testid="offerings-page-title">
               {language === 'en' ? 'Our Services' : 'हमारी सेवाएँ'}
