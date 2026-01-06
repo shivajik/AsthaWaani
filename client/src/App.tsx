@@ -12,7 +12,7 @@ import Gallery from "@/pages/gallery";
 import Contact from "@/pages/contact";
 import Videos from "@/pages/videos";
 import Admin from "@/pages/admin";
-import Offerings from "@/pages/offerings";
+import Services from "@/pages/offerings";
 import Brajbhoomi from "@/pages/brajbhoomi";
 import Blog from "@/pages/blog";
 import BlogPostDetail from "@/pages/blog-post";
@@ -30,7 +30,7 @@ function Router() {
       <Route path="/about" component={About} />
       <Route path="/videos" component={Videos} />
       <Route path="/gallery" component={Gallery} />
-      <Route path="/offerings" component={Offerings} />
+      <Route path="/services" component={Services} />
       <Route path="/brajbhoomi" component={Brajbhoomi} />
       <Route path="/blog" component={Blog} />
       <Route path="/blog/:slug" component={BlogPostDetail} />

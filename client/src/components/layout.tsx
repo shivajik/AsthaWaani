@@ -44,7 +44,7 @@ export function Header() {
   const navLinks = [
     { href: "/", label: t('nav.home') },
     { href: "/about", label: t('nav.about') },
-    { href: "/offerings", label: language === 'en' ? 'Our Services' : 'हमारी सेवाएँ' },
+    { href: "/services", label: language === 'en' ? 'Our Services' : 'हमारी सेवाएँ' },
     { href: "/brajbhoomi", label: language === 'en' ? 'Brajbhoomi' : 'ब्रजभूमि' },
     { href: "/blog", label: language === 'en' ? 'Blog' : 'ब्लॉग' },
     { href: "/videos", label: t('nav.videos') || "Videos" },

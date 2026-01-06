@@ -28,9 +28,9 @@ const fadeUpItem = {
   },
 };
 
-export default function Offerings() {
+export default function Services() {
   const { language } = useLanguage();
-  const { data: pageData } = useCmsPage("offerings");
+  const { data: pageData } = useCmsPage("services");
   const [hasError, setHasError] = useState(false);
 
   const { data: offerings = [], isLoading, error } = useQuery<Offering[]>({
@@ -43,10 +43,10 @@ export default function Offerings() {
           return [];
         }
         const data = await res.json();
-        if (enableDebug) console.log("Offerings fetched:", data);
+        if (enableDebug) console.log("Services fetched:", data);
         return data;
       } catch (err) {
-        console.error("Error fetching offerings:", err);
+        console.error("Error fetching services:", err);
         setHasError(true);
         return [];
       }
@@ -58,12 +58,12 @@ export default function Offerings() {
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    if (enableDebug) console.log("Offerings data:", offerings, "Loading:", isLoading, "Error:", error);
+    if (enableDebug) console.log("Services data:", offerings, "Loading:", isLoading, "Error:", error);
   }, [offerings, isLoading, error]);
 
   const pageTitle = language === 'en' 
-    ? "Our Services - Spiritual Services | Asthawaani" 
-    : "हमारी सेवाएँ - आध्यात्मिक सेवाएं | आस्थावाणी";
+    ? "Our Services | Asthawaani" 
+    : "हमारी सेवाएँ | आस्थावाणी";
   
   const pageDescription = language === 'en'
     ? "Explore Asthawaani's spiritual services including Daily Satsang, Katha Pravachan, Bhajan Kirtan, Mantra Jaap, Morning Aarti, and Community services from Vrindavan."

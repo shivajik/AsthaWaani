@@ -557,7 +557,7 @@ export default function Home() {
             viewport={{ once: true, margin: "-50px" }}
           >
             {offerings.map((item, index) => (
-              <Link key={index} href="/offerings">
+              <Link key={index} href="/services">
                 <motion.div
                   variants={scaleIn}
                   whileHover={{ y: -10, transition: { duration: 0.3 } }}
