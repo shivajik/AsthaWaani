@@ -250,7 +250,7 @@ export default function Home() {
             animate="visible"
             className="flex flex-col items-center gap-6"
           >
-            {/* Decorative Element Above Title */}
+            {/* Decorative Element Above Title (Commented out as per request)
             <motion.div
               initial={{ opacity: 0, scale: 0 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -264,6 +264,7 @@ export default function Home() {
               />
               <Sparkles className="w-8 h-8 text-amber-400" />
             </motion.div>
+            */}
             
             {/* Animated Title */}
             <motion.div className="relative">
