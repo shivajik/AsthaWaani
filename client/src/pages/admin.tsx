@@ -2785,12 +2785,12 @@ export default function Admin() {
     <div className="min-h-screen bg-background">
       <div className="flex">
         {/* Sidebar */}
-        <div className="w-64 bg-stone-900 min-h-screen p-4 text-white fixed left-0 top-0 flex flex-col">
+        <div className="w-64 bg-stone-900 h-screen p-4 text-white fixed left-0 top-0 flex flex-col">
           <div className="mb-8 flex-shrink-0">
             <h1 className="text-xl font-serif font-bold text-amber-400">Asthawaani CMS</h1>
             <p className="text-sm text-stone-400">{admin?.name}</p>
           </div>
-          <nav className="space-y-2 flex-1 overflow-y-auto pr-2">
+          <nav className="space-y-2 flex-1 overflow-y-auto pr-2 pb-4 scrollbar-hide" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
             {menuItems.map((item) => (
               <button
                 key={item.id}
