@@ -23,6 +23,7 @@ import DynamicPage from "@/pages/dynamic-page";
 import CommunityPage from "./pages/community";
 import JoinPartnersPage from "./pages/join-partners";
 import ApplyVakta from "./pages/apply-vakta";
+import { PromoPopup } from "./components/promo-popup";
 
 function Router() {
   return (
@@ -62,6 +63,7 @@ function AppContent() {
         <Router />
       </main>
       {!isAdmin && <Footer />}
+      {!isAdmin && <PromoPopup />}
       <Toaster />
     </div>
   );

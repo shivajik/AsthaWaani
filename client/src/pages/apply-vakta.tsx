@@ -66,6 +66,7 @@ export default function ApplyVakta() {
         title: "Application Submitted!",
         description: "We will contact you soon. Thank you for your interest!",
       });
+      window.scrollTo({ top: 0, behavior: "smooth" });
     },
     onError: (error: Error) => {
       toast({
