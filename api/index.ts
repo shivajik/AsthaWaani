@@ -148,6 +148,85 @@ async function sendContactFormNotification(
   }
 }
 
+async function sendVaktaApplicationNotification(
+  name: string,
+  email: string,
+  phone: string,
+  categories: string[],
+  experience: string
+) {
+  const adminEmail = process.env.EMAIL;
+  const escapedName = escapeHtml(name);
+  const escapedEmail = escapeHtml(email);
+  const escapedPhone = escapeHtml(phone);
+  const escapedExperience = escapeHtml(experience);
+  const escapedCategories = categories.map(c => escapeHtml(c)).join(", ");
+
+  const mailOptions = {
+    from: process.env.EMAIL,
+    to: adminEmail,
+    subject: `New Vakta Application: ${escapedName}`,
+    html: `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #fff7ed; border-radius: 8px;">
+        <div style="background-color: #ffffff; padding: 40px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+          <div style="text-align: center; margin-bottom: 30px;">
+            <h1 style="color: #c2410c; margin: 0; font-size: 28px; font-weight: bold;">New Vakta Application</h1>
+            <div style="width: 60px; height: 4px; background-color: #ea580c; margin: 10px auto; border-radius: 2px;"></div>
+          </div>
+          
+          <div style="color: #374151; line-height: 1.6; font-size: 16px;">
+            <p style="margin-bottom: 20px;">You have received a new Vakta application:</p>
+            
+            <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+              <tr>
+                <td style="padding: 12px; border-bottom: 1px solid #e5e7eb; font-weight: bold; color: #4b5563; width: 120px;">Name:</td>
+                <td style="padding: 12px; border-bottom: 1px solid #e5e7eb;">${escapedName}</td>
+              </tr>
+              <tr>
+                <td style="padding: 12px; border-bottom: 1px solid #e5e7eb; font-weight: bold; color: #4b5563;">Email:</td>
+                <td style="padding: 12px; border-bottom: 1px solid #e5e7eb;"><a href="mailto:${escapedEmail}" style="color: #c2410c;">${escapedEmail}</a></td>
+              </tr>
+              <tr>
+                <td style="padding: 12px; border-bottom: 1px solid #e5e7eb; font-weight: bold; color: #4b5563;">Phone:</td>
+                <td style="padding: 12px; border-bottom: 1px solid #e5e7eb;"><a href="tel:${escapedPhone}" style="color: #c2410c;">${escapedPhone}</a></td>
+              </tr>
+              <tr>
+                <td style="padding: 12px; border-bottom: 1px solid #e5e7eb; font-weight: bold; color: #4b5563;">Categories:</td>
+                <td style="padding: 12px; border-bottom: 1px solid #e5e7eb;">${escapedCategories}</td>
+              </tr>
+            </table>
+            
+            <div style="background-color: #fff7ed; padding: 20px; border-radius: 8px; border-left: 4px solid #ea580c;">
+              <p style="margin: 0 0 10px 0; font-weight: bold; color: #4b5563;">Experience:</p>
+              <p style="margin: 0; white-space: pre-wrap;">${escapedExperience}</p>
+            </div>
+          </div>
+          
+          <div style="margin-top: 30px; text-align: center; color: #9ca3af; font-size: 14px;">
+            <p style="margin: 0;">This application was submitted via Asthawaani</p>
+          </div>
+        </div>
+      </div>
+    `,
+  };
+
+  const emailTransporter = getTransporter();
+  if (!emailTransporter) {
+    console.error("📧 Email transporter not initialized");
+    throw new Error("Email transporter not initialized");
+  }
+
+  try {
+    console.log(`📧 Attempting to send Vakta application email to: ${adminEmail}`);
+    const info = await emailTransporter.sendMail(mailOptions);
+    console.log("✅ Vakta application email sent successfully:", info.messageId);
+    return info;
+  } catch (error) {
+    console.error("❌ Failed to send Vakta application email:", error);
+    throw error;
+  }
+}
+
 const users = pgTable("users", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   username: text("username").notNull().unique(),
@@ -354,6 +433,17 @@ const ads = pgTable("ads", {
   position: integer("position").notNull().default(0),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
+
+const vaktaApplications = pgTable("vakta_applications", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  name: text("name").notNull(),
+  email: text("email").notNull(),
+  phone: text("phone").notNull(),
+  categories: text("categories").array().notNull(),
+  experience: text("experience").notNull(),
+  status: text("status").notNull().default("pending"),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
 const insertPageSchema = createInsertSchema(pages).omit({ id: true, createdAt: true, updatedAt: true });
@@ -697,6 +787,12 @@ const contactRateLimit = rateLimit({
   windowMs: 60 * 60 * 1000,
   max: 5,
   message: { error: "Too many contact form submissions, please try again later" },
+});
+
+const vaktaApplicationRateLimit = rateLimit({
+  windowMs: 60 * 60 * 1000,
+  max: 3,
+  message: { error: "Too many applications submitted. Please try again later." },
 });
 
 const updatePageSchema = z.object({
@@ -1900,6 +1996,83 @@ app.post("/api/contact", contactRateLimit, async (req: Request, res: Response) =
   } catch (error) {
     console.error("Contact form submission error:", error);
     res.status(500).json({ error: "Failed to send message. Please try again later." });
+  }
+});
+
+// Vakta Application API
+app.post("/api/vakta-application", vaktaApplicationRateLimit, async (req: Request, res: Response) => {
+  try {
+    const { name, email, phone, categories, experience } = req.body;
+
+    if (!name || !email || !phone || !categories || !experience) {
+      return res.status(400).json({ error: "All fields are required" });
+    }
+
+    if (!Array.isArray(categories) || categories.length === 0) {
+      return res.status(400).json({ error: "Please select at least one category" });
+    }
+
+    if (name.length > 100 || email.length > 200 || phone.length > 20 || experience.length > 2000) {
+      return res.status(400).json({ error: "Field length exceeded" });
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({ error: "Invalid email address" });
+    }
+
+    if (!process.env.EMAIL || !process.env.PASS) {
+      console.error("Email service not configured");
+      return res.status(500).json({ error: "Email service is not currently available. Please try again later." });
+    }
+
+    try {
+      await sendVaktaApplicationNotification(name, email, phone, categories, experience);
+    } catch (emailError) {
+      console.error("📧 Vakta application email failed:", emailError);
+    }
+
+    try {
+      await db.insert(vaktaApplications).values({
+        name,
+        email,
+        phone,
+        categories,
+        experience,
+      });
+    } catch (dbError) {
+      console.error("Error saving vakta application:", dbError);
+      return res.status(500).json({ error: "Failed to save your application. Please try again later." });
+    }
+
+    res.json({
+      success: true,
+      message: "Your application has been submitted successfully. We will contact you soon!",
+    });
+  } catch (error) {
+    console.error("Vakta application error:", error);
+    res.status(500).json({ error: "Failed to submit application. Please try again later." });
+  }
+});
+
+app.get("/api/cms/vakta-applications", isAuthenticated, async (req: Request, res: Response) => {
+  try {
+    const applications = await db.select().from(vaktaApplications).orderBy(desc(vaktaApplications.createdAt));
+    res.json(applications);
+  } catch (error) {
+    console.error("Error fetching vakta applications:", error);
+    res.status(500).json({ error: "Failed to fetch applications" });
+  }
+});
+
+app.delete("/api/cms/vakta-applications/:id", isAuthenticated, async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    await db.delete(vaktaApplications).where(eq(vaktaApplications.id, id));
+    res.json({ success: true });
+  } catch (error) {
+    console.error("Error deleting vakta application:", error);
+    res.status(500).json({ error: "Failed to delete application" });
   }
 });
 
