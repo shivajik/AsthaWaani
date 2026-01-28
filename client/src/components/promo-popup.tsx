@@ -3,7 +3,7 @@ import { X } from "lucide-react";
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { Button } from "@/components/ui/button";
-import promoImage from "@assets/image_1769606633932.png";
+import promoImage from "@assets/promoImage.png";
 
 const POPUP_SESSION_KEY = "asthawaani_promo_popup_shown";
 
