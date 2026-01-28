@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { X } from "lucide-react";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { Button } from "@/components/ui/button";
 import promoImage from "@assets/image_1769606633932.png";
 
@@ -23,12 +24,19 @@ export function PromoPopup() {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogContent className="sm:max-w-lg p-0 overflow-hidden border-0 bg-transparent shadow-2xl">
+        <VisuallyHidden>
+          <DialogTitle>Asthawaani Promotional</DialogTitle>
+          <DialogDescription>Promotional image for Asthawaani spiritual platform</DialogDescription>
+        </VisuallyHidden>
         <div className="relative">
           <Button
             size="icon"
-            variant="secondary"
-            className="absolute top-2 right-2 z-10 rounded-full bg-white/90 hover:bg-white shadow-lg"
-            onClick={() => setIsOpen(false)}
+            variant="outline"
+            className="absolute top-2 right-2 z-10 rounded-full shadow-lg backdrop-blur-sm"
+            onClick={() => {
+              setIsOpen(false);
+              sessionStorage.setItem(POPUP_SESSION_KEY, "true");
+            }}
             data-testid="button-close-popup"
           >
             <X className="w-4 h-4" />
