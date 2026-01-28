@@ -298,7 +298,7 @@ export default function ApplyVakta() {
             <Card className="shadow-xl border-orange-200/50 dark:border-orange-800/30 overflow-hidden">
               <div className="aspect-video relative bg-black">
                 <iframe
-                  src="https://www.awesomescreenshot.com/embed/48769760?key=4bfa0bf264fb3d0ae1352d0e4bb1b2f7"
+                  src="https://res.cloudinary.com/ddejz4aju/video/upload/v1769604522/Asthawani_Video_sf4nhb.mp4"
                   title="Promotional Video"
                   className="w-full h-full"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
