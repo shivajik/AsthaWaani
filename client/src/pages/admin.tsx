@@ -672,6 +672,7 @@ function VaktaApplicationsManager() {
   const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
   const limit = 50;
 
   const { data, isLoading } = useQuery<VaktaApplicationsResponse>({
@@ -696,12 +697,17 @@ function VaktaApplicationsManager() {
 
   const deleteApplicationMutation = useMutation({
     mutationFn: async (id: string) => {
+      setDeletingId(id);
       const res = await fetch(`/api/cms/vakta-applications/${id}`, { method: "DELETE", credentials: "include" });
       if (!res.ok) throw new Error("Failed to delete application");
     },
     onSuccess: () => {
       toast({ title: "Application deleted" });
       queryClient.invalidateQueries({ queryKey: ["/api/cms/vakta-applications"] });
+      setDeletingId(null);
+    },
+    onError: () => {
+      setDeletingId(null);
     },
   });
 
@@ -766,10 +772,10 @@ function VaktaApplicationsManager() {
                   size="sm" 
                   variant="destructive" 
                   onClick={(e) => { e.stopPropagation(); deleteApplicationMutation.mutate(app.id); }} 
-                  disabled={deleteApplicationMutation.isPending}
+                  disabled={deletingId === app.id}
                   data-testid={`button-delete-vakta-${app.id}`}
                 >
-                  {deleteApplicationMutation.isPending ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
+                  {deletingId === app.id ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
                 </Button>
               </div>
             </CardContent>
