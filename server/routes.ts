@@ -5,7 +5,7 @@ import { YouTubeService } from "./youtube.service";
 import { insertYoutubeChannelSchema, insertVideoSchema, insertContactInfoSchema, insertCategorySchema, insertOfferingSchema, insertNewsTickerSchema, insertMediaSchema, insertPageSchema, insertAdSchema, insertVaktaApplicationSchema } from "@shared/schema";
 import multer from "multer";
 import { uploadToCloudinary, deleteFromCloudinary } from "./cloudinary.service";
-import { sendContactFormNotification } from "./email.service";
+import { sendContactFormNotification, sendVaktaApplicationNotification } from "./email.service";
 import rateLimit from "express-rate-limit";
 
 export async function registerRoutes(
@@ -1048,6 +1048,23 @@ export async function registerRoutes(
       }
 
       const application = await storage.createVaktaApplication(validation.data);
+
+      // Send email notification if email service is configured
+      if (process.env.EMAIL && process.env.PASS) {
+        try {
+          await sendVaktaApplicationNotification(
+            validation.data.name,
+            validation.data.email,
+            validation.data.phone,
+            validation.data.categories,
+            validation.data.experience
+          );
+          console.log("Vakta application email notification sent successfully");
+        } catch (emailError) {
+          console.error("Failed to send Vakta application email notification:", emailError);
+        }
+      }
+
       res.status(201).json({
         success: true,
         message: "Your application has been submitted successfully! We will contact you soon.",
