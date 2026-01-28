@@ -4,8 +4,8 @@ import {
   type Media, type InsertMedia, type SeoMeta, type InsertSeoMeta, type SiteSettings, type InsertSiteSettings,
   type ContactInfo, type InsertContactInfo, type Category, type InsertCategory, type PostCategory,
   type Offering, type InsertOffering, type NewsTicker, type InsertNewsTicker, type Ad, type InsertAd,
-  type Contact, type InsertContact,
-  videos, youtubeChannels, users, admins, pages, posts, media, seoMeta, siteSettings, contactInfo, categories, postCategories, offerings, newsTickers, ads, contacts
+  type Contact, type InsertContact, type VaktaApplication, type InsertVaktaApplication,
+  videos, youtubeChannels, users, admins, pages, posts, media, seoMeta, siteSettings, contactInfo, categories, postCategories, offerings, newsTickers, ads, contacts, vaktaApplications
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, desc, and } from "drizzle-orm";
@@ -116,6 +116,11 @@ export interface IStorage {
   getAllContacts(): Promise<Contact[]>;
   createContact(contact: InsertContact): Promise<Contact>;
   deleteContact(id: string): Promise<void>;
+
+  // Vakta applications operations
+  getAllVaktaApplications(): Promise<VaktaApplication[]>;
+  createVaktaApplication(application: InsertVaktaApplication): Promise<VaktaApplication>;
+  deleteVaktaApplication(id: string): Promise<void>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -593,6 +598,20 @@ export class DatabaseStorage implements IStorage {
 
   async deleteContact(id: string): Promise<void> {
     await db.delete(contacts).where(eq(contacts.id, id));
+  }
+
+  // Vakta applications operations
+  async getAllVaktaApplications(): Promise<VaktaApplication[]> {
+    return await db.select().from(vaktaApplications).orderBy(desc(vaktaApplications.createdAt));
+  }
+
+  async createVaktaApplication(application: InsertVaktaApplication): Promise<VaktaApplication> {
+    const [newApplication] = await db.insert(vaktaApplications).values(application).returning();
+    return newApplication;
+  }
+
+  async deleteVaktaApplication(id: string): Promise<void> {
+    await db.delete(vaktaApplications).where(eq(vaktaApplications.id, id));
   }
 }
 

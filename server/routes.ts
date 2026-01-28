@@ -2,7 +2,7 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { YouTubeService } from "./youtube.service";
-import { insertYoutubeChannelSchema, insertVideoSchema, insertContactInfoSchema, insertCategorySchema, insertOfferingSchema, insertNewsTickerSchema, insertMediaSchema, insertPageSchema, insertAdSchema } from "@shared/schema";
+import { insertYoutubeChannelSchema, insertVideoSchema, insertContactInfoSchema, insertCategorySchema, insertOfferingSchema, insertNewsTickerSchema, insertMediaSchema, insertPageSchema, insertAdSchema, insertVaktaApplicationSchema } from "@shared/schema";
 import multer from "multer";
 import { uploadToCloudinary, deleteFromCloudinary } from "./cloudinary.service";
 import { sendContactFormNotification } from "./email.service";
@@ -1027,6 +1027,57 @@ export async function registerRoutes(
     } catch (error) {
       console.error("Error seeding legal pages:", error);
       res.status(500).json({ error: "Failed to seed legal pages" });
+    }
+  });
+
+  // Vakta Application Rate Limiter
+  const vaktaRateLimit = rateLimit({
+    windowMs: 60 * 60 * 1000, // 1 hour
+    max: 3, // 3 applications per hour
+    message: "Too many applications submitted, please try again later",
+    standardHeaders: true,
+    legacyHeaders: false,
+  });
+
+  // Vakta Application Routes
+  app.post("/api/vakta-application", vaktaRateLimit, async (req, res) => {
+    try {
+      const validation = insertVaktaApplicationSchema.safeParse(req.body);
+      if (!validation.success) {
+        return res.status(400).json({ error: "Invalid application data", issues: validation.error.issues });
+      }
+
+      const application = await storage.createVaktaApplication(validation.data);
+      res.status(201).json({
+        success: true,
+        message: "Your application has been submitted successfully! We will contact you soon.",
+        application,
+      });
+    } catch (error) {
+      console.error("Error submitting vakta application:", error);
+      res.status(500).json({ error: "Failed to submit application. Please try again later." });
+    }
+  });
+
+  // Get all vakta applications (admin endpoint)
+  app.get("/api/cms/vakta-applications", async (req, res) => {
+    try {
+      const applications = await storage.getAllVaktaApplications();
+      res.json(applications);
+    } catch (error) {
+      console.error("Error fetching vakta applications:", error);
+      res.status(500).json({ error: "Failed to fetch applications" });
+    }
+  });
+
+  // Delete vakta application (admin endpoint)
+  app.delete("/api/cms/vakta-applications/:id", async (req, res) => {
+    try {
+      await storage.deleteVaktaApplication(req.params.id);
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Error deleting vakta application:", error);
+      res.status(500).json({ error: "Failed to delete application" });
     }
   });
 

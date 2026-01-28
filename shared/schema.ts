@@ -363,3 +363,33 @@ export const insertAdSchema = createInsertSchema(ads).omit({
 
 export type InsertAd = z.infer<typeof insertAdSchema>;
 export type Ad = typeof ads.$inferSelect;
+
+// Vakta Applications
+export const vaktaCategories = [
+  "Katha Vachak",
+  "Bhajan",
+  "Pravachan",
+  "Motivational",
+  "Bhakti Sangeet",
+  "Live Darshan"
+] as const;
+
+export const vaktaApplications = pgTable("vakta_applications", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  name: text("name").notNull(),
+  phone: text("phone").notNull(),
+  email: text("email").notNull(),
+  categories: text("categories").array().notNull(),
+  experience: text("experience").notNull(),
+  status: text("status").notNull().default("pending"),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
+export const insertVaktaApplicationSchema = createInsertSchema(vaktaApplications).omit({
+  id: true,
+  createdAt: true,
+  status: true,
+});
+
+export type InsertVaktaApplication = z.infer<typeof insertVaktaApplicationSchema>;
+export type VaktaApplication = typeof vaktaApplications.$inferSelect;

@@ -22,6 +22,7 @@ import DynamicPage from "@/pages/dynamic-page";
 
 import CommunityPage from "./pages/community";
 import JoinPartnersPage from "./pages/join-partners";
+import ApplyVakta from "./pages/apply-vakta";
 
 function Router() {
   return (
@@ -37,6 +38,7 @@ function Router() {
       <Route path="/contact" component={Contact} />
       <Route path="/community" component={CommunityPage} />
       <Route path="/join-partners" component={JoinPartnersPage} />
+      <Route path="/apply-vakta" component={ApplyVakta} />
       <Route path="/terms-of-service" component={TermsOfService} />
       <Route path="/privacy-policy" component={PrivacyPolicy} />
       <Route path="/admin" component={Admin} />
