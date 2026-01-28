@@ -658,22 +658,34 @@ function ContactsManager() {
   );
 }
 
+interface VaktaApplicationsResponse {
+  applications: VaktaApplicationItem[];
+  total: number;
+  page: number;
+  totalPages: number;
+}
+
 function VaktaApplicationsManager() {
   const queryClient = useQueryClient();
   const { toast } = useToast();
   const [selectedApplication, setSelectedApplication] = useState<VaktaApplicationItem | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const limit = 50;
 
-  const { data: applications = [], isLoading } = useQuery<VaktaApplicationItem[]>({
-    queryKey: ["/api/cms/vakta-applications"],
+  const { data, isLoading } = useQuery<VaktaApplicationsResponse>({
+    queryKey: ["/api/cms/vakta-applications", currentPage],
     queryFn: async () => {
-      const res = await fetch("/api/cms/vakta-applications", { credentials: "include" });
-      if (!res.ok) return [];
-      const data = await res.json();
-      return Array.isArray(data) ? data : [];
+      const res = await fetch(`/api/cms/vakta-applications?page=${currentPage}&limit=${limit}`, { credentials: "include" });
+      if (!res.ok) return { applications: [], total: 0, page: 1, totalPages: 1 };
+      return await res.json();
     },
   });
+
+  const applications = data?.applications || [];
+  const totalPages = data?.totalPages || 1;
+  const total = data?.total || 0;
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -700,7 +712,7 @@ function VaktaApplicationsManager() {
       app.email.toLowerCase().includes(searchLower) ||
       app.phone.toLowerCase().includes(searchLower) ||
       app.categories.some(c => c.toLowerCase().includes(searchLower));
-  }).sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+  });
 
   if (isLoading) {
     return (
@@ -719,7 +731,7 @@ function VaktaApplicationsManager() {
       
       <div className="flex gap-4 items-end flex-wrap">
         <div className="flex-1 min-w-48">
-          <Label className="text-sm mb-2 block">Search</Label>
+          <Label className="text-sm mb-2 block">Search (current page)</Label>
           <Input
             placeholder="Search by name, email, phone, category..."
             value={searchTerm}
@@ -728,7 +740,7 @@ function VaktaApplicationsManager() {
           />
         </div>
         <div className="text-sm text-muted-foreground">
-          {filteredApplications.length} application{filteredApplications.length !== 1 ? "s" : ""}
+          Showing {filteredApplications.length} of {total} total application{total !== 1 ? "s" : ""}
         </div>
       </div>
 
@@ -765,6 +777,33 @@ function VaktaApplicationsManager() {
         ))}
         {filteredApplications?.length === 0 && <p className="text-muted-foreground text-center py-8">No vakta applications found</p>}
       </div>
+
+      {totalPages > 1 && (
+        <div className="flex justify-center items-center gap-2 pt-4">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+            disabled={currentPage === 1}
+            data-testid="button-prev-page"
+          >
+            Previous
+          </Button>
+          <span className="text-sm text-muted-foreground px-4">
+            Page {currentPage} of {totalPages}
+          </span>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+            disabled={currentPage === totalPages}
+            data-testid="button-next-page"
+          >
+            Next
+          </Button>
+        </div>
+      )}
+
       <AlertDialog open={!!selectedApplication} onOpenChange={() => setSelectedApplication(null)}>
         <AlertDialogContent className="max-w-2xl">
           <AlertDialogTitle>Vakta Application Details</AlertDialogTitle>

@@ -1076,11 +1076,13 @@ export async function registerRoutes(
     }
   });
 
-  // Get all vakta applications (admin endpoint)
+  // Get all vakta applications (admin endpoint) with pagination
   app.get("/api/cms/vakta-applications", async (req, res) => {
     try {
-      const applications = await storage.getAllVaktaApplications();
-      res.json(applications);
+      const page = parseInt(req.query.page as string) || 1;
+      const limit = parseInt(req.query.limit as string) || 50;
+      const result = await storage.getVaktaApplicationsPaginated(page, limit);
+      res.json(result);
     } catch (error) {
       console.error("Error fetching vakta applications:", error);
       res.status(500).json({ error: "Failed to fetch applications" });

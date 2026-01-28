@@ -8,7 +8,7 @@ import {
   videos, youtubeChannels, users, admins, pages, posts, media, seoMeta, siteSettings, contactInfo, categories, postCategories, offerings, newsTickers, ads, contacts, vaktaApplications
 } from "@shared/schema";
 import { db } from "./db";
-import { eq, desc, and } from "drizzle-orm";
+import { eq, desc, and, count } from "drizzle-orm";
 
 export interface IStorage {
   getUser(id: string): Promise<User | undefined>;
@@ -119,6 +119,7 @@ export interface IStorage {
 
   // Vakta applications operations
   getAllVaktaApplications(): Promise<VaktaApplication[]>;
+  getVaktaApplicationsPaginated(page: number, limit: number): Promise<{ applications: VaktaApplication[]; total: number; page: number; totalPages: number }>;
   createVaktaApplication(application: InsertVaktaApplication): Promise<VaktaApplication>;
   deleteVaktaApplication(id: string): Promise<void>;
 }
@@ -603,6 +604,19 @@ export class DatabaseStorage implements IStorage {
   // Vakta applications operations
   async getAllVaktaApplications(): Promise<VaktaApplication[]> {
     return await db.select().from(vaktaApplications).orderBy(desc(vaktaApplications.createdAt));
+  }
+
+  async getVaktaApplicationsPaginated(page: number, limit: number): Promise<{ applications: VaktaApplication[]; total: number; page: number; totalPages: number }> {
+    const offset = (page - 1) * limit;
+    const [countResult] = await db.select({ count: count() }).from(vaktaApplications);
+    const total = countResult?.count || 0;
+    const applications = await db.select().from(vaktaApplications).orderBy(desc(vaktaApplications.createdAt)).limit(limit).offset(offset);
+    return {
+      applications,
+      total,
+      page,
+      totalPages: Math.ceil(total / limit),
+    };
   }
 
   async createVaktaApplication(application: InsertVaktaApplication): Promise<VaktaApplication> {

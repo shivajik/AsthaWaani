@@ -2057,8 +2057,20 @@ app.post("/api/vakta-application", vaktaApplicationRateLimit, async (req: Reques
 
 app.get("/api/cms/vakta-applications", isAuthenticated, async (req: Request, res: Response) => {
   try {
-    const applications = await db.select().from(vaktaApplications).orderBy(desc(vaktaApplications.createdAt));
-    res.json(applications);
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 50;
+    const offset = (page - 1) * limit;
+    
+    const [countResult] = await db.select({ count: sql`count(*)` }).from(vaktaApplications);
+    const total = Number(countResult?.count || 0);
+    const applications = await db.select().from(vaktaApplications).orderBy(desc(vaktaApplications.createdAt)).limit(limit).offset(offset);
+    
+    res.json({
+      applications,
+      total,
+      page,
+      totalPages: Math.ceil(total / limit),
+    });
   } catch (error) {
     console.error("Error fetching vakta applications:", error);
     res.status(500).json({ error: "Failed to fetch applications" });
