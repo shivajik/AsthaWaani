@@ -32,7 +32,7 @@ export function PromoPopup() {
           <Button
             size="icon"
             variant="outline"
-            className="absolute top-2 right-2 z-10 rounded-full shadow-lg backdrop-blur-sm"
+            className="absolute top-2 right-2 z-10 rounded-full shadow-lg backdrop-blur-sm bg-white cursor-pointer"
             onClick={() => {
               setIsOpen(false);
               sessionStorage.setItem(POPUP_SESSION_KEY, "true");
