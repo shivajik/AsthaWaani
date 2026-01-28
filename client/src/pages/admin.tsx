@@ -15,7 +15,7 @@ import { MediaUpload } from "@/components/media-upload";
 import { 
   RefreshCw, Youtube, LogOut, FileText, 
   Image, Settings, LayoutDashboard, PenSquare, Trash2, Plus, Save, Phone, Megaphone, FileCheck,
-  ChevronLeft, Mail, X, Layers
+  ChevronLeft, Mail, X, Layers, Mic2
 } from "lucide-react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
@@ -96,6 +96,17 @@ interface ContactSubmission {
   phone: string | null;
   subject: string;
   message: string;
+  status: string;
+  createdAt: string;
+}
+
+interface VaktaApplicationItem {
+  id: string;
+  name: string;
+  phone: string;
+  email: string;
+  categories: string[];
+  experience: string;
   status: string;
   createdAt: string;
 }
@@ -640,6 +651,143 @@ function ContactsManager() {
           <div className="flex justify-end gap-2">
             <AlertDialogCancel>Close</AlertDialogCancel>
             <AlertDialogAction onClick={() => { deleteContactMutation.mutate(selectedContact!.id); setSelectedContact(null); }} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">Delete</AlertDialogAction>
+          </div>
+        </AlertDialogContent>
+      </AlertDialog>
+    </div>
+  );
+}
+
+function VaktaApplicationsManager() {
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
+  const [selectedApplication, setSelectedApplication] = useState<VaktaApplicationItem | null>(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
+
+  const { data: applications = [], isLoading } = useQuery<VaktaApplicationItem[]>({
+    queryKey: ["/api/cms/vakta-applications"],
+    queryFn: async () => {
+      const res = await fetch("/api/cms/vakta-applications", { credentials: "include" });
+      if (!res.ok) return [];
+      const data = await res.json();
+      return Array.isArray(data) ? data : [];
+    },
+  });
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm);
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [searchTerm]);
+
+  const deleteApplicationMutation = useMutation({
+    mutationFn: async (id: string) => {
+      const res = await fetch(`/api/cms/vakta-applications/${id}`, { method: "DELETE", credentials: "include" });
+      if (!res.ok) throw new Error("Failed to delete application");
+    },
+    onSuccess: () => {
+      toast({ title: "Application deleted" });
+      queryClient.invalidateQueries({ queryKey: ["/api/cms/vakta-applications"] });
+    },
+  });
+
+  const filteredApplications = applications.filter((app) => {
+    const searchLower = debouncedSearchTerm.toLowerCase();
+    return !searchLower || 
+      app.name.toLowerCase().includes(searchLower) ||
+      app.email.toLowerCase().includes(searchLower) ||
+      app.phone.toLowerCase().includes(searchLower) ||
+      app.categories.some(c => c.toLowerCase().includes(searchLower));
+  }).sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+
+  if (isLoading) {
+    return (
+      <div className="space-y-6">
+        <h2 className="text-2xl font-bold">Vakta Applications</h2>
+        <div className="flex items-center justify-center py-12">
+          <RefreshCw className="w-8 h-8 animate-spin text-primary" />
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-6">
+      <h2 className="text-2xl font-bold">Vakta Applications</h2>
+      
+      <div className="flex gap-4 items-end flex-wrap">
+        <div className="flex-1 min-w-48">
+          <Label className="text-sm mb-2 block">Search</Label>
+          <Input
+            placeholder="Search by name, email, phone, category..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            data-testid="input-vakta-search"
+          />
+        </div>
+        <div className="text-sm text-muted-foreground">
+          {filteredApplications.length} application{filteredApplications.length !== 1 ? "s" : ""}
+        </div>
+      </div>
+
+      <div className="grid gap-4">
+        {filteredApplications?.map((app) => (
+          <Card key={app.id} className="hover-elevate cursor-pointer" onClick={() => setSelectedApplication(app)} data-testid={`card-vakta-${app.id}`}>
+            <CardContent className="pt-6">
+              <div className="flex justify-between items-start gap-4">
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 mb-1 flex-wrap">
+                    <p className="font-semibold">{app.name}</p>
+                    {app.status === "pending" && <span className="text-xs bg-amber-100 text-amber-800 px-2 py-0.5 rounded">Pending</span>}
+                  </div>
+                  <p className="text-sm text-muted-foreground">{app.email} | {app.phone}</p>
+                  <div className="flex gap-1 mt-2 flex-wrap">
+                    {app.categories.map((cat) => (
+                      <Badge key={cat} variant="secondary" className="text-xs">{cat}</Badge>
+                    ))}
+                  </div>
+                  <p className="text-sm text-muted-foreground mt-2">{new Date(app.createdAt).toLocaleString()}</p>
+                </div>
+                <Button 
+                  size="sm" 
+                  variant="destructive" 
+                  onClick={(e) => { e.stopPropagation(); deleteApplicationMutation.mutate(app.id); }} 
+                  disabled={deleteApplicationMutation.isPending}
+                  data-testid={`button-delete-vakta-${app.id}`}
+                >
+                  {deleteApplicationMutation.isPending ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+        {filteredApplications?.length === 0 && <p className="text-muted-foreground text-center py-8">No vakta applications found</p>}
+      </div>
+      <AlertDialog open={!!selectedApplication} onOpenChange={() => setSelectedApplication(null)}>
+        <AlertDialogContent className="max-w-2xl">
+          <AlertDialogTitle>Vakta Application Details</AlertDialogTitle>
+          {selectedApplication && (
+            <div className="space-y-4">
+              <div><p className="text-sm text-muted-foreground">Name</p><p className="font-semibold">{selectedApplication.name}</p></div>
+              <div><p className="text-sm text-muted-foreground">Email</p><p>{selectedApplication.email}</p></div>
+              <div><p className="text-sm text-muted-foreground">Phone</p><p>{selectedApplication.phone}</p></div>
+              <div>
+                <p className="text-sm text-muted-foreground">Interested Categories</p>
+                <div className="flex gap-1 mt-1 flex-wrap">
+                  {selectedApplication.categories.map((cat) => (
+                    <Badge key={cat} variant="secondary">{cat}</Badge>
+                  ))}
+                </div>
+              </div>
+              <div><p className="text-sm text-muted-foreground">Experience</p><p className="whitespace-pre-wrap">{selectedApplication.experience}</p></div>
+              <div><p className="text-sm text-muted-foreground">Submitted</p><p>{new Date(selectedApplication.createdAt).toLocaleString()}</p></div>
+            </div>
+          )}
+          <div className="flex justify-end gap-2">
+            <AlertDialogCancel>Close</AlertDialogCancel>
+            <AlertDialogAction onClick={() => { deleteApplicationMutation.mutate(selectedApplication!.id); setSelectedApplication(null); }} className="bg-destructive text-destructive-foreground">Delete</AlertDialogAction>
           </div>
         </AlertDialogContent>
       </AlertDialog>
@@ -2627,6 +2775,7 @@ export default function Admin() {
     { id: "media", label: "Media", icon: Image },
     { id: "contact", label: "Contact Info", icon: Phone },
     { id: "contacts", label: "Contact Forms", icon: Mail },
+    { id: "vakta-applications", label: "Vakta Applications", icon: Mic2 },
     { id: "news-ticker", label: "News Ticker", icon: Megaphone },
     { id: "youtube", label: "YouTube", icon: Youtube },
     { id: "settings", label: "Settings", icon: Settings },
@@ -2679,6 +2828,7 @@ export default function Admin() {
           {activeTab === "offerings" && <OfferingManager />}
           {activeTab === "ads" && <AdManager />}
           {activeTab === "contacts" && <ContactsManager />}
+          {activeTab === "vakta-applications" && <VaktaApplicationsManager />}
           {activeTab === "media" && <MediaManager />}
           {activeTab === "contact" && <ContactInfoManager />}
           {activeTab === "news-ticker" && <NewsTickerManager />}
