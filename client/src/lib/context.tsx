@@ -18,6 +18,7 @@ const translations: Record<string, Record<Language, string>> = {
   'nav.join': { en: 'Join Us', hi: 'हमसे जुड़ें' },
   'nav.joinCommunity': { en: 'Join Our Community', hi: 'हमारे समुदाय से जुड़ें' },
   'nav.joinPartners': { en: 'Join as Partners', hi: 'साझेदार के रूप में जुड़ें' },
+  'nav.joinVakta': { en: 'Join as Vakta', hi: 'वक्ता के रूप में जुड़ें' },
 
   // Hero
   'hero.mission': { en: 'To take the light of wisdom to every home.', hi: 'ज्ञान के प्रकाश को हर घर तक पहुँचाना।' },

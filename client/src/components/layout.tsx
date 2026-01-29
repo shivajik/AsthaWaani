@@ -142,6 +142,11 @@ export function Header() {
                   {t('nav.joinPartners')}
                 </Link>
               </DropdownMenuItem>
+              <DropdownMenuItem asChild className="cursor-pointer">
+                <Link href="/apply-vakta" className="w-full">
+                  {t('nav.joinVakta')}
+                </Link>
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </nav>
@@ -185,6 +190,9 @@ export function Header() {
                   </Link>
                   <Link href="/join-partners" className="text-xl font-medium hover:text-primary transition-colors">
                     {t('nav.joinPartners')}
+                  </Link>
+                  <Link href="/apply-vakta" className="text-xl font-medium hover:text-primary transition-colors">
+                    {t('nav.joinVakta')}
                   </Link>
                 </div>
               </nav>
