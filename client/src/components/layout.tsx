@@ -25,6 +25,7 @@ import {
 export function Header() {
   const { language, setLanguage, t } = useLanguage();
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [location] = useLocation();
 
   const isHome = location === "/";
@@ -152,7 +153,7 @@ export function Header() {
         </nav>
 
         {/* Mobile Nav */}
-        <Sheet>
+        <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
           <SheetTrigger asChild>
             <Button 
               variant="ghost" 
@@ -169,7 +170,7 @@ export function Header() {
           </SheetTrigger>
           <SheetContent side="right" className="bg-background/95 backdrop-blur-xl border-l-primary/20">
             <div className="flex flex-col gap-8 mt-8">
-              <Link href="/" className="flex items-center gap-2">
+              <Link href="/" className="flex items-center gap-2" onClick={() => setIsMobileMenuOpen(false)}>
                 <img src={logoHorizontal} alt="Asthawaani" className="h-14 w-auto" />
               </Link>
               <nav className="flex flex-col gap-6">
@@ -178,6 +179,7 @@ export function Header() {
                     key={link.href} 
                     href={link.href}
                     className="text-xl font-medium hover:text-primary transition-colors"
+                    onClick={() => setIsMobileMenuOpen(false)}
                   >
                       {link.label}
                   </Link>
@@ -185,19 +187,19 @@ export function Header() {
                 
                 <div className="flex flex-col gap-4 mt-4">
                   <p className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">{t('nav.join')}</p>
-                  <Link href="/community" className="text-xl font-medium hover:text-primary transition-colors">
+                  <Link href="/community" className="text-xl font-medium hover:text-primary transition-colors" onClick={() => setIsMobileMenuOpen(false)}>
                     {t('nav.joinCommunity')}
                   </Link>
-                  <Link href="/join-partners" className="text-xl font-medium hover:text-primary transition-colors">
+                  <Link href="/join-partners" className="text-xl font-medium hover:text-primary transition-colors" onClick={() => setIsMobileMenuOpen(false)}>
                     {t('nav.joinPartners')}
                   </Link>
-                  <Link href="/apply-vakta" className="text-xl font-medium hover:text-primary transition-colors">
+                  <Link href="/apply-vakta" className="text-xl font-medium hover:text-primary transition-colors" onClick={() => setIsMobileMenuOpen(false)}>
                     {t('nav.joinVakta')}
                   </Link>
                 </div>
               </nav>
               <div className="flex items-center gap-4 mt-4">
-                <Button variant="outline" onClick={toggleLanguage} className="w-full text-lg py-6">
+                <Button variant="outline" onClick={() => { toggleLanguage(); setIsMobileMenuOpen(false); }} className="w-full text-lg py-6">
                   <Globe className="mr-2 h-5 w-5" />
                   {language === 'en' ? 'Hindi' : 'English'}
                 </Button>
