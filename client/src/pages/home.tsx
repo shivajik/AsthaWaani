@@ -174,6 +174,13 @@ export default function Home() {
 
   const displayVideos = [
     {
+      id: "0",
+      videoId: "PlHBsxaO-ys",
+      title: "True Friendship Has No Gender | Radha Krishna Prem Sandesh",
+      thumbnailUrl: "https://img.youtube.com/vi/PlHBsxaO-ys/sddefault.jpg",
+      duration: "2:34",
+    },
+    {
       id: "1",
       videoId: "_R77olhRj74",
       title: "अब डर कैसा? श्याम बाबा ने हाथ थाम लिया",
@@ -186,14 +193,7 @@ export default function Home() {
       title: "ॐ शं शनैश्चराय नमः 108 बार | Shani Dev Mantra Jaap | शनि देव के चमत्कारी मंत्र",
       thumbnailUrl: "https://img.youtube.com/vi/8cAb1LM_cfo/maxresdefault.jpg",
       duration: "6:37",
-    },
-    {
-      id: "3",
-      videoId: "hcEA17tEbLc",
-      title: "The feet of the devotee are the crown of the Lord - Prem Ras Bhajan",
-      thumbnailUrl: "https://img.youtube.com/vi/hcEA17tEbLc/sddefault.jpg",
-      duration: "1:25",
-    },
+    }
   ];
 
   return (

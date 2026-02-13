@@ -85,6 +85,18 @@ export default function Videos() {
   // Hardcoded videos - showing only 3 specific videos
   const hardcodedVideos: Video[] = [
     {
+      id: "0",
+      videoId: "PlHBsxaO-ys",
+      title: "True Friendship Has No Gender | Radha Krishna Prem Sandesh",
+      description: "A wonderful discourse on spiritual wisdom",
+      thumbnailUrl: "https://img.youtube.com/vi/PlHBsxaO-ys/sddefault.jpg",
+      duration: "2:34",
+      publishedAt: '2026-02-13T10:00:00Z',
+      viewCount: 0,
+      likeCount: 0,
+      tags: []
+    },
+    {
       id: "1",
       videoId: "dCzdE9umrr4",
       title: "अब डर कैसा? श्याम बाबा ने हाथ थाम लिया",
