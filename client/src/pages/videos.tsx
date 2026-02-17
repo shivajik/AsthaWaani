@@ -85,6 +85,18 @@ export default function Videos() {
   // Hardcoded videos - showing only 3 specific videos
   const hardcodedVideos: Video[] = [
     {
+      id: "8",
+      videoId: "7CHJ-56pf7s",
+      title: "अंजनी के लाल सालासर वाले | जय बजरंगबली | Salasar ji Balaji",
+      description: "A soulful Prem Ras bhajan expressing devotion and surrender, highlighting the glory of devotees and love for the Lord.",
+      thumbnailUrl: "https://i.ytimg.com/vi/7CHJ-56pf7s/sddefault.jpg",
+      duration: "2:12",
+      publishedAt: "2025-02-17T00:00:00Z",
+      viewCount: 200,
+      likeCount: 10,
+      tags: ["prem ras", "bhajan", "bhakti", "devotion", "hindu", "spiritual"],
+    },
+    {
       id: "0",
       videoId: "PlHBsxaO-ys",
       title: "True Friendship Has No Gender | Radha Krishna Prem Sandesh",

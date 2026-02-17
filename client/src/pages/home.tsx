@@ -174,6 +174,13 @@ export default function Home() {
 
   const displayVideos = [
     {
+      id: "2",
+      videoId: "7CHJ-56pf7s",
+      title: "अंजनी के लाल सालासर वाले | जय बजरंगबली | Salasar ji Balaji",
+      thumbnailUrl: "https://img.youtube.com/vi/7CHJ-56pf7s/sddefault.jpg",
+      duration: "2:12",
+    },
+    {
       id: "0",
       videoId: "PlHBsxaO-ys",
       title: "True Friendship Has No Gender | Radha Krishna Prem Sandesh",
@@ -186,13 +193,6 @@ export default function Home() {
       title: "अब डर कैसा? श्याम बाबा ने हाथ थाम लिया",
       thumbnailUrl: "https://img.youtube.com/vi/dCzdE9umrr4/sddefault.jpg",
       duration: "3:49",
-    },
-    {
-      id: "2",
-      videoId: "8cAb1LM_cfo",
-      title: "ॐ शं शनैश्चराय नमः 108 बार | Shani Dev Mantra Jaap | शनि देव के चमत्कारी मंत्र",
-      thumbnailUrl: "https://img.youtube.com/vi/8cAb1LM_cfo/maxresdefault.jpg",
-      duration: "6:37",
     }
   ];
 
