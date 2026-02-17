@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <!-- Static Pages -->
+  <url><loc>https://asthawaani.com/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
+  <url><loc>https://asthawaani.com/about</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://asthawaani.com/services</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://asthawaani.com/brajbhoomi</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://asthawaani.com/blog</loc><changefreq>daily</changefreq><priority>0.9</priority></url>
+  <url><loc>https://asthawaani.com/videos</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://asthawaani.com/gallery</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://asthawaani.com/contact</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://asthawaani.com/community</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://asthawaani.com/join-partners</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://asthawaani.com/apply-vakta</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://asthawaani.com/terms-of-service</loc><changefreq>yearly</changefreq><priority>0.3</priority></url>
+  <url><loc>https://asthawaani.com/privacy-policy</loc><changefreq>yearly</changefreq><priority>0.3</priority></url>
+
+  <!-- Blog Posts - Mantra Jaap Series -->
+  <url><loc>https://asthawaani.com/blog/mantra-jaap</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://asthawaani.com/blog/live-jaap</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://asthawaani.com/blog/online-jaap</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://asthawaani.com/blog/daily-jaap</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://asthawaani.com/blog/aaj-ka-jaap</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+
+  <!-- Blog Posts - Navgrah Series -->
+  <url><loc>https://asthawaani.com/blog/navgrah-shanti</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://asthawaani.com/blog/navgrah-shani-dev-jaap</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://asthawaani.com/blog/navgrah-surya-dev-jaap</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://asthawaani.com/blog/navgrah-chandra-dev-jaap</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://asthawaani.com/blog/navgrah-mangal-dev-jaap</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://asthawaani.com/blog/navgrah-budh-dev-jaap</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://asthawaani.com/blog/navgrah-guru-grah-jaap</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://asthawaani.com/blog/navgrah-shukra-grah-jaap</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://asthawaani.com/blog/navgrah-rahu-grah-jaap</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://asthawaani.com/blog/navgrah-ketu-grah-jaap</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+</urlset>
