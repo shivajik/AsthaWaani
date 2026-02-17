@@ -128,7 +128,7 @@
   }
 
   /* Remove any default spacing between elements in the prose container */
-  .prose.preserve-whitespace > * {
+  .prose.preserve-whitespace > *:not(details) {
     margin: 0 !important;
     padding: 0 !important;
   }
@@ -157,6 +157,118 @@
     display: block;
     content: '';
   }
+}
+
+/* FAQ styled details/summary in blog posts */
+.prose details {
+  border: 1px solid hsl(225 20% 85%);
+  border-radius: 0.75rem;
+  margin-top: 1.75rem !important;
+  margin-bottom: 1.75rem !important;
+  padding: 0 !important;
+  overflow: hidden;
+  background: hsl(40 30% 98%);
+  transition: box-shadow 0.2s ease;
+}
+
+.prose details:hover {
+  box-shadow: 0 2px 12px hsl(225 55% 35% / 0.08);
+}
+
+.prose details[open] {
+  border-color: hsl(225 55% 35% / 0.3);
+  box-shadow: 0 2px 12px hsl(225 55% 35% / 0.1);
+}
+
+.prose details summary {
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1.05rem;
+  padding: 1rem 1.25rem !important;
+  margin: 0 !important;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  color: hsl(225 55% 35%);
+  background: hsl(225 20% 96%);
+  transition: background 0.2s ease, color 0.2s ease;
+  user-select: none;
+}
+
+.prose details summary::-webkit-details-marker {
+  display: none;
+}
+
+.prose details summary::after {
+  content: '+' !important;
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  font-size: 1.25rem;
+  font-weight: 700;
+  flex-shrink: 0;
+  color: hsl(225 55% 35%);
+  border-radius: 50%;
+  background: hsl(45 95% 55% / 0.2);
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.prose details[open] summary::after {
+  content: '−' !important;
+  background: hsl(45 95% 55% / 0.4);
+  transform: rotate(0deg);
+}
+
+.prose details summary:hover {
+  background: hsl(225 20% 93%);
+}
+
+.prose details > *:not(summary) {
+  padding: 1rem 1.5rem 1.25rem !important;
+  margin: 0 !important;
+}
+
+.prose details ul {
+  padding-left: 1.25rem !important;
+  margin: 0.5rem 0 !important;
+}
+
+.prose details ul li {
+  margin: 0.5rem 0 !important;
+  padding: 0 !important;
+  line-height: 1.6;
+}
+
+/* Dark mode FAQ */
+.dark .prose details {
+  border-color: hsl(225 20% 30%);
+  background: hsl(225 20% 12%);
+}
+
+.dark .prose details[open] {
+  border-color: hsl(45 95% 55% / 0.3);
+}
+
+.dark .prose details summary {
+  color: hsl(45 95% 75%);
+  background: hsl(225 20% 15%);
+}
+
+.dark .prose details summary:hover {
+  background: hsl(225 20% 18%);
+}
+
+.dark .prose details summary::after {
+  color: hsl(45 95% 75%);
+  background: hsl(45 95% 55% / 0.15);
+}
+
+.dark .prose details[open] summary::after {
+  background: hsl(45 95% 55% / 0.3);
 }
 
 /* Hindi text spacing fix - prevent character overlap */
