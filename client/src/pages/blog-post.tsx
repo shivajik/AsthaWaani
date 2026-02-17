@@ -330,7 +330,7 @@ export default function BlogPostDetail() {
             )}
 
             {/* CTA Banner */}
-            <div className="mt-12 rounded-xl bg-[hsl(45,80%,92%)] dark:bg-[hsl(45,40%,15%)] py-10 px-6 text-center space-y-5">
+            {/* <div className="mt-12 rounded-xl bg-[hsl(45,80%,92%)] dark:bg-[hsl(45,40%,15%)] py-10 px-6 text-center space-y-5">
               <h2 className="text-2xl md:text-3xl font-bold text-[hsl(230,70%,25%)] dark:text-primary">
                 {language === "hi" ? "क्या आप अपनी आध्यात्मिक यात्रा शुरू करने के लिए तैयार हैं?" : "Ready to begin your journey?"}
               </h2>
@@ -350,7 +350,7 @@ export default function BlogPostDetail() {
                   </Button>
                 </Link>
               </div>
-            </div>
+            </div> */}
 
             {/* Related Posts */}
             {relatedPosts.length > 0 && (
