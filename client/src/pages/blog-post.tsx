@@ -273,6 +273,18 @@ export default function BlogPostDetail() {
               )}
             </article>
 
+            <div className="mt-12 pt-8 border-t border-border text-center">
+              <p className="text-lg text-muted-foreground mb-4">
+                {language === "hi"
+                  ? "अधिक जानकारी के लिए हमसे संपर्क करें"
+                  : "For more information, feel free to contact us"}
+              </p>
+              <Link href="/contact">
+                <Button className="gap-2 cursor-pointer">
+                  {language === "hi" ? "संपर्क करें" : "Contact Us"}
+                </Button>
+              </Link>
+            </div>
             {/* Bottom Ads */}
             {data?.ads?.bottom && data.ads.bottom.length > 0 && (
               <div className="my-2 space-y-2">
@@ -304,7 +316,7 @@ export default function BlogPostDetail() {
               </div>
             )}
 
-            <div className="mt-12 pt-8 border-t border-border">
+            <div className="mt-6 flex justify-start">
               <Link href="/blog">
                 <Button variant="outline" className="gap-2">
                   <ChevronLeft className="w-4 h-4" />
