@@ -257,9 +257,11 @@ export default function BlogPostDetail() {
 
               {content && (
                 <div
-                  className="prose dark:prose-invert max-w-none preserve-whitespace
-                    prose-headings:font-bold prose-headings:text-foreground
-                    prose-p:text-foreground/90 prose-p:leading-7 prose-p:min-h-[1rem]
+                  className="prose prose-lg dark:prose-invert max-w-none
+                    prose-headings:font-bold prose-headings:text-foreground prose-headings:tracking-tight
+                    prose-h2:text-2xl prose-h2:mt-10 prose-h2:mb-4
+                    prose-h3:text-xl prose-h3:mt-8 prose-h3:mb-3
+                    prose-p:text-foreground/90 prose-p:leading-7 prose-p:my-4
                     prose-a:text-primary prose-a:underline
                     prose-strong:font-semibold prose-strong:text-foreground
                     prose-img:rounded-lg prose-img:border prose-img:border-border

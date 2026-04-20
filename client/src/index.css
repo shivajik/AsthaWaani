@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+@plugin "@tailwindcss/typography";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -82,6 +83,77 @@
   .prose h3 {
     @apply text-secondary font-serif font-bold;
   }
+}
+
+/* Blog post content formatting — explicit styles so headings, lists and paragraphs always render */
+.prose h2 {
+  font-family: 'Playfair Display', 'Merriweather', serif;
+  font-size: 1.75rem;
+  font-weight: 700;
+  line-height: 1.3;
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
+  color: hsl(225 55% 35%);
+}
+
+.prose h3 {
+  font-size: 1.35rem;
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+  line-height: 1.4;
+}
+
+.prose p {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  line-height: 1.75;
+}
+
+.prose ul {
+  list-style: disc;
+  padding-left: 1.5rem;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.prose ol {
+  list-style: decimal;
+  padding-left: 1.5rem;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.prose ul li,
+.prose ol li {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+  line-height: 1.7;
+}
+
+.prose strong {
+  font-weight: 600;
+  color: hsl(225 60% 15%);
+}
+
+.prose a {
+  color: hsl(225 55% 35%);
+  text-decoration: underline;
+}
+
+.prose blockquote {
+  border-left: 4px solid hsl(225 55% 35%);
+  padding-left: 1rem;
+  font-style: italic;
+  color: hsl(225 30% 40%);
+  margin: 1.5rem 0;
+}
+
+.dark .prose h2 {
+  color: hsl(45 95% 75%);
+}
+
+.dark .prose strong {
+  color: hsl(40 30% 96%);
 }
 
 @layer utilities {
