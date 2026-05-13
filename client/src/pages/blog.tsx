@@ -7,6 +7,7 @@ import { useLanguage } from "@/lib/context";
 import { Link } from "wouter";
 import type { Category, Post } from "@shared/schema";
 import { ensureProtocol } from "@/lib/utils";
+import { SEOHead } from "@/components/seo-head";
 
 export default function Blog() {
   const { language } = useLanguage();
@@ -44,6 +45,11 @@ export default function Blog() {
 
   return (
     <div className="w-full bg-white dark:bg-black flex flex-col">
+      <SEOHead
+        title="Spiritual Blog – Mantras, Devotion & Wisdom | आध्यात्मिक ब्लॉग"
+        description="Read articles on mantra jaap, navgrah shanti, Krishna wisdom, bhakti yoga, and spiritual practices from Asthawaani's expert guides."
+        canonicalPath="/blog"
+      />
       <div className="max-w-7xl mx-auto px-4 pt-24 md:pt-32 pb-12 md:pb-16 w-full flex-1">
         <h1 className="text-4xl md:text-5xl font-bold mb-12 text-center">
           {title}

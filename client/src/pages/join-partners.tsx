@@ -11,6 +11,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { useToast } from "@/hooks/use-toast";
 import { useMutation } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
+import { SEOHead } from "@/components/seo-head";
 
 const partnerSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -72,6 +73,11 @@ export default function JoinPartnersPage() {
 
   return (
     <div className="min-h-screen bg-white dark:bg-black pt-32 pb-16">
+      <SEOHead
+        title="Join as Partner – Collaborate with Asthawaani | भागीदार बनें"
+        description="Partner with Asthawaani to spread spiritual wisdom. Collaborate on satsang, bhajan events, and community initiatives."
+        canonicalPath="/join-partners"
+      />
       <div className="container mx-auto px-4">
         <div className="max-w-2xl mx-auto">
           <div className="text-center mb-12">

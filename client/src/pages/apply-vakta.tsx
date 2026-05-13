@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/form";
 import { useToast } from "@/hooks/use-toast";
 import { Mic2, Music, BookOpen, Sparkles, Play, CheckCircle, Loader2, MapPin, Phone, Mail, User } from "lucide-react";
+import { SEOHead } from "@/components/seo-head";
 
 const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -84,6 +85,11 @@ export default function ApplyVakta() {
   if (submitted) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50 dark:from-orange-950/30 dark:via-amber-950/30 dark:to-yellow-950/30">
+        <SEOHead
+          title="Apply as Vakta – Share Your Spiritual Voice | वक्ता आवेदन"
+          description="Apply to become a Vakta (speaker) on Asthawaani. Share your spiritual knowledge, bhajan, pravachan with seekers worldwide."
+          canonicalPath="/apply-vakta"
+        />
         <div className="container mx-auto px-4 py-16 flex flex-col items-center justify-center min-h-screen">
           <Card className="max-w-lg w-full text-center">
             <CardContent className="p-8">
@@ -106,6 +112,11 @@ export default function ApplyVakta() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50 dark:from-orange-950/30 dark:via-amber-950/30 dark:to-yellow-950/30">
+      <SEOHead
+        title="Apply as Vakta – Share Your Spiritual Voice | वक्ता आवेदन"
+        description="Apply to become a Vakta (speaker) on Asthawaani. Share your spiritual knowledge, bhajan, pravachan with seekers worldwide."
+        canonicalPath="/apply-vakta"
+      />
       <div className="container mx-auto px-4 py-8 md:py-12">
         <div className="text-center mb-8">
           <div className="inline-flex items-center gap-2 px-4 py-2 bg-orange-100 dark:bg-orange-900/30 rounded-full mb-4">

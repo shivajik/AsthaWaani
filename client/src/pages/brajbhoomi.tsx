@@ -12,6 +12,8 @@ import gokulImage from "@assets/Temple/Raman_reti.png";
 import govardhanImage from "@assets/Temple/Daan_Ghati.png";
 import mahavanImage from "@assets/Temple/mahaban_Chaurasi.png";
 import barsanaImage from "@assets/Temple/Barsana_Radha_Rani.png";
+import { SEOHead } from "@/components/seo-head";
+import { generatePlaceSchema } from "@/lib/schema-generator";
 
 const locationsData = [
   {
@@ -153,14 +155,15 @@ export default function Brajbhoomi() {
 
   return (
     <>
-      <title>{pageTitle}</title>
-      <meta name="description" content={pageDescription} />
-      <meta name="keywords" content="Brajbhoomi darshan, Mathura spirituality, Vrindavan bhakti, Krishna Janmabhoomi, Govardhan parikrama, Gokul Krishna leela, Barsana Radha Rani, sacred temples India" />
-      <meta property="og:title" content={pageTitle} />
-      <meta property="og:description" content={pageDescription} />
-      <meta property="og:type" content="website" />
-      <meta name="twitter:title" content={pageTitle} />
-      <meta name="twitter:description" content={pageDescription} />
+      <SEOHead
+        title={pageTitle}
+        description={pageDescription}
+        canonicalPath="/brajbhoomi"
+        jsonLd={generatePlaceSchema({
+          name: selectedLocation.name[language === 'hi' ? 'hi' : 'en'],
+          description: selectedLocation.description[language === 'hi' ? 'hi' : 'en'],
+        })}
+      />
 
       <div className="flex flex-col w-full">
         {/* Selected Location Hero Section */}

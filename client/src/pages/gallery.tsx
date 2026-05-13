@@ -6,6 +6,7 @@ import { Play, Filter, Youtube, ExternalLink } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { useCmsPage } from "@/lib/useCmsPage";
+import { SEOHead } from "@/components/seo-head";
 
 const categories = [
   { id: 'all', en: 'All', hi: 'सभी' },
@@ -37,6 +38,11 @@ export default function Gallery() {
 
   return (
     <div className="min-h-screen pt-20">
+      <SEOHead
+        title="Photo Gallery – Temples & Sacred Places | फोटो गैलरी"
+        description="View photos of sacred temples, spiritual events, and divine moments from Mathura, Vrindavan, and Braj Bhoomi."
+        canonicalPath="/gallery"
+      />
       <div className="bg-secondary py-16 text-white text-center relative overflow-hidden">
         <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10" />
         <div className="container mx-auto px-4 relative z-10">

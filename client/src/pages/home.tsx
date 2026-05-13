@@ -11,6 +11,8 @@ import { useRef, useState, useEffect } from "react";
 import { useCmsPage } from "@/lib/useCmsPage";
 import { NewsTicker } from "@/components/news-ticker";
 import type { Ad } from "@shared/schema";
+import { SEOHead } from "@/components/seo-head";
+import { generateOrganizationSchema, generateWebSiteSchema } from "@/lib/schema-generator";
 
 interface Video {
   id: string;
@@ -208,6 +210,12 @@ export default function Home() {
 
   return (
     <div className="flex flex-col w-full overflow-hidden">
+      <SEOHead
+        title="Asthawaani – The Voice of Faith | Spiritual Platform from Mathura-Vrindavan"
+        description="A spiritual platform born from Mathura–Vrindavan connecting divine voices with seekers. Live satsang, bhajan, kirtan, pravachan, and mantra jaap."
+        canonicalPath="/"
+        jsonLd={[generateOrganizationSchema(), generateWebSiteSchema()]}
+      />
       {/* Hero Section with Enhanced Animations */}
       <section ref={heroRef} className="relative h-screen w-full flex items-center justify-center overflow-hidden" style={{ position: 'relative' }}>
         {/* Animated Background */}

@@ -4,26 +4,41 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
 
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RKHLK6WYS4"></script>
+    <!-- Google tag (gtag.js) - deferred for performance -->
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
       gtag('config', 'G-RKHLK6WYS4');
+      window.addEventListener('load', function() {
+        var s = document.createElement('script');
+        s.src = 'https://www.googletagmanager.com/gtag/js?id=G-RKHLK6WYS4';
+        s.async = true;
+        document.head.appendChild(s);
+      });
     </script>
 
-    <!-- Crisp Chat Widget -->
+    <!-- Crisp Chat Widget (deferred for performance) -->
     <script type="text/javascript">
       window.$crisp=[];
       window.CRISP_WEBSITE_ID="146efbaa-5688-456b-8fac-04a0a0be21f6";
-      (function(){
-        var d=document;
-        var s=d.createElement("script");
-        s.src="https://client.crisp.chat/l.js";
-        s.async=1;
-        d.getElementsByTagName("head")[0].appendChild(s);
-      })();
+      if (typeof window.requestIdleCallback === 'function') {
+        window.requestIdleCallback(function() {
+          var d=document;
+          var s=d.createElement("script");
+          s.src="https://client.crisp.chat/l.js";
+          s.async=1;
+          d.getElementsByTagName("head")[0].appendChild(s);
+        });
+      } else {
+        window.addEventListener('load', function() {
+          var d=document;
+          var s=d.createElement("script");
+          s.src="https://client.crisp.chat/l.js";
+          s.async=1;
+          d.getElementsByTagName("head")[0].appendChild(s);
+        });
+      }
     </script>
 
     <title>Asthawaani – The Voice of Faith</title>
@@ -32,16 +47,23 @@
     <meta property="og:title" content="Asthawaani – The Voice of Faith" />
     <meta property="og:description" content="A spiritual platform born from Mathura–Vrindavan to bring India’s purest voices of wisdom to every home." />
     <meta property="og:type" content="website" />
-    <meta property="og:image" content="/attached_assets/generated_images/vrindavan_sunrise_temple_landscape.png" />
+    <meta property="og:image" content="https://asthawaani.com/opengraph.jpg" />
+    <meta property="og:url" content="https://asthawaani.com" />
+    <meta property="og:site_name" content="Asthawaani" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@replit" />
+    <meta name="twitter:site" content="@asthawaani" />
     <meta name="twitter:title" content="Asthawaani – The Voice of Faith" />
     <meta name="twitter:description" content="Connect with the divine voices of Mathura, Vrindavan, and beyond. Join the digital satsang." />
-    <meta name="twitter:image" content="/attached_assets/generated_images/vrindavan_sunrise_temple_landscape.png" />
+    <meta name="twitter:image" content="https://asthawaani.com/opengraph.jpg" />
     
     <link rel="icon" type="image/png" href="/attached_assets/Asthawani-logo_1765886539362.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://client.crisp.chat" crossorigin>
+    <link rel="preconnect" href="https://www.googletagmanager.com" crossorigin>
+    <link rel="dns-prefetch" href="https://i.ytimg.com">
+    <link rel="dns-prefetch" href="https://www.youtube.com">
+    <link rel="dns-prefetch" href="https://res.cloudinary.com">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Inter:wght@300..700&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300&family=Noto+Sans+Devanagari:wght@400;500;700&display=swap" rel="stylesheet">
     
     <!-- Schema.org JSON-LD -->

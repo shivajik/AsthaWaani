@@ -1,6 +1,7 @@
 import { useLanguage } from "@/lib/context";
 import { useQuery } from "@tanstack/react-query";
 import { useState, useEffect } from "react";
+import { SEOHead } from "@/components/seo-head";
 
 interface PageContent {
   title: string;
@@ -38,6 +39,12 @@ export default function TermsOfService() {
 
   return (
     <div className="min-h-screen pt-20">
+      <SEOHead
+        title="Terms of Service | Asthawaani"
+        description="Terms of service for using the Asthawaani spiritual platform."
+        canonicalPath="/terms-of-service"
+        noindex={true}
+      />
       {/* Hero */}
       <section className="relative h-[40vh] flex items-center justify-center bg-gradient-to-br from-primary/10 to-secondary/10">
         <div className="relative z-10 container mx-auto px-4 text-center">

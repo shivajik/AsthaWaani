@@ -3,6 +3,7 @@ import { useLanguage } from "@/lib/context";
 import { assets, values } from "@/lib/data";
 import { Card, CardContent } from "@/components/ui/card";
 import { useCmsPage } from "@/lib/useCmsPage";
+import { SEOHead } from "@/components/seo-head";
 
 export default function About() {
   const { language, t } = useLanguage();
@@ -10,6 +11,11 @@ export default function About() {
 
   return (
     <div className="min-h-screen pt-20">
+      <SEOHead
+        title="About Asthawaani – Our Spiritual Mission | आस्थावाणी के बारे में"
+        description="Learn about Asthawaani's mission to bring authentic spiritual voices from Mathura-Vrindavan to every home. Founded in the sacred Braj Bhoomi."
+        canonicalPath="/about"
+      />
       {/* Hero */}
       <section className="relative h-[50vh] flex items-center justify-center overflow-hidden">
         <div 

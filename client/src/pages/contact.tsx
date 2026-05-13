@@ -11,6 +11,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { SEOHead } from "@/components/seo-head";
 
 const contactFormSchema = z.object({
   name: z.string().min(1, "Name is required").max(100, "Name must be less than 100 characters"),
@@ -81,6 +82,11 @@ export default function Contact() {
 
   return (
     <div className="min-h-screen pt-20">
+      <SEOHead
+        title="Contact Asthawaani – Get in Touch | संपर्क करें"
+        description="Contact Asthawaani for spiritual guidance, satsang inquiries, or partnership opportunities. Located in Mathura, Uttar Pradesh."
+        canonicalPath="/contact"
+      />
       <div className="bg-secondary py-20 text-white text-center">
         <h1 className="text-5xl font-serif font-bold">{t('nav.contact')}</h1>
       </div>

@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import bhajanKirtan from "@assets/generated_images/devotional_bhajan_kirtan.png";
 import { useQuery } from "@tanstack/react-query";
 import type { Offering } from "@shared/schema";
+import { SEOHead } from "@/components/seo-head";
 
 // DEBUG: Add console log to track data loading
 const enableDebug = false;
@@ -87,14 +88,11 @@ export default function Services() {
 
   return (
     <>
-      <title>{pageTitle}</title>
-      <meta name="description" content={pageDescription} />
-      <meta name="keywords" content="Daily satsang online, Vrindavan satsang, Bhajan kirtan, Krishna bhajan, spiritual guidance India, Asthawaani, mantra jaap, morning aarti, spiritual community" />
-      <meta property="og:title" content={pageTitle} />
-      <meta property="og:description" content={pageDescription} />
-      <meta property="og:type" content="website" />
-      <meta name="twitter:title" content={pageTitle} />
-      <meta name="twitter:description" content={pageDescription} />
+      <SEOHead
+        title={pageTitle}
+        description={pageDescription}
+        canonicalPath="/services"
+      />
 
       <div className="flex flex-col w-full">
         {/* Hero Section */}

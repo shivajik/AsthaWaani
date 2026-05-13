@@ -9,6 +9,8 @@ import { Button } from "@/components/ui/button";
 import type { Post, Category } from "@shared/schema";
 import { useState } from "react";
 import { ensureProtocol } from "@/lib/utils";
+import { SEOHead } from "@/components/seo-head";
+import { generateBlogPostingSchema } from "@/lib/schema-generator";
 
 interface Ad {
   id: string;
@@ -96,6 +98,18 @@ export default function BlogPostDetail() {
   const content = isHindi ? post.contentHi || post.content : post.content;
   const excerpt = isHindi ? post.excerptHi || post.excerpt : post.excerpt;
 
+  const metaTitle = post.metaTitle || `${title} | Asthawaani Blog`;
+  const metaDescription = post.metaDescription || excerpt || title;
+  const blogSchema = generateBlogPostingSchema({
+    title: post.title,
+    slug: post.slug,
+    excerpt: post.excerpt,
+    content: post.content,
+    featuredImage: post.featuredImage,
+    publishedAt: post.publishedAt,
+    updatedAt: post.updatedAt,
+  });
+
   // Get related posts from the same category
   const relatedPosts = (allPosts as Post[])
     .filter((p: Post) => p.categoryId === post.categoryId && p.id !== post.id)
@@ -103,6 +117,19 @@ export default function BlogPostDetail() {
 
   return (
     <div className="w-full bg-white dark:bg-black flex flex-col">
+      <SEOHead
+        title={metaTitle}
+        description={metaDescription}
+        canonicalPath={`/blog/${post.slug}`}
+        ogType="article"
+        ogImage={post.featuredImage || undefined}
+        article={{
+          publishedTime: post.publishedAt ? new Date(post.publishedAt).toISOString() : new Date().toISOString(),
+          modifiedTime: post.updatedAt ? new Date(post.updatedAt).toISOString() : undefined,
+          section: data.categories?.find(c => c.id === post.categoryId)?.name,
+        }}
+        jsonLd={blogSchema}
+      />
       <div className="max-w-7xl mx-auto px-4 pt-24 md:pt-32 pb-12 md:pb-16 w-full flex-1">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Categories Sidebar */}

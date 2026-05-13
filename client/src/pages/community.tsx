@@ -2,6 +2,7 @@ import { useLanguage } from "@/lib/context";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Youtube, Facebook, Instagram, MessageCircle, ExternalLink } from "lucide-react";
+import { SEOHead } from "@/components/seo-head";
 
 export default function CommunityPage() {
   const { language } = useLanguage();
@@ -47,6 +48,11 @@ export default function CommunityPage() {
 
   return (
     <div className="min-h-screen bg-white dark:bg-black pt-32 pb-16">
+      <SEOHead
+        title="Spiritual Community – Join Our Sangha | आध्यात्मिक समुदाय"
+        description="Join Asthawaani's spiritual community. Connect with fellow seekers, participate in satsang, and grow on your spiritual path."
+        canonicalPath="/community"
+      />
       <div className="container mx-auto px-4">
         <div className="max-w-3xl mx-auto text-center mb-12">
           <h1 className="text-4xl font-bold mb-4">

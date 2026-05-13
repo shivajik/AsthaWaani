@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useLanguage } from "@/lib/context";
 import { useState, useEffect } from "react";
 import NotFound from "./not-found";
+import { SEOHead } from "@/components/seo-head";
 
 interface PageContent {
   title: string;
@@ -59,6 +60,11 @@ export default function DynamicPage() {
 
   return (
     <div className="min-h-screen pt-20">
+      <SEOHead
+        title={page.metaTitle || `${page.title} | Asthawaani`}
+        description={page.metaDescription || page.title}
+        canonicalPath={`/${page.slug}`}
+      />
       <section className="relative h-[40vh] flex items-center justify-center bg-gradient-to-br from-primary/10 to-secondary/10">
         <div className="relative z-10 container mx-auto px-4 text-center">
           <h1 className="text-5xl md:text-6xl font-serif font-bold text-secondary mb-6">

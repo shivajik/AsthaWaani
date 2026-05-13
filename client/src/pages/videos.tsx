@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useCmsPage } from "@/lib/useCmsPage";
+import { SEOHead } from "@/components/seo-head";
 
 interface Video {
   id: string;
@@ -240,6 +241,11 @@ export default function Videos() {
 
   return (
     <div className="pt-40 md:pt-48 pb-16 min-h-screen bg-background">
+      <SEOHead
+        title="Spiritual Videos – Bhajan, Kirtan & Pravachan | आध्यात्मिक वीडियो"
+        description="Watch spiritual videos including bhajan, kirtan, pravachan, and satsang from Asthawaani. Divine content from Mathura-Vrindavan."
+        canonicalPath="/videos"
+      />
       <div className="container mx-auto px-4">
         
         {/* Header Section with Animation */}
