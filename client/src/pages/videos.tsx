@@ -85,6 +85,30 @@ export default function Videos() {
   // Hardcoded videos - showing only 3 specific videos
   const hardcodedVideos: Video[] = [
     {
+      id: "9",
+      videoId: "wRAHgryads0",
+      title: "पंडित अखिलेश गौड़ जी की चेतावनी! आज नहीं संभले तो देर हो जाएगी।",
+      description: "A powerful spiritual warning and motivational discourse by Pandit Akhilesh Gaur Ji, inspiring devotees to awaken spiritually and walk on the path of righteousness before it is too late.",
+      thumbnailUrl: "https://i.ytimg.com/vi/wRAHgryads0/sddefault.jpg",
+      duration: "13:53",
+      publishedAt: "2025-05-13T00:00:00Z",
+      viewCount: 13,
+      likeCount: 2,
+      tags: ["spiritual", "pravachan", "motivation", "hindu", "bhakti", "pandit akhilesh gaur"],
+    },
+    {
+      id: "10",
+      videoId: "WkuCencbA9g",
+      title: "Sankat Mochan Hanuman Ashtak – Asthavaani Version",
+      description: "A divine rendition of Sankat Mochan Hanuman Ashtak in Asthavaani style, invoking strength, protection, and devotion towards Lord Hanuman.",
+      thumbnailUrl: "https://i.ytimg.com/vi/WkuCencbA9g/sddefault.jpg",
+      duration: "5:16",
+      publishedAt: "2025-04-29T00:00:00Z",
+      viewCount: 755,
+      likeCount: 24,
+      tags: ["hanuman", "hanuman ashtak", "sankat mochan", "bhajan", "bhakti", "asthavaani"],
+    },
+    {
       id: "8",
       videoId: "7CHJ-56pf7s",
       title: "अंजनी के लाल सालासर वाले | जय बजरंगबली | Salasar ji Balaji",
@@ -180,18 +204,18 @@ export default function Videos() {
       likeCount: 280,
       tags: ["krishna", "putana", "bhagavatam", "katha", "spiritual"],
     },
-    {
-      id: "7",
-      videoId: "hcEA17tEbLc",
-      title: "The feet of the devotee are the crown of the Lord - I am the servant of the devotees. Prem Ras Bhajan",
-      description: "A soulful Prem Ras bhajan expressing devotion and surrender, highlighting the glory of devotees and love for the Lord.",
-      thumbnailUrl: "https://i.ytimg.com/vi/hcEA17tEbLc/sddefault.jpg",
-      duration: "1:25",
-      publishedAt: "2025-12-07T00:00:00Z",
-      viewCount: 3711,
-      likeCount: 47,
-      tags: ["prem ras", "bhajan", "bhakti", "devotion", "hindu", "spiritual"],
-    }
+    // {
+    //   id: "7",
+    //   videoId: "hcEA17tEbLc",
+    //   title: "The feet of the devotee are the crown of the Lord - I am the servant of the devotees. Prem Ras Bhajan",
+    //   description: "A soulful Prem Ras bhajan expressing devotion and surrender, highlighting the glory of devotees and love for the Lord.",
+    //   thumbnailUrl: "https://i.ytimg.com/vi/hcEA17tEbLc/sddefault.jpg",
+    //   duration: "1:25",
+    //   publishedAt: "2025-12-07T00:00:00Z",
+    //   viewCount: 3711,
+    //   likeCount: 47,
+    //   tags: ["prem ras", "bhajan", "bhakti", "devotion", "hindu", "spiritual"],
+    // }
   ];
 
   // Commented out - Originally fetches from API, now using hardcoded videos

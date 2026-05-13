@@ -174,26 +174,36 @@ export default function Home() {
 
   const displayVideos = [
     {
+      id: "0",
+      videoId: "wRAHgryads0",
+      title: "पंडित अखिलेश गौड़ जी की चेतावनी! आज नहीं संभले तो देर हो जाएगी।",
+      description: "A powerful spiritual warning and motivational discourse by Pandit Akhilesh Gaur Ji, inspiring devotees to awaken spiritually and walk on the path of righteousness before it is too late.",
+      thumbnailUrl: "https://i.ytimg.com/vi/wRAHgryads0/sddefault.jpg",
+      duration: "13:53",
+      publishedAt: "2025-05-13T00:00:00Z",
+      viewCount: 13,
+      likeCount: 2,
+      tags: ["spiritual", "pravachan", "motivation", "hindu", "bhakti", "pandit akhilesh gaur"],
+    },
+    {
+      id: "1",
+      videoId: "WkuCencbA9g",
+      title: "Sankat Mochan Hanuman Ashtak – Asthavaani Version",
+      description: "A divine rendition of Sankat Mochan Hanuman Ashtak in Asthavaani style, invoking strength, protection, and devotion towards Lord Hanuman.",
+      thumbnailUrl: "https://i.ytimg.com/vi/WkuCencbA9g/sddefault.jpg",
+      duration: "5:16",
+      publishedAt: "2025-04-29T00:00:00Z",
+      viewCount: 755,
+      likeCount: 24,
+      tags: ["hanuman", "hanuman ashtak", "sankat mochan", "bhajan", "bhakti", "asthavaani"],
+    },
+    {
       id: "2",
       videoId: "7CHJ-56pf7s",
       title: "अंजनी के लाल सालासर वाले | जय बजरंगबली | Salasar ji Balaji",
       thumbnailUrl: "https://img.youtube.com/vi/7CHJ-56pf7s/sddefault.jpg",
       duration: "2:12",
     },
-    {
-      id: "0",
-      videoId: "PlHBsxaO-ys",
-      title: "True Friendship Has No Gender | Radha Krishna Prem Sandesh",
-      thumbnailUrl: "https://img.youtube.com/vi/PlHBsxaO-ys/sddefault.jpg",
-      duration: "2:34",
-    },
-    {
-      id: "1",
-      videoId: "_R77olhRj74",
-      title: "अब डर कैसा? श्याम बाबा ने हाथ थाम लिया",
-      thumbnailUrl: "https://img.youtube.com/vi/dCzdE9umrr4/sddefault.jpg",
-      duration: "3:49",
-    }
   ];
 
   return (
