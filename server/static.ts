@@ -1,6 +1,7 @@
 import express, { type Express } from "express";
 import fs from "fs";
 import path from "path";
+import { prerenderMiddleware } from "./prerender";
 
 export function serveStatic(app: Express) {
   const distPath = path.resolve(__dirname, "public");
@@ -21,6 +22,9 @@ export function serveStatic(app: Express) {
       }
     }
   }));
+
+  // Prerender middleware for crawlers — serves SEO-optimized HTML to bots
+  app.use(prerenderMiddleware());
 
   // fall through to index.html if the file doesn't exist
   app.use("*", (_req, res) => {

@@ -5,6 +5,7 @@ import viteConfig from "../vite.config";
 import fs from "fs";
 import path from "path";
 import { nanoid } from "nanoid";
+import { prerenderMiddleware } from "./prerender";
 
 const viteLogger = createLogger();
 
@@ -30,6 +31,9 @@ export async function setupVite(server: Server, app: Express) {
   });
 
   app.use(vite.middlewares);
+
+  // Prerender middleware for crawlers — serves SEO-optimized HTML to bots
+  app.use(prerenderMiddleware());
 
   app.use("*", async (req, res, next) => {
     const url = req.originalUrl;

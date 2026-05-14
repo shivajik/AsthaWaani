@@ -20,25 +20,17 @@
 
     <!-- Crisp Chat Widget (deferred for performance) -->
     <script type="text/javascript">
-      window.$crisp=[];
-      window.CRISP_WEBSITE_ID="146efbaa-5688-456b-8fac-04a0a0be21f6";
-      if (typeof window.requestIdleCallback === 'function') {
-        window.requestIdleCallback(function() {
+      window.addEventListener('load', function() {
+        setTimeout(function() {
+          window.$crisp=[];
+          window.CRISP_WEBSITE_ID="146efbaa-5688-456b-8fac-04a0a0be21f6";
           var d=document;
           var s=d.createElement("script");
           s.src="https://client.crisp.chat/l.js";
           s.async=1;
           d.getElementsByTagName("head")[0].appendChild(s);
-        });
-      } else {
-        window.addEventListener('load', function() {
-          var d=document;
-          var s=d.createElement("script");
-          s.src="https://client.crisp.chat/l.js";
-          s.async=1;
-          d.getElementsByTagName("head")[0].appendChild(s);
-        });
-      }
+        }, 2000);
+      });
     </script>
 
     <title>Asthawaani – The Voice of Faith</title>
@@ -60,10 +52,11 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://client.crisp.chat" crossorigin>
+    <link rel="dns-prefetch" href="https://client.crisp.chat">
     <link rel="preconnect" href="https://www.googletagmanager.com" crossorigin>
+    <link rel="dns-prefetch" href="https://www.googletagmanager.com">
+    <link rel="preconnect" href="https://i.ytimg.com" crossorigin>
     <link rel="dns-prefetch" href="https://i.ytimg.com">
-    <link rel="dns-prefetch" href="https://www.youtube.com">
-    <link rel="dns-prefetch" href="https://res.cloudinary.com">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Inter:wght@300..700&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300&family=Noto+Sans+Devanagari:wght@400;500;700&display=swap" rel="stylesheet">
     
     <!-- Schema.org JSON-LD -->
