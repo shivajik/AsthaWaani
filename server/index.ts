@@ -71,6 +71,147 @@ app.use((req, res, next) => {
 // CMS API routes
 app.use("/api/cms", cmsRoutes);
 
+// SEO routes - robots.txt
+app.get('/robots.txt', (req, res) => {
+  const robotsTxt = `# robots.txt for https://asthawaani.com
+
+# Default rules for all crawlers
+User-agent: *
+Allow: /
+Allow: /about
+Allow: /services
+Allow: /brajbhoomi
+Allow: /blog
+Allow: /videos
+Allow: /gallery
+Allow: /contact
+Allow: /community
+Disallow: /admin
+Disallow: /api
+
+# GPTBot - OpenAI crawler
+User-agent: GPTBot
+Allow: /
+Allow: /about
+Allow: /services
+Allow: /brajbhoomi
+Allow: /blog
+Allow: /videos
+Allow: /gallery
+Allow: /contact
+Allow: /community
+Disallow: /admin
+Disallow: /api
+
+# ClaudeBot - Anthropic crawler
+User-agent: ClaudeBot
+Allow: /
+Allow: /about
+Allow: /services
+Allow: /brajbhoomi
+Allow: /blog
+Allow: /videos
+Allow: /gallery
+Allow: /contact
+Allow: /community
+Disallow: /admin
+Disallow: /api
+
+# PerplexityBot - Perplexity AI crawler
+User-agent: PerplexityBot
+Allow: /
+Allow: /about
+Allow: /services
+Allow: /brajbhoomi
+Allow: /blog
+Allow: /videos
+Allow: /gallery
+Allow: /contact
+Allow: /community
+Disallow: /admin
+Disallow: /api
+
+Sitemap: https://asthawaani.com/sitemap.xml
+`;
+  res.type('text/plain');
+  res.send(robotsTxt);
+});
+
+// SEO routes - dynamic sitemap.xml
+app.get('/sitemap.xml', async (req, res) => {
+  try {
+    const { storage: storageInstance } = await import("./storage");
+    const publishedPosts = await storageInstance.getPublishedPosts();
+    const allPages = await storageInstance.getAllPages();
+    const publishedPages = allPages.filter(p => p.isPublished);
+
+    const baseUrl = 'https://asthawaani.com';
+    
+    const staticRoutes = [
+      { path: '/', priority: '1.0', changefreq: 'weekly' },
+      { path: '/about', priority: '0.8', changefreq: 'monthly' },
+      { path: '/services', priority: '0.8', changefreq: 'monthly' },
+      { path: '/brajbhoomi', priority: '0.8', changefreq: 'monthly' },
+      { path: '/blog', priority: '0.9', changefreq: 'daily' },
+      { path: '/videos', priority: '0.7', changefreq: 'weekly' },
+      { path: '/gallery', priority: '0.6', changefreq: 'weekly' },
+      { path: '/contact', priority: '0.6', changefreq: 'monthly' },
+      { path: '/community', priority: '0.6', changefreq: 'monthly' },
+      { path: '/join-partners', priority: '0.5', changefreq: 'monthly' },
+      { path: '/apply-vakta', priority: '0.5', changefreq: 'monthly' },
+      { path: '/terms-of-service', priority: '0.3', changefreq: 'yearly' },
+      { path: '/privacy-policy', priority: '0.3', changefreq: 'yearly' },
+    ];
+
+    let xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
+    xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n';
+
+    for (const route of staticRoutes) {
+      const lastmod = new Date().toISOString().split('T')[0];
+      xml += `  <url>\n`;
+      xml += `    <loc>${baseUrl}${route.path}</loc>\n`;
+      xml += `    <lastmod>${lastmod}</lastmod>\n`;
+      xml += `    <changefreq>${route.changefreq}</changefreq>\n`;
+      xml += `    <priority>${route.priority}</priority>\n`;
+      xml += `    <xhtml:link rel="alternate" hreflang="en" href="${baseUrl}${route.path}" />\n`;
+      xml += `    <xhtml:link rel="alternate" hreflang="hi" href="${baseUrl}${route.path}" />\n`;
+      xml += `  </url>\n`;
+    }
+
+    for (const post of publishedPosts) {
+      const lastmod = post.updatedAt ? new Date(post.updatedAt).toISOString().split('T')[0] :
+                      post.publishedAt ? new Date(post.publishedAt).toISOString().split('T')[0] :
+                      new Date().toISOString().split('T')[0];
+      xml += `  <url>\n`;
+      xml += `    <loc>${baseUrl}/blog/${post.slug}</loc>\n`;
+      xml += `    <lastmod>${lastmod}</lastmod>\n`;
+      xml += `    <changefreq>monthly</changefreq>\n`;
+      xml += `    <priority>0.7</priority>\n`;
+      xml += `    <xhtml:link rel="alternate" hreflang="en" href="${baseUrl}/blog/${post.slug}" />\n`;
+      xml += `    <xhtml:link rel="alternate" hreflang="hi" href="${baseUrl}/blog/${post.slug}" />\n`;
+      xml += `  </url>\n`;
+    }
+
+    for (const page of publishedPages) {
+      const lastmod = page.updatedAt ? new Date(page.updatedAt).toISOString().split('T')[0] :
+                      new Date().toISOString().split('T')[0];
+      xml += `  <url>\n`;
+      xml += `    <loc>${baseUrl}/${page.slug}</loc>\n`;
+      xml += `    <lastmod>${lastmod}</lastmod>\n`;
+      xml += `    <changefreq>monthly</changefreq>\n`;
+      xml += `    <priority>0.6</priority>\n`;
+      xml += `  </url>\n`;
+    }
+
+    xml += '</urlset>';
+    res.type('application/xml');
+    res.send(xml);
+  } catch (error) {
+    console.error('Sitemap generation error:', error);
+    res.status(503).set('Retry-After', '60').type('text/plain').send('Service temporarily unavailable');
+  }
+});
+
 (async () => {
   await registerRoutes(httpServer, app);
 
