@@ -11,6 +11,7 @@ import { useState } from "react";
 import { ensureProtocol } from "@/lib/utils";
 import { SEOHead } from "@/components/seo-head";
 import { generateBlogPostingSchema } from "@/lib/schema-generator";
+import { BLOG_POST_SEO } from "@/lib/blog-seo-data";
 
 interface Ad {
   id: string;
@@ -98,8 +99,8 @@ export default function BlogPostDetail() {
   const content = isHindi ? post.contentHi || post.content : post.content;
   const excerpt = isHindi ? post.excerptHi || post.excerpt : post.excerpt;
 
-  const metaTitle = post.metaTitle || `${title} | Asthawaani Blog`;
-  const metaDescription = post.metaDescription || excerpt || title;
+  const metaTitle = post.metaTitle || BLOG_POST_SEO[post.slug]?.title || `${title} | Asthawaani`;
+  const metaDescription = post.metaDescription || BLOG_POST_SEO[post.slug]?.description || excerpt || title;
   const blogSchema = generateBlogPostingSchema({
     title: post.title,
     slug: post.slug,

@@ -17,44 +17,44 @@ function isCrawler(userAgent: string | undefined): boolean {
   return CRAWLER_USER_AGENTS.some(bot => ua.includes(bot));
 }
 
-const BASE_URL = 'https://asthawaani.com';
+const BASE_URL = 'https://www.asthawaani.com';
 
 // Static page metadata
 const STATIC_PAGES: Record<string, { title: string; description: string }> = {
   '/': {
-    title: 'Asthawaani – The Voice of Faith | Spiritual Platform from Mathura-Vrindavan',
-    description: 'A spiritual platform born from Mathura–Vrindavan connecting divine voices with seekers. Live satsang, bhajan, kirtan, pravachan, and mantra jaap.',
+    title: 'Asthawaani – Online Satsang, Bhajan & Mantra Jaap from Vrindavan',
+    description: 'Asthawaani is a spiritual platform from Mathura-Vrindavan offering daily satsang, bhajan kirtan, mantra jaap, and katha pravachan. Join the digital satsang today.',
   },
   '/about': {
-    title: 'About Asthawaani – Our Spiritual Mission',
-    description: 'Learn about Asthawaani\'s mission to bring authentic spiritual voices from Mathura-Vrindavan to every home. Founded in the sacred Braj Bhoomi.',
+    title: 'About Asthawaani – Spiritual Platform from Mathura Vrindavan',
+    description: 'Asthawaani connects gifted Katha Vachaks, Pravaktas, Bhajan singers & spiritual speakers with seekers across India. Born from the sacred land of Braj Bhoomi.',
   },
   '/services': {
-    title: 'Spiritual Offerings – Satsang, Bhajan, Pravachan',
-    description: 'Explore Asthawaani\'s spiritual offerings: daily satsang, bhajan kirtan, morning aarti, and community connection from Vrindavan.',
+    title: 'Our Services – Satsang, Katha, Bhajan, Mantra Jaap | Asthawaani',
+    description: 'Explore Asthawaani\'s spiritual services: Daily Satsang, Katha Pravachan, Bhajan Kirtan, Mantra Jaap, Navgrah Shanti, Morning Aarti & community from Vrindavan.',
   },
   '/brajbhoomi': {
-    title: 'Brajbhoomi Darshan – Sacred Places of Lord Krishna',
-    description: 'Explore the sacred Brajbhoomi - Mathura, Vrindavan, Gokul, Govardhan, Mahavan, and Barsana. Experience divine temples and spiritual heritage.',
+    title: 'Braj Bhoomi – Sacred Places of Mathura, Vrindavan & Gokul | Asthawaani',
+    description: 'Explore the sacred Braj Bhoomi through Asthawaani. Spiritual presence in Mathura, Vrindavan, Gokul, Govardhan, Mahavan & Barsana with authentic satsang & wisdom.',
   },
   '/blog': {
-    title: 'Spiritual Blog – Mantras, Devotion & Wisdom',
-    description: 'Read articles on mantra jaap, navgrah shanti, Krishna wisdom, bhakti yoga, and spiritual practices from Asthawaani.',
+    title: 'Spiritual Blog – Mantra Jaap, Satsang & Vedic Wisdom | Asthawaani',
+    description: 'Read articles on mantra jaap, navgrah shanti, daily satsang, bhakti yoga, meditation and Vedic spiritual wisdom. Guidance for peace and positivity by Asthawaani.',
   },
   '/videos': {
-    title: 'Spiritual Videos – Bhajan, Kirtan & Pravachan',
-    description: 'Watch spiritual videos including bhajan, kirtan, pravachan, and satsang from Asthawaani. Divine content from Mathura-Vrindavan.',
+    title: 'Spiritual Videos – Satsang, Kirtan & Pravachan | Asthawaani',
+    description: 'Watch satsang, bhajan kirtan, katha pravachan and spiritual discourses from Mathura-Vrindavan. Subscribe to Asthawaani\'s YouTube channel for daily wisdom.',
   },
   '/gallery': {
-    title: 'Photo Gallery – Temples & Sacred Places',
+    title: 'Photo Gallery – Temples & Sacred Places | Asthawaani',
     description: 'View photos of sacred temples, spiritual events, and divine moments from Mathura, Vrindavan, and Braj Bhoomi.',
   },
   '/contact': {
-    title: 'Contact Asthawaani – Get in Touch',
-    description: 'Contact Asthawaani for spiritual guidance, satsang inquiries, or partnership opportunities. Located in Mathura, Uttar Pradesh.',
+    title: 'Contact Asthawaani – Reach Us in Mathura, Uttar Pradesh',
+    description: 'Get in touch with Asthawaani Kendra, Mathura. Call +91 76684 09246 or email us. Whether you\'re a seeker or a spiritual speaker, we\'re here for you.',
   },
   '/community': {
-    title: 'Spiritual Community – Join Our Sangha',
+    title: 'Spiritual Community – Join Our Sangha | Asthawaani',
     description: 'Join Asthawaani\'s spiritual community. Connect with fellow seekers, participate in satsang, and grow on your spiritual path.',
   },
 };

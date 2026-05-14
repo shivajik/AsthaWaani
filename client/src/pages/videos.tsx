@@ -242,8 +242,8 @@ export default function Videos() {
   return (
     <div className="pt-40 md:pt-48 pb-16 min-h-screen bg-background">
       <SEOHead
-        title="Spiritual Videos – Bhajan, Kirtan & Pravachan | आध्यात्मिक वीडियो"
-        description="Watch spiritual videos including bhajan, kirtan, pravachan, and satsang from Asthawaani. Divine content from Mathura-Vrindavan."
+        title="Spiritual Videos – Satsang, Kirtan & Pravachan | Asthawaani"
+        description="Watch satsang, bhajan kirtan, katha pravachan and spiritual discourses from Mathura-Vrindavan. Subscribe to Asthawaani's YouTube channel for daily wisdom."
         canonicalPath="/videos"
       />
       <div className="container mx-auto px-4">

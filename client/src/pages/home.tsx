@@ -211,8 +211,8 @@ export default function Home() {
   return (
     <div className="flex flex-col w-full overflow-hidden">
       <SEOHead
-        title="Asthawaani – The Voice of Faith | Spiritual Platform from Mathura-Vrindavan"
-        description="A spiritual platform born from Mathura–Vrindavan connecting divine voices with seekers. Live satsang, bhajan, kirtan, pravachan, and mantra jaap."
+        title="Asthawaani – Online Satsang, Bhajan & Mantra Jaap from Vrindavan"
+        description="Asthawaani is a spiritual platform from Mathura-Vrindavan offering daily satsang, bhajan kirtan, mantra jaap, and katha pravachan. Join the digital satsang today."
         canonicalPath="/"
         jsonLd={[generateOrganizationSchema(), generateWebSiteSchema()]}
       />

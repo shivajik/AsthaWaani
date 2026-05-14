@@ -5,7 +5,7 @@
  * for structured data across the AsthaWaani website.
  */
 
-const BASE_URL = "https://asthawaani.com";
+const BASE_URL = "https://www.asthawaani.com";
 
 // ─── Interfaces ──────────────────────────────────────────────────────────────
 

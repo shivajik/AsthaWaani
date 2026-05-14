@@ -787,7 +787,7 @@ app.use(session({
 
 // robots.txt endpoint - serves crawler directives for SEO
 app.get('/robots.txt', (req: Request, res: Response) => {
-  const robotsTxt = `# robots.txt for https://asthawaani.com
+  const robotsTxt = `# robots.txt for https://www.asthawaani.com
 
 # Default rules for all crawlers
 User-agent: *
@@ -845,7 +845,7 @@ Allow: /community
 Disallow: /admin
 Disallow: /api
 
-Sitemap: https://asthawaani.com/sitemap.xml
+Sitemap: https://www.asthawaani.com/sitemap.xml
 `;
 
   res.type('text/plain');
@@ -861,7 +861,7 @@ app.get('/sitemap.xml', async (req: Request, res: Response) => {
     // Fetch published pages
     const publishedPages = await db.select().from(pages).where(eq(pages.isPublished, true));
 
-    const baseUrl = 'https://asthawaani.com';
+    const baseUrl = 'https://www.asthawaani.com';
     
     // Static routes with priorities
     const staticRoutes = [

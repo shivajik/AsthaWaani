@@ -141,11 +141,11 @@ export default function Brajbhoomi() {
   const otherLocations = locationsData.filter(loc => loc.id !== selectedLocation.id);
 
   const pageTitle = language === 'en' 
-    ? "Brajbhoomi Darshan - Sacred Places of Lord Krishna | Asthawaani" 
+    ? "Braj Bhoomi – Sacred Places of Mathura, Vrindavan & Gokul | Asthawaani" 
     : "ब्रजभूमि दर्शन - भगवान कृष्ण के पवित्र स्थान | आस्थावाणी";
   
   const pageDescription = language === 'en'
-    ? "Explore the sacred Brajbhoomi - Mathura, Vrindavan, Gokul, Govardhan, Mahavan, and Barsana. Experience divine temples and spiritual heritage of Lord Krishna's land."
+    ? "Explore the sacred Braj Bhoomi through Asthawaani. Spiritual presence in Mathura, Vrindavan, Gokul, Govardhan, Mahavan & Barsana with authentic satsang & wisdom."
     : "पवित्र ब्रजभूमि का अन्वेषण करें - मथुरा, वृंदावन, गोकुल, गोवर्धन, महावन और बरसाना। भगवान कृष्ण की भूमि के दिव्य मंदिरों और आध्यात्मिक विरासत का अनुभव करें।";
 
   const handleLocationClick = (location: typeof locationsData[0]) => {

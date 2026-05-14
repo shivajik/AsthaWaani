@@ -1,4 +1,4 @@
-const BASE_URL = 'https://asthawaani.com';
+const BASE_URL = 'https://www.asthawaani.com';
 const DEFAULT_OG_IMAGE = `${BASE_URL}/opengraph.jpg`;
 
 interface ArticleMetadata {

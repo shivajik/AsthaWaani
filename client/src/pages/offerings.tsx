@@ -63,11 +63,11 @@ export default function Services() {
   }, [offerings, isLoading, error]);
 
   const pageTitle = language === 'en' 
-    ? "Our Services | Asthawaani" 
+    ? "Our Services – Satsang, Katha, Bhajan, Mantra Jaap | Asthawaani" 
     : "हमारी सेवाएँ | आस्थावाणी";
   
   const pageDescription = language === 'en'
-    ? "Explore Asthawaani's spiritual services including Daily Satsang, Katha Pravachan, Bhajan Kirtan, Mantra Jaap, Morning Aarti, and Community services from Vrindavan."
+    ? "Explore Asthawaani's spiritual services: Daily Satsang, Katha Pravachan, Bhajan Kirtan, Mantra Jaap, Navgrah Shanti, Morning Aarti & community from Vrindavan."
     : "वृंदावन से आस्थावाणी की आध्यात्मिक सेवाओं का अन्वेषण करें - दैनिक सत्संग, कथा प्रवचन, भजन कीर्तन, मंत्र जाप, प्रातः आरती और समुदाय सेवाएं।";
 
   const getIcon = (iconName: string) => {

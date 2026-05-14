@@ -12,8 +12,8 @@ export default function About() {
   return (
     <div className="min-h-screen pt-20">
       <SEOHead
-        title="About Asthawaani – Our Spiritual Mission | आस्थावाणी के बारे में"
-        description="Learn about Asthawaani's mission to bring authentic spiritual voices from Mathura-Vrindavan to every home. Founded in the sacred Braj Bhoomi."
+        title="About Asthawaani – Spiritual Platform from Mathura Vrindavan"
+        description="Asthawaani connects gifted Katha Vachaks, Pravaktas, Bhajan singers & spiritual speakers with seekers across India. Born from the sacred land of Braj Bhoomi."
         canonicalPath="/about"
       />
       {/* Hero */}

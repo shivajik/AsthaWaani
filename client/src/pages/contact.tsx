@@ -83,8 +83,8 @@ export default function Contact() {
   return (
     <div className="min-h-screen pt-20">
       <SEOHead
-        title="Contact Asthawaani – Get in Touch | संपर्क करें"
-        description="Contact Asthawaani for spiritual guidance, satsang inquiries, or partnership opportunities. Located in Mathura, Uttar Pradesh."
+        title="Contact Asthawaani – Reach Us in Mathura, Uttar Pradesh"
+        description="Get in touch with Asthawaani Kendra, Mathura. Call +91 76684 09246 or email us. Whether you're a seeker or a spiritual speaker, we're here for you."
         canonicalPath="/contact"
       />
       <div className="bg-secondary py-20 text-white text-center">
