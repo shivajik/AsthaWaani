@@ -1,3 +1,5 @@
+import { Helmet } from 'react-helmet-async';
+
 const BASE_URL = 'https://www.asthawaani.com';
 const DEFAULT_OG_IMAGE = `${BASE_URL}/opengraph.jpg`;
 
@@ -36,8 +38,16 @@ export function SEOHead({
       : `${BASE_URL}${ogImage}`
     : DEFAULT_OG_IMAGE;
 
+  // Prepare JSON-LD scripts as string
+  const jsonLdString = jsonLd
+    ? Array.isArray(jsonLd)
+      ? jsonLd.map(schema => JSON.stringify(schema)).join('')
+      : JSON.stringify(jsonLd)
+    : null;
+
   return (
-    <>
+    <Helmet>
+      {/* Primary Meta Tags */}
       <title>{title}</title>
       <meta name="description" content={description} />
       <link rel="canonical" href={canonicalUrl} />
@@ -63,38 +73,20 @@ export function SEOHead({
       <link rel="alternate" hrefLang="x-default" href={canonicalUrl} />
 
       {/* Article metadata */}
-      {article && (
-        <>
-          <meta property="article:published_time" content={article.publishedTime} />
-          {article.modifiedTime && (
-            <meta property="article:modified_time" content={article.modifiedTime} />
-          )}
-          {article.section && (
-            <meta property="article:section" content={article.section} />
-          )}
-        </>
-      )}
+      {article && <meta property="article:published_time" content={article.publishedTime} />}
+      {article?.modifiedTime && <meta property="article:modified_time" content={article.modifiedTime} />}
+      {article?.section && <meta property="article:section" content={article.section} />}
 
       {/* Noindex */}
       {noindex && <meta name="robots" content="noindex, nofollow" />}
 
       {/* JSON-LD Structured Data */}
-      {jsonLd && (
-        Array.isArray(jsonLd) ? (
-          jsonLd.map((schema, index) => (
-            <script
-              key={index}
-              type="application/ld+json"
-              dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
-            />
-          ))
-        ) : (
-          <script
-            type="application/ld+json"
-            dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-          />
-        )
+      {jsonLd && !Array.isArray(jsonLd) && (
+        <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
       )}
-    </>
+      {jsonLd && Array.isArray(jsonLd) && jsonLd.map((schema, i) => (
+        <script key={i} type="application/ld+json">{JSON.stringify(schema)}</script>
+      ))}
+    </Helmet>
   );
 }
