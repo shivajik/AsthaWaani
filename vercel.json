@@ -11,6 +11,16 @@
     { "source": "/api/:path*", "destination": "/api/index.ts" },
     { "source": "/robots.txt", "destination": "/api/index.ts" },
     { "source": "/sitemap.xml", "destination": "/api/index.ts" },
+    {
+      "source": "/blog/:slug",
+      "has": [{ "type": "header", "key": "user-agent", "value": "(?i).*(bot|crawl|spider|facebookexternalhit|WhatsApp|Twitterbot|LinkedInBot|Slurp|TelegramBot|Discordbot).*" }],
+      "destination": "/api/og?path=/blog/:slug"
+    },
+    {
+      "source": "/:path*",
+      "has": [{ "type": "header", "key": "user-agent", "value": "(?i).*(bot|crawl|spider|facebookexternalhit|WhatsApp|Twitterbot|LinkedInBot|Slurp|TelegramBot|Discordbot).*" }],
+      "destination": "/api/og?path=/:path*"
+    },
     { "source": "/(.*)", "destination": "/index.html" }
   ],
   "headers": [
