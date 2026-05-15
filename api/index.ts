@@ -2266,33 +2266,8 @@ app.get("*", async (req: Request, res: Response) => {
     return res.status(404).send('Not found');
   }
 
-  const userAgent = req.headers['user-agent'] || '';
-  
-  // If not a crawler, serve the SPA shell (let the client-side router handle it)
-  if (!isCrawler(userAgent)) {
-    // On Vercel, serve index.html for SPA routing
-    const fs = await import('fs');
-    const path_module = await import('path');
-    try {
-      const indexPath = path_module.default.join(process.cwd(), 'dist', 'public', 'index.html');
-      const indexHtml = fs.default.readFileSync(indexPath, 'utf-8');
-      return res.status(200).type('html').send(indexHtml);
-    } catch {
-      // Fallback: serve minimal HTML that triggers client-side navigation
-      return res.status(200).type('html').send(`<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Asthawaani</title>
-  <meta http-equiv="refresh" content="0;url=${path}" />
-</head>
-<body></body>
-</html>`);
-    }
-  }
-
-  // For crawlers: serve prerendered HTML with proper meta tags
+  // This route is only reached by crawlers (Vercel routes browsers to index.html directly)
+  // Serve prerendered HTML with proper meta tags for social sharing
   try {
     const baseUrl = 'https://www.asthawaani.com';
     
