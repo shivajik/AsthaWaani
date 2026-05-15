@@ -24,9 +24,10 @@ declare module "express-session" {
 }
 
 // Crawler detection utility for SEO/AEO optimization
-const CRAWLER_USER_AGENTS = [
+const CRAWLER_USER_AGENTS = [ 
   'googlebot', 'bingbot', 'gptbot', 'claudebot', 'perplexitybot',
-  'slurp', 'duckduckbot', 'facebookexternalhit', 'twitterbot',
+  'slurp', 'duckduckbot',
+   'facebookexternalhit', 'twitterbot',
   'linkedinbot', 'whatsapp', 'telegrambot', 'applebot', 'yandexbot',
   'baiduspider', 'sogou', 'ia_archiver'
 ];
@@ -62,7 +63,7 @@ function getTransporter() {
       host: "smtp.gmail.com",
       port: 465,
       secure: true, // use SSL
-      auth: {
+      auth: { 
         user: process.env.EMAIL,
         pass: process.env.PASS,
       },
