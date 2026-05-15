@@ -11,7 +11,6 @@
     { "source": "/api/:path*", "destination": "/api/index.ts" },
     { "source": "/robots.txt", "destination": "/api/index.ts" },
     { "source": "/sitemap.xml", "destination": "/api/index.ts" },
-    { "source": "/:path*", "has": [{ "type": "header", "key": "user-agent", "value": ".*(bot|crawl|spider|facebookexternalhit|WhatsApp|Twitterbot|LinkedInBot|Slurp|Googlebot|Bingbot|GPTBot|ClaudeBot|PerplexityBot|TelegramBot).*" }], "destination": "/api/index.ts" },
     { "source": "/(.*)", "destination": "/index.html" }
   ],
   "headers": [
