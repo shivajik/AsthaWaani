@@ -935,6 +935,89 @@ app.get('/sitemap.xml', async (req: Request, res: Response) => {
   }
 });
 
+// OG meta tags endpoint for social media crawlers (WhatsApp, Facebook, Twitter, etc.)
+app.get('/api/og', async (req: Request, res: Response) => {
+  const originalPath = (req.query.path as string) || '/';
+  const path = originalPath.startsWith('/') ? originalPath : `/${originalPath}`;
+  const baseUrl = 'https://www.asthawaani.com';
+  const defaultImage = `${baseUrl}/opengraph.jpg`;
+
+  const staticPages: Record<string, { title: string; description: string }> = {
+    '/': { title: 'Asthawaani – Online Satsang, Bhajan & Mantra Jaap from Vrindavan', description: 'Asthawaani is a spiritual platform from Mathura-Vrindavan offering daily satsang, bhajan kirtan, mantra jaap, and katha pravachan.' },
+    '/about': { title: 'About Asthawaani – Spiritual Platform from Mathura Vrindavan', description: 'Asthawaani connects gifted Katha Vachaks, Pravaktas, Bhajan singers & spiritual speakers with seekers across India.' },
+    '/services': { title: 'Our Services – Satsang, Katha, Bhajan, Mantra Jaap | Asthawaani', description: 'Explore Asthawaani spiritual services: Daily Satsang, Katha Pravachan, Bhajan Kirtan, Mantra Jaap, Navgrah Shanti.' },
+    '/brajbhoomi': { title: 'Braj Bhoomi – Sacred Places of Mathura, Vrindavan & Gokul | Asthawaani', description: 'Explore the sacred Braj Bhoomi through Asthawaani. Mathura, Vrindavan, Gokul, Govardhan, Mahavan & Barsana.' },
+    '/blog': { title: 'Spiritual Blog – Mantra Jaap, Satsang & Vedic Wisdom | Asthawaani', description: 'Read articles on mantra jaap, navgrah shanti, daily satsang, bhakti yoga, meditation and Vedic spiritual wisdom.' },
+    '/videos': { title: 'Spiritual Videos – Satsang, Kirtan & Pravachan | Asthawaani', description: 'Watch satsang, bhajan kirtan, katha pravachan and spiritual discourses from Mathura-Vrindavan.' },
+    '/contact': { title: 'Contact Asthawaani – Reach Us in Mathura, Uttar Pradesh', description: 'Get in touch with Asthawaani Kendra, Mathura. Call +91 76684 09246 or email us.' },
+    '/community': { title: 'Spiritual Community – Join Our Sangha | Asthawaani', description: 'Join Asthawaani spiritual community. Connect with fellow seekers and grow on your spiritual path.' },
+  };
+
+  function escHtml(s: string): string {
+    return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+
+  function ogHtml(title: string, desc: string, image: string, url: string, type = 'website'): string {
+    const t = escHtml(title), d = escHtml(desc);
+    return `<!DOCTYPE html><html><head>
+<meta charset="UTF-8"/><title>${t}</title>
+<meta name="description" content="${d}"/>
+<meta property="og:title" content="${t}"/>
+<meta property="og:description" content="${d}"/>
+<meta property="og:image" content="${image}"/>
+<meta property="og:image:width" content="1200"/>
+<meta property="og:image:height" content="630"/>
+<meta property="og:url" content="${url}"/>
+<meta property="og:type" content="${type}"/>
+<meta property="og:site_name" content="Asthawaani"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="${t}"/>
+<meta name="twitter:description" content="${d}"/>
+<meta name="twitter:image" content="${image}"/>
+</head><body><h1>${t}</h1><p>${d}</p></body></html>`;
+  }
+
+  try {
+    // Blog post
+    const blogMatch = path.match(/^\/blog\/([^/]+)$/);
+    if (blogMatch) {
+      const slug = blogMatch[1];
+      const [post] = await db.select().from(posts).where(eq(posts.slug, slug));
+      if (post && post.status === 'published') {
+        const title = post.metaTitle || `${post.title} | Asthawaani`;
+        const desc = post.metaDescription || post.excerpt || post.title;
+        const image = post.featuredImage
+          ? (post.featuredImage.startsWith('http') ? post.featuredImage : `${baseUrl}${post.featuredImage}`)
+          : defaultImage;
+        return res.status(200).type('html').send(ogHtml(title, desc, image, `${baseUrl}/blog/${slug}`, 'article'));
+      }
+    }
+
+    // Static pages
+    if (staticPages[path]) {
+      const p = staticPages[path];
+      return res.status(200).type('html').send(ogHtml(p.title, p.description, defaultImage, `${baseUrl}${path}`));
+    }
+
+    // Dynamic CMS page
+    const slug = path.replace(/^\//, '');
+    if (slug && !slug.includes('/')) {
+      const [page] = await db.select().from(pages).where(eq(pages.slug, slug));
+      if (page && page.isPublished) {
+        const title = page.metaTitle || `${page.title} | Asthawaani`;
+        const desc = page.metaDescription || page.title;
+        return res.status(200).type('html').send(ogHtml(title, desc, defaultImage, `${baseUrl}/${slug}`));
+      }
+    }
+
+    // Fallback
+    return res.status(200).type('html').send(ogHtml('Asthawaani – Online Satsang & Mantra Jaap from Vrindavan', 'Spiritual platform from Mathura-Vrindavan.', defaultImage, `${baseUrl}${path}`));
+  } catch (error) {
+    console.error('OG endpoint error:', error);
+    return res.status(200).type('html').send(ogHtml('Asthawaani', 'Spiritual platform from Mathura-Vrindavan.', defaultImage, `${baseUrl}${path}`));
+  }
+});
+
 const loginLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 5,
@@ -2254,6 +2337,77 @@ app.delete("/api/cms/vakta-applications/:id", isAuthenticated, async (req: Reque
 
 app.all("/api/*", (req, res) => {
   res.status(404).json({ error: "API endpoint not found" });
+});
+
+// Catch-all for crawler requests routed here by Vercel (non-API paths like /blog/:slug, /about, etc.)
+app.get("*", async (req: Request, res: Response) => {
+  const reqPath = req.path;
+
+  // Skip static assets
+  if (reqPath.match(/\.(js|css|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|eot|map|webp)$/)) {
+    return res.status(404).send('');
+  }
+
+  // This is reached only by crawlers (Vercel's has condition routes them here)
+  const baseUrl = 'https://www.asthawaani.com';
+  const defaultImage = `${baseUrl}/opengraph.jpg`;
+
+  const staticMeta: Record<string, { title: string; description: string }> = {
+    '/': { title: 'Asthawaani – Online Satsang, Bhajan & Mantra Jaap from Vrindavan', description: 'Asthawaani is a spiritual platform from Mathura-Vrindavan offering daily satsang, bhajan kirtan, mantra jaap, and katha pravachan.' },
+    '/about': { title: 'About Asthawaani – Spiritual Platform from Mathura Vrindavan', description: 'Asthawaani connects gifted Katha Vachaks, Pravaktas, Bhajan singers & spiritual speakers with seekers across India.' },
+    '/services': { title: 'Our Services – Satsang, Katha, Bhajan, Mantra Jaap | Asthawaani', description: 'Explore Asthawaani spiritual services: Daily Satsang, Katha Pravachan, Bhajan Kirtan, Mantra Jaap, Navgrah Shanti.' },
+    '/brajbhoomi': { title: 'Braj Bhoomi – Sacred Places of Mathura, Vrindavan & Gokul | Asthawaani', description: 'Explore the sacred Braj Bhoomi. Mathura, Vrindavan, Gokul, Govardhan, Mahavan & Barsana.' },
+    '/blog': { title: 'Spiritual Blog – Mantra Jaap, Satsang & Vedic Wisdom | Asthawaani', description: 'Read articles on mantra jaap, navgrah shanti, daily satsang, bhakti yoga, meditation and Vedic spiritual wisdom.' },
+    '/videos': { title: 'Spiritual Videos – Satsang, Kirtan & Pravachan | Asthawaani', description: 'Watch satsang, bhajan kirtan, katha pravachan and spiritual discourses from Mathura-Vrindavan.' },
+    '/contact': { title: 'Contact Asthawaani – Reach Us in Mathura, Uttar Pradesh', description: 'Get in touch with Asthawaani Kendra, Mathura. Call +91 76684 09246.' },
+    '/community': { title: 'Spiritual Community – Join Our Sangha | Asthawaani', description: 'Join Asthawaani spiritual community. Connect with fellow seekers.' },
+  };
+
+  function esc(s: string): string { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+  function renderOg(title: string, desc: string, img: string, url: string, type = 'website'): string {
+    const t = esc(title), d = esc(desc);
+    return `<!DOCTYPE html><html><head><meta charset="UTF-8"/><title>${t}</title><meta name="description" content="${d}"/><meta property="og:title" content="${t}"/><meta property="og:description" content="${d}"/><meta property="og:image" content="${img}"/><meta property="og:image:width" content="1200"/><meta property="og:image:height" content="630"/><meta property="og:url" content="${url}"/><meta property="og:type" content="${type}"/><meta property="og:site_name" content="Asthawaani"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="${t}"/><meta name="twitter:description" content="${d}"/><meta name="twitter:image" content="${img}"/></head><body><h1>${t}</h1><p>${d}</p></body></html>`;
+  }
+
+  try {
+    // Blog post
+    const blogMatch = reqPath.match(/^\/blog\/([^/]+)$/);
+    if (blogMatch) {
+      const slug = blogMatch[1];
+      const [post] = await db.select().from(posts).where(eq(posts.slug, slug));
+      if (post && post.status === 'published') {
+        const title = post.metaTitle || `${post.title} | Asthawaani`;
+        const desc = post.metaDescription || post.excerpt || post.title;
+        const img = post.featuredImage
+          ? (post.featuredImage.startsWith('http') ? post.featuredImage : `${baseUrl}${post.featuredImage}`)
+          : defaultImage;
+        return res.status(200).type('html').send(renderOg(title, desc, img, `${baseUrl}/blog/${slug}`, 'article'));
+      }
+    }
+
+    // Static pages
+    if (staticMeta[reqPath]) {
+      const m = staticMeta[reqPath];
+      return res.status(200).type('html').send(renderOg(m.title, m.description, defaultImage, `${baseUrl}${reqPath}`));
+    }
+
+    // Dynamic CMS page
+    const pageSlug = reqPath.replace(/^\//, '');
+    if (pageSlug && !pageSlug.includes('/')) {
+      const [page] = await db.select().from(pages).where(eq(pages.slug, pageSlug));
+      if (page && page.isPublished) {
+        const title = page.metaTitle || `${page.title} | Asthawaani`;
+        const desc = page.metaDescription || page.title;
+        return res.status(200).type('html').send(renderOg(title, desc, defaultImage, `${baseUrl}/${pageSlug}`));
+      }
+    }
+
+    // Fallback
+    return res.status(200).type('html').send(renderOg('Asthawaani', 'Spiritual platform from Mathura-Vrindavan.', defaultImage, `${baseUrl}${reqPath}`));
+  } catch (err) {
+    console.error('Crawler catch-all error:', err);
+    return res.status(200).type('html').send(renderOg('Asthawaani', 'Spiritual platform from Mathura-Vrindavan.', defaultImage, `${baseUrl}${reqPath}`));
+  }
 });
 
 export default app;

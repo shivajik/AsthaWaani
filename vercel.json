@@ -13,13 +13,13 @@
     { "source": "/sitemap.xml", "destination": "/api/index.ts" },
     {
       "source": "/blog/:slug",
-      "has": [{ "type": "header", "key": "user-agent", "value": "(?i).*(bot|crawl|spider|facebookexternalhit|WhatsApp|Twitterbot|LinkedInBot|Slurp|TelegramBot|Discordbot).*" }],
-      "destination": "/api/og?path=/blog/:slug"
+      "has": [{ "type": "header", "key": "user-agent", "value": ".*(facebookexternalhit|WhatsApp|Twitterbot|LinkedInBot|TelegramBot|Discordbot|Googlebot|Bingbot|Slurp|DuckDuckBot|GPTBot|ClaudeBot|PerplexityBot).*" }],
+      "destination": "/api/index.ts"
     },
     {
       "source": "/:path*",
-      "has": [{ "type": "header", "key": "user-agent", "value": "(?i).*(bot|crawl|spider|facebookexternalhit|WhatsApp|Twitterbot|LinkedInBot|Slurp|TelegramBot|Discordbot).*" }],
-      "destination": "/api/og?path=/:path*"
+      "has": [{ "type": "header", "key": "user-agent", "value": ".*(facebookexternalhit|WhatsApp|Twitterbot|LinkedInBot|TelegramBot|Discordbot|Googlebot|Bingbot|Slurp|DuckDuckBot|GPTBot|ClaudeBot|PerplexityBot).*" }],
+      "destination": "/api/index.ts"
     },
     { "source": "/(.*)", "destination": "/index.html" }
   ],
