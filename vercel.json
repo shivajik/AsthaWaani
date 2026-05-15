@@ -3,7 +3,6 @@
   "buildCommand": "npx vite build",
   "installCommand": "npm install",
   "outputDirectory": "dist/public",
-  "framework": "vite",
   "redirects": [
     { "source": "/:path*", "has": [{ "type": "host", "value": "asthawaani.com" }], "destination": "https://www.asthawaani.com/:path*", "permanent": true }
   ],
@@ -11,7 +10,7 @@
     { "source": "/api/:path*", "destination": "/api/index.ts" },
     { "source": "/robots.txt", "destination": "/api/index.ts" },
     { "source": "/sitemap.xml", "destination": "/api/index.ts" },
-    { "source": "/(.*)", "destination": "/index.html" }
+    { "source": "/((?!assets/).*)", "destination": "/api/index.ts" }
   ],
   "headers": [
     {
