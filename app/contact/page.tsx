@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { ContactForm } from './ContactForm';
 
 export const metadata: Metadata = {
   title: 'Contact Asthawaani – Reach Us in Mathura, Uttar Pradesh',
@@ -15,25 +16,38 @@ export const metadata: Metadata = {
 
 export default function ContactPage() {
   return (
-    <main className="min-h-screen pt-24 pb-16">
-      <div className="container mx-auto px-4 max-w-4xl">
-        <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-serif font-bold text-[hsl(225,55%,35%)] mb-4">Contact Us</h1>
-          <p className="text-gray-600">Get in touch with Asthawaani</p>
+    <main className="min-h-screen">
+      {/* Yellow Banner */}
+      <section className="bg-[hsl(45,90%,50%)] pt-28 pb-16">
+        <div className="container mx-auto px-4 text-center">
+          <h1 className="text-4xl md:text-5xl font-serif font-bold text-white">Contact</h1>
         </div>
-        <div className="grid md:grid-cols-2 gap-12">
-          <div>
-            <h2 className="text-2xl font-serif font-bold text-[hsl(225,55%,35%)] mb-6">Our Address</h2>
-            <p className="text-gray-600 mb-4">Ashirwad Palace, Swej Farm, Yamunapar, Laxminagar, Mathura, Uttar Pradesh 281001</p>
-            <p className="text-gray-600 mb-4"><strong>Phone:</strong> +91 76684 09246</p>
-            <p className="text-gray-600"><strong>Email:</strong> contact@asthawaani.com</p>
-          </div>
-          <div>
-            <h2 className="text-2xl font-serif font-bold text-[hsl(225,55%,35%)] mb-6">Send a Message</h2>
-            <p className="text-gray-500">Contact form coming soon. For now, please call or email us directly.</p>
+      </section>
+
+      {/* Contact Content */}
+      <section className="py-16">
+        <div className="container mx-auto px-4">
+          <div className="grid md:grid-cols-2 gap-12 max-w-6xl mx-auto">
+            {/* Left - Info */}
+            <div>
+              <h2 className="text-3xl font-serif font-bold text-[hsl(45,90%,50%)] mb-6 italic">Get in Touch</h2>
+              <p className="text-gray-600 mb-8 text-lg">
+                Whether you are a seeker looking for guidance or a speaker wishing to join our platform, we are here for you.
+              </p>
+              <div className="space-y-4">
+                <p className="text-gray-700"><strong>Address:</strong> Ashirwad Palace, Swej Farm, Yamunapar, Laxminagar, Mathura, Uttar Pradesh 281001</p>
+                <p className="text-gray-700"><strong>Phone:</strong> +91 76684 09246</p>
+                <p className="text-gray-700"><strong>Email:</strong> contact@asthawaani.com</p>
+              </div>
+            </div>
+
+            {/* Right - Form */}
+            <div>
+              <ContactForm />
+            </div>
           </div>
         </div>
-      </div>
+      </section>
     </main>
   );
 }
