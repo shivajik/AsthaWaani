@@ -2,6 +2,8 @@ import type { Metadata } from 'next';
 import { Playfair_Display, Inter, Merriweather, Noto_Sans_Devanagari } from 'next/font/google';
 import './globals.css';
 import Script from 'next/script';
+import { Header } from './components/Header';
+import { Footer } from './components/Footer';
 
 const playfair = Playfair_Display({
   subsets: ['latin'],
@@ -100,7 +102,11 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-screen flex flex-col bg-white dark:bg-black overflow-x-hidden">
-        {children}
+        <Header />
+        <main className="flex-1 w-full relative">
+          {children}
+        </main>
+        <Footer />
 
         {/* Google Analytics - deferred */}
         <Script

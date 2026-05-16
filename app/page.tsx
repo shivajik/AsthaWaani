@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 
 export const metadata: Metadata = {
   title: 'Asthawaani – Online Satsang, Bhajan & Mantra Jaap from Vrindavan',
@@ -16,18 +17,158 @@ export const metadata: Metadata = {
     description: 'A spiritual platform connecting divine voices from Mathura-Vrindavan with seekers worldwide.',
     images: ['https://www.asthawaani.com/opengraph.jpg'],
   },
-  alternates: {
-    canonical: 'https://www.asthawaani.com',
-  },
+  alternates: { canonical: 'https://www.asthawaani.com' },
 };
 
-// This is a placeholder - we'll migrate the full homepage component next
+const offerings = [
+  { title: 'Daily Satsang', desc: 'Live wisdom from Vrindavan.' },
+  { title: 'Bhajan Kirtan', desc: 'Devotional music for the soul.' },
+  { title: 'Morning Aarti', desc: 'Start your day with blessings.' },
+  { title: 'Community', desc: 'Connect with fellow seekers.' },
+];
+
+const locations = [
+  { id: 'mathura', name: 'Mathura' },
+  { id: 'vrindavan', name: 'Vrindavan' },
+  { id: 'gokul', name: 'Gokul' },
+  { id: 'govardhan', name: 'Govardhan' },
+  { id: 'mahavan', name: 'Mahavan' },
+];
+
+const videos = [
+  { id: 'wRAHgryads0', title: 'पंडित अखिलेश गौड़ जी की चेतावनी!', duration: '13:53' },
+  { id: 'WkuCencbA9g', title: 'Sankat Mochan Hanuman Ashtak – Asthavaani Version', duration: '5:16' },
+  { id: '7CHJ-56pf7s', title: 'अंजनी के लाल सालासर वाले | जय बजरंगबली', duration: '2:12' },
+];
+
 export default function HomePage() {
   return (
-    <main>
-      <h1>Asthawaani – The Voice of Faith</h1>
-      <p>A spiritual platform born from Mathura-Vrindavan to bring India&apos;s purest voices of wisdom to every home.</p>
-      <p>Full homepage coming soon during migration...</p>
-    </main>
+    <div className="flex flex-col w-full">
+      {/* Hero Section */}
+      <section className="relative h-screen w-full flex items-center justify-center overflow-hidden">
+        <div className="absolute inset-0 z-0 bg-cover bg-center" style={{ backgroundImage: 'url(/attached_assets/generated_images/vrindavan_sunrise_temple_landscape.png)' }}>
+          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/30 to-black/70" />
+        </div>
+        <div className="relative z-10 container mx-auto px-4 text-center text-white">
+          <h1 className="text-5xl md:text-7xl lg:text-8xl font-serif font-bold tracking-tight text-amber-200 drop-shadow-2xl">Asthawaani</h1>
+          <div className="h-1 bg-gradient-to-r from-transparent via-amber-400 to-transparent mx-auto mt-4 w-4/5 max-w-md"></div>
+          <p className="text-xl md:text-2xl font-light max-w-2xl mx-auto text-white/90 drop-shadow-md leading-relaxed mt-6">To take the light of wisdom to every home.</p>
+          <div className="mt-10">
+            <Link href="/contact" className="inline-flex items-center gap-2 bg-gradient-to-r from-amber-500 via-amber-600 to-amber-500 hover:from-amber-600 hover:via-amber-700 hover:to-amber-600 text-white font-serif text-lg px-10 py-4 rounded-full shadow-2xl shadow-amber-500/30 border border-amber-400/30 transition-all">
+              Join the Digital Satsang
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* About Preview */}
+      <section className="py-24 bg-white">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto text-center">
+            <h2 className="text-4xl md:text-5xl font-serif font-bold text-[hsl(225,55%,35%)] mb-6">What is Asthawaani?</h2>
+            <p className="text-xl text-amber-600 font-medium mb-6">A spiritual platform born from Mathura–Vrindavan.</p>
+            <p className="text-gray-600 text-lg leading-relaxed mb-8">
+              Asthawaani opens a doorway for gifted spiritual voices. It connects these divine voices with seekers across India and the world — so that no true teacher remains unheard, and no true seeker remains unguided.
+            </p>
+            <Link href="/about" className="inline-flex items-center gap-2 border border-[hsl(225,55%,35%)] text-[hsl(225,55%,35%)] hover:bg-[hsl(225,55%,35%)] hover:text-white font-serif px-6 py-3 rounded-md transition-colors">
+              Read Our Story →
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Offerings */}
+      <section className="py-24 md:py-32 bg-gradient-to-br from-stone-900 via-stone-800 to-stone-900 text-white">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-16">
+            <span className="inline-block text-amber-400 text-sm font-semibold tracking-widest uppercase mb-4">What We Offer</span>
+            <h2 className="text-4xl md:text-5xl font-serif font-bold text-white mb-6">Our Services</h2>
+            <div className="w-24 h-1 bg-gradient-to-r from-amber-400 to-amber-600 mx-auto rounded-full"></div>
+          </div>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {offerings.map((item) => (
+              <Link key={item.title} href="/services">
+                <div className="bg-white/5 backdrop-blur-sm border border-white/10 hover:border-amber-500/30 transition-all duration-500 rounded-xl p-8 text-center h-full">
+                  <h3 className="text-xl font-bold text-white mb-3 group-hover:text-amber-300">{item.title}</h3>
+                  <p className="text-white/60">{item.desc}</p>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Locations */}
+      <section className="py-24 bg-white">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-serif font-bold text-[hsl(225,55%,35%)] mb-4">Our Locations</h2>
+            <p className="text-gray-600 max-w-2xl mx-auto">Our spiritual presence spans across the sacred Braj Bhoomi.</p>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+            {locations.map((loc) => (
+              <Link key={loc.id} href={`/brajbhoomi?location=${loc.id}`}>
+                <div className="group relative overflow-hidden rounded-xl aspect-[3/4] bg-stone-200 cursor-pointer">
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex items-end justify-center p-4">
+                    <div className="text-white text-center">
+                      <p className="text-xs font-bold uppercase tracking-wider text-amber-500 mb-1">Ashram</p>
+                      <h3 className="text-xl font-serif font-bold">{loc.name}</h3>
+                    </div>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* YouTube Gallery */}
+      <section className="py-24 bg-stone-100">
+        <div className="container mx-auto px-4">
+          <div className="flex justify-between items-end mb-12">
+            <div>
+              <h2 className="text-4xl font-serif font-bold text-[hsl(225,55%,35%)] mb-2">Divine Gallery</h2>
+              <p className="text-gray-600">Watch our latest Satsangs</p>
+            </div>
+            <Link href="/videos" className="hidden md:flex items-center gap-2 border border-gray-300 px-4 py-2 rounded-md text-sm hover:bg-gray-50">
+              View All Videos
+            </Link>
+          </div>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {videos.map((video) => (
+              <a key={video.id} href={`https://www.youtube.com/watch?v=${video.id}`} target="_blank" rel="noopener noreferrer" className="group bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all">
+                <div className="relative aspect-video bg-black overflow-hidden">
+                  <img src={`https://i.ytimg.com/vi/${video.id}/sddefault.jpg`} alt={video.title} className="w-full h-full object-cover opacity-80 group-hover:opacity-60 transition-opacity" />
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center text-white shadow-lg">
+                      <svg className="w-8 h-8 fill-current" viewBox="0 0 24 24"><path d="M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z"/></svg>
+                    </div>
+                  </div>
+                  <div className="absolute bottom-2 right-2 bg-black/80 text-white text-xs px-2 py-1 rounded">{video.duration}</div>
+                </div>
+                <div className="p-6">
+                  <h3 className="font-bold text-lg text-[hsl(225,55%,35%)] line-clamp-2 group-hover:text-amber-600 transition-colors">{video.title}</h3>
+                </div>
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section className="py-24 bg-gradient-to-r from-amber-50 via-amber-100 to-amber-50 text-center">
+        <div className="container mx-auto px-4">
+          <h2 className="text-4xl md:text-5xl font-serif font-bold mb-8 text-[hsl(225,55%,35%)]">Ready to begin your journey?</h2>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <a href="https://www.youtube.com/@Asthawaani" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 bg-red-600 hover:bg-red-700 text-white font-bold h-12 px-8 rounded-lg transition-colors shadow-lg">
+              Subscribe on YouTube
+            </a>
+            <Link href="/contact" className="inline-flex items-center justify-center gap-2 border border-[hsl(225,55%,35%)]/30 text-[hsl(225,55%,35%)] hover:bg-[hsl(225,55%,35%)]/10 h-12 px-8 rounded-lg shadow-md transition-colors">
+              Contact Us
+            </Link>
+          </div>
+        </div>
+      </section>
+    </div>
   );
 }
