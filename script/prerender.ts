@@ -72,7 +72,76 @@ async function prerenderRoute(browser: any, route: string): Promise<void> {
     });
 
     // Get the full rendered HTML
-    const html = await page.content();
+    let html = await page.content();
+
+    // Clean up duplicate titles - keep only the first (page-specific) title
+    const titleMatches = html.match(/<title>[^<]*<\/title>/g);
+    if (titleMatches && titleMatches.length > 1) {
+      // Remove all titles except the first one
+      let firstFound = false;
+      html = html.replace(/<title>[^<]*<\/title>/g, (match) => {
+        if (!firstFound) {
+          firstFound = true;
+          return match;
+        }
+        return '';
+      });
+    }
+
+    // Remove duplicate meta descriptions (keep only the last one which is page-specific)
+    const descMatches = html.match(/<meta name="description"[^>]*>/g);
+    if (descMatches && descMatches.length > 1) {
+      let count = 0;
+      const total = descMatches.length;
+      html = html.replace(/<meta name="description"[^>]*>/g, (match) => {
+        count++;
+        return count === total ? match : '';
+      });
+    }
+
+    // Remove duplicate og:title (keep only the last one)
+    const ogTitleMatches = html.match(/<meta property="og:title"[^>]*>/g);
+    if (ogTitleMatches && ogTitleMatches.length > 1) {
+      let count = 0;
+      const total = ogTitleMatches.length;
+      html = html.replace(/<meta property="og:title"[^>]*>/g, (match) => {
+        count++;
+        return count === total ? match : '';
+      });
+    }
+
+    // Remove duplicate og:description (keep only the last one)
+    const ogDescMatches = html.match(/<meta property="og:description"[^>]*>/g);
+    if (ogDescMatches && ogDescMatches.length > 1) {
+      let count = 0;
+      const total = ogDescMatches.length;
+      html = html.replace(/<meta property="og:description"[^>]*>/g, (match) => {
+        count++;
+        return count === total ? match : '';
+      });
+    }
+
+    // Remove duplicate og:url (keep only the last one)
+    const ogUrlMatches = html.match(/<meta property="og:url"[^>]*>/g);
+    if (ogUrlMatches && ogUrlMatches.length > 1) {
+      let count = 0;
+      const total = ogUrlMatches.length;
+      html = html.replace(/<meta property="og:url"[^>]*>/g, (match) => {
+        count++;
+        return count === total ? match : '';
+      });
+    }
+
+    // Remove duplicate canonical links (keep only the last one)
+    const canonicalMatches = html.match(/<link rel="canonical"[^>]*>/g);
+    if (canonicalMatches && canonicalMatches.length > 1) {
+      let count = 0;
+      const total = canonicalMatches.length;
+      html = html.replace(/<link rel="canonical"[^>]*>/g, (match) => {
+        count++;
+        return count === total ? match : '';
+      });
+    }
 
     // Determine output path
     let outputPath: string;
