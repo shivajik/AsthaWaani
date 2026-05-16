@@ -1,4 +1,6 @@
 import type { Metadata } from 'next';
+import Image from 'next/image';
+import Link from 'next/link';
 
 export const metadata: Metadata = {
   title: 'Braj Bhoomi – Sacred Places of Mathura, Vrindavan & Gokul | Asthawaani',
@@ -13,36 +15,99 @@ export const metadata: Metadata = {
   alternates: { canonical: 'https://www.asthawaani.com/brajbhoomi' },
 };
 
-const locations = [
-  { id: 'mathura', name: 'Mathura', nameHi: 'मथुरा', title: 'The Divine Birthplace of Lord Krishna', description: 'Mathura is the eternal heart of Braj Bhoomi and the sacred birthplace of Lord Shri Krishna.' },
-  { id: 'vrindavan', name: 'Vrindavan', nameHi: 'वृंदावन', title: 'The Land of Divine Love and Bhakti', description: 'Vrindavan is the soul of Krishna Bhakti, where every particle breathes devotion and divine love.' },
-  { id: 'gokul', name: 'Gokul', nameHi: 'गोकुल', title: 'The Sacred Childhood Abode of Shri Krishna', description: 'Gokul is the sacred land where Lord Krishna\'s bal-leelas unfolded.' },
-  { id: 'govardhan', name: 'Govardhan', nameHi: 'गोवर्धन', title: 'The Sacred Hill of Protection', description: 'Govardhan is the divine symbol of faith, protection, and surrender.' },
-  { id: 'mahavan', name: 'Mahavan', nameHi: 'महावन', title: 'The Forest of Divine Protection', description: 'Mahavan is a deeply sacred forest region where Lord Krishna performed powerful childhood leelas.' },
-  { id: 'barsana', name: 'Barsana', nameHi: 'बरसाना', title: 'The Divine Land of Radha Rani', description: 'Barsana is the sacred birthplace of Shri Radha Rani, the embodiment of supreme devotion.' },
+const sacredPlaces = [
+  { name: 'Vrindavan', description: 'The Land of Divine Love and Bhakti' },
+  { name: 'Gokul', description: 'The Sacred Childhood Abode of Shri Krishna' },
+  { name: 'Govardhan', description: 'The Sacred Hill of Protection' },
+  { name: 'Mahavan', description: 'The Forest of Divine Protection' },
+  { name: 'Barsana', description: 'The Divine Land of Radha Rani' },
 ];
 
 export default function BrajbhoomiPage() {
   return (
-    <main className="min-h-screen pt-24 pb-16">
-      <div className="container mx-auto px-4">
-        <div className="text-center mb-16">
-          <h1 className="text-4xl md:text-5xl font-serif font-bold text-[hsl(225,55%,35%)] mb-4">Brajbhoomi Darshan</h1>
-          <p className="text-gray-600 max-w-2xl mx-auto">Explore the sacred Braj Bhoomi — the divine land of Lord Krishna&apos;s leelas.</p>
-        </div>
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {locations.map((loc) => (
-            <article key={loc.id} className="rounded-xl border bg-white shadow-sm overflow-hidden hover:shadow-lg transition-shadow">
-              <div className="p-6">
-                <h2 className="text-2xl font-serif font-bold text-[hsl(225,55%,35%)] mb-1">{loc.name}</h2>
-                <p className="text-amber-600 text-sm mb-3">{loc.nameHi}</p>
-                <h3 className="font-medium text-gray-800 mb-2">{loc.title}</h3>
-                <p className="text-gray-500 text-sm">{loc.description}</p>
+    <main className="min-h-screen pt-20">
+      {/* Featured Location */}
+      <section className="py-16">
+        <div className="container mx-auto px-4">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            {/* Image */}
+            <div className="relative h-[400px] lg:h-[500px] rounded-2xl overflow-hidden shadow-xl">
+              <Image
+                src="/attached_assets/generated_images/vrindavan_sunrise_temple_landscape.png"
+                alt="Mathura Temple - The Divine Birthplace of Lord Krishna"
+                fill
+                className="object-cover"
+                priority
+              />
+            </div>
+
+            {/* Content */}
+            <div>
+              <div className="flex flex-wrap gap-2 mb-4">
+                <span className="text-xs font-semibold tracking-wider uppercase text-amber-600 bg-amber-50 px-3 py-1 rounded-full">Janmabhoomi Leelas</span>
+                <span className="text-xs font-semibold tracking-wider uppercase text-amber-600 bg-amber-50 px-3 py-1 rounded-full">Sanatan Pravachan</span>
+                <span className="text-xs font-semibold tracking-wider uppercase text-amber-600 bg-amber-50 px-3 py-1 rounded-full">Krishna Tattva</span>
               </div>
-            </article>
-          ))}
+              <h1 className="text-3xl md:text-4xl font-serif font-bold text-[hsl(225,55%,35%)] mb-6">
+                The Divine Birthplace of Lord Krishna
+              </h1>
+              <p className="text-gray-600 leading-relaxed mb-6">
+                Mathura is the eternal heart of Braj Bhoomi and the sacred birthplace of Lord Shri Krishna. This ancient city, nestled on the banks of the holy Yamuna river, has been a center of devotion and spiritual wisdom for thousands of years. Every stone, every ghat, every temple here resonates with the divine energy of Krishna&apos;s presence. From the sacred Shri Krishna Janmabhoomi to the countless temples that dot the landscape, Mathura invites seekers from across the world to experience the divine love that permeates this holy land.
+              </p>
+              <Link
+                href="/contact"
+                className="inline-block bg-amber-500 hover:bg-amber-600 text-white font-semibold px-6 py-3 rounded-lg transition-colors"
+              >
+                Get in touch
+              </Link>
+            </div>
+          </div>
         </div>
-      </div>
+      </section>
+
+      {/* Other Sacred Places */}
+      <section className="py-16 bg-gray-50">
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl font-serif font-bold text-[hsl(225,55%,35%)] text-center mb-12">
+            Explore Other Sacred Places
+          </h2>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
+            {sacredPlaces.map((place) => (
+              <div key={place.name} className="relative group rounded-xl overflow-hidden shadow-md h-64">
+                <Image
+                  src="/attached_assets/generated_images/vrindavan_sunrise_temple_landscape.png"
+                  alt={place.name}
+                  fill
+                  className="object-cover group-hover:scale-105 transition-transform duration-300"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
+                <div className="absolute bottom-0 left-0 right-0 p-4 text-white">
+                  <h3 className="font-serif font-bold text-lg">{place.name}</h3>
+                  <p className="text-white/80 text-xs">{place.description}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-20 bg-[hsl(225,55%,20%)]">
+        <div className="container mx-auto px-4 text-center">
+          <h2 className="text-3xl md:text-4xl font-serif font-bold text-white mb-4">
+            Experience the Divine Energy of Braj Bhoomi
+          </h2>
+          <p className="text-white/70 mb-8 max-w-xl mx-auto">
+            Connect with the sacred land of Krishna through Asthawaani&apos;s spiritual services.
+          </p>
+          <Link
+            href="/contact"
+            className="inline-block bg-amber-500 hover:bg-amber-600 text-white font-bold px-8 py-3 rounded-lg transition-colors"
+          >
+            Connect With Us
+          </Link>
+        </div>
+      </section>
     </main>
   );
 }
