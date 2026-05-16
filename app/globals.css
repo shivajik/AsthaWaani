@@ -1,0 +1,40 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@plugin "@tailwindcss/typography";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+
+  --color-background: hsl(40 30% 98%);
+  --color-foreground: hsl(225 60% 15%);
+  --color-card: hsl(0 0% 100%);
+  --color-card-foreground: hsl(225 60% 20%);
+  --color-popover: hsl(0 0% 100%);
+  --color-popover-foreground: hsl(225 60% 20%);
+  --color-primary: hsl(225 55% 35%);
+  --color-primary-foreground: hsl(0 0% 100%);
+  --color-secondary: hsl(45 90% 50%);
+  --color-secondary-foreground: hsl(225 60% 15%);
+  --color-muted: hsl(40 20% 94%);
+  --color-muted-foreground: hsl(225 20% 45%);
+  --color-accent: hsl(45 90% 50%);
+  --color-accent-foreground: hsl(225 60% 15%);
+  --color-destructive: hsl(0 84% 60%);
+  --color-border: hsl(225 20% 88%);
+  --color-input: hsl(225 20% 88%);
+  --color-ring: hsl(225 55% 35%);
+  --radius: 0.625rem;
+}
+
+body {
+  font-family: var(--font-inter), system-ui, sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-playfair), serif;
+}
