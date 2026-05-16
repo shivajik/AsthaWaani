@@ -2432,25 +2432,24 @@ app.get("*", async (req: Request, res: Response) => {
 
     const metaTags = buildMetaTags(title, description, ogImage, canonicalUrl, ogType);
 
-    // Read the built index.html and inject meta tags
-    const fs = await import('fs');
-    const path = await import('path');
-    
-    // Try multiple possible locations for index.html
-    const possiblePaths = [
-      path.default.join(process.cwd(), 'dist', 'public', 'index.html'),
-      path.default.join(process.cwd(), '.output', 'static', 'index.html'),
-      path.default.join(process.cwd(), 'index.html'),
-      path.default.join(__dirname, '..', 'dist', 'public', 'index.html'),
-      path.default.join(__dirname, '..', 'index.html'),
-    ];
-
+    // Read the built index.html template (embedded during build)
     let indexHtml = '';
-    for (const p of possiblePaths) {
+    try {
+      const { HTML_TEMPLATE } = await import('./_html-template');
+      indexHtml = HTML_TEMPLATE;
+    } catch {
+      // Fallback: try reading from filesystem (works in dev/Replit)
       try {
-        indexHtml = fs.default.readFileSync(p, 'utf-8');
-        break;
-      } catch { continue; }
+        const fs = await import('fs');
+        const path = await import('path');
+        const possiblePaths = [
+          path.default.join(process.cwd(), 'dist', 'public', 'index.html'),
+          path.default.join(__dirname, '..', 'dist', 'public', 'index.html'),
+        ];
+        for (const p of possiblePaths) {
+          try { indexHtml = fs.default.readFileSync(p, 'utf-8'); break; } catch { continue; }
+        }
+      } catch { /* ignore */ }
     }
 
     if (indexHtml) {
