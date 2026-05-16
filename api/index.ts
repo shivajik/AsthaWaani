@@ -2339,74 +2339,132 @@ app.all("/api/*", (req, res) => {
   res.status(404).json({ error: "API endpoint not found" });
 });
 
-// Catch-all for crawler requests routed here by Vercel (non-API paths like /blog/:slug, /about, etc.)
+// Catch-all: serves the SPA index.html with injected meta tags per route
 app.get("*", async (req: Request, res: Response) => {
   const reqPath = req.path;
 
   // Skip static assets
-  if (reqPath.match(/\.(js|css|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|eot|map|webp)$/)) {
+  if (reqPath.match(/\.(js|css|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|eot|map|webp|mp4|json)$/)) {
     return res.status(404).send('');
   }
 
-  // This is reached only by crawlers (Vercel's has condition routes them here)
   const baseUrl = 'https://www.asthawaani.com';
   const defaultImage = `${baseUrl}/opengraph.jpg`;
 
   const staticMeta: Record<string, { title: string; description: string }> = {
-    '/': { title: 'Asthawaani – Online Satsang, Bhajan & Mantra Jaap from Vrindavan', description: 'Asthawaani is a spiritual platform from Mathura-Vrindavan offering daily satsang, bhajan kirtan, mantra jaap, and katha pravachan.' },
-    '/about': { title: 'About Asthawaani – Spiritual Platform from Mathura Vrindavan', description: 'Asthawaani connects gifted Katha Vachaks, Pravaktas, Bhajan singers & spiritual speakers with seekers across India.' },
-    '/services': { title: 'Our Services – Satsang, Katha, Bhajan, Mantra Jaap | Asthawaani', description: 'Explore Asthawaani spiritual services: Daily Satsang, Katha Pravachan, Bhajan Kirtan, Mantra Jaap, Navgrah Shanti.' },
-    '/brajbhoomi': { title: 'Braj Bhoomi – Sacred Places of Mathura, Vrindavan & Gokul | Asthawaani', description: 'Explore the sacred Braj Bhoomi. Mathura, Vrindavan, Gokul, Govardhan, Mahavan & Barsana.' },
-    '/blog': { title: 'Spiritual Blog – Mantra Jaap, Satsang & Vedic Wisdom | Asthawaani', description: 'Read articles on mantra jaap, navgrah shanti, daily satsang, bhakti yoga, meditation and Vedic spiritual wisdom.' },
-    '/videos': { title: 'Spiritual Videos – Satsang, Kirtan & Pravachan | Asthawaani', description: 'Watch satsang, bhajan kirtan, katha pravachan and spiritual discourses from Mathura-Vrindavan.' },
-    '/contact': { title: 'Contact Asthawaani – Reach Us in Mathura, Uttar Pradesh', description: 'Get in touch with Asthawaani Kendra, Mathura. Call +91 76684 09246.' },
-    '/community': { title: 'Spiritual Community – Join Our Sangha | Asthawaani', description: 'Join Asthawaani spiritual community. Connect with fellow seekers.' },
+    '/': { title: 'Asthawaani – Online Satsang, Bhajan & Mantra Jaap from Vrindavan', description: 'Asthawaani is a spiritual platform from Mathura-Vrindavan offering daily satsang, bhajan kirtan, mantra jaap, and katha pravachan. Join the digital satsang today.' },
+    '/about': { title: 'About Asthawaani – Spiritual Platform from Mathura Vrindavan', description: 'Asthawaani connects gifted Katha Vachaks, Pravaktas, Bhajan singers & spiritual speakers with seekers across India. Born from the sacred land of Braj Bhoomi.' },
+    '/services': { title: 'Our Services – Satsang, Katha, Bhajan, Mantra Jaap | Asthawaani', description: 'Explore Asthawaani spiritual services: Daily Satsang, Katha Pravachan, Bhajan Kirtan, Mantra Jaap, Navgrah Shanti, Morning Aarti & community from Vrindavan.' },
+    '/brajbhoomi': { title: 'Braj Bhoomi – Sacred Places of Mathura, Vrindavan & Gokul | Asthawaani', description: 'Explore the sacred Braj Bhoomi through Asthawaani. Spiritual presence in Mathura, Vrindavan, Gokul, Govardhan, Mahavan & Barsana with authentic satsang & wisdom.' },
+    '/blog': { title: 'Spiritual Blog – Mantra Jaap, Satsang & Vedic Wisdom | Asthawaani', description: 'Read articles on mantra jaap, navgrah shanti, daily satsang, bhakti yoga, meditation and Vedic spiritual wisdom. Guidance for peace and positivity by Asthawaani.' },
+    '/videos': { title: 'Spiritual Videos – Satsang, Kirtan & Pravachan | Asthawaani', description: 'Watch satsang, bhajan kirtan, katha pravachan and spiritual discourses from Mathura-Vrindavan. Subscribe to Asthawaani YouTube channel for daily wisdom.' },
+    '/gallery': { title: 'Photo Gallery – Temples & Sacred Places | Asthawaani', description: 'View photos of sacred temples, spiritual events, and divine moments from Mathura, Vrindavan, and Braj Bhoomi.' },
+    '/contact': { title: 'Contact Asthawaani – Reach Us in Mathura, Uttar Pradesh', description: 'Get in touch with Asthawaani Kendra, Mathura. Call +91 76684 09246 or email us. Whether you are a seeker or a spiritual speaker, we are here for you.' },
+    '/community': { title: 'Spiritual Community – Join Our Sangha | Asthawaani', description: 'Join Asthawaani spiritual community. Connect with fellow seekers, participate in satsang, and grow on your spiritual path.' },
+    '/join-partners': { title: 'Join as Partner – Collaborate with Asthawaani', description: 'Partner with Asthawaani to spread spiritual wisdom. Collaborate on satsang, bhajan events, and community initiatives.' },
+    '/apply-vakta': { title: 'Apply as Vakta – Share Your Spiritual Voice | Asthawaani', description: 'Apply to become a Vakta (speaker) on Asthawaani. Share your spiritual knowledge with seekers worldwide.' },
+    '/terms-of-service': { title: 'Terms of Service | Asthawaani', description: 'Terms of service for using the Asthawaani spiritual platform.' },
+    '/privacy-policy': { title: 'Privacy Policy | Asthawaani', description: 'Privacy policy for the Asthawaani spiritual platform.' },
   };
 
   function esc(s: string): string { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-  function renderOg(title: string, desc: string, img: string, url: string, type = 'website'): string {
+
+  function buildMetaTags(title: string, desc: string, img: string, url: string, type = 'website'): string {
     const t = esc(title), d = esc(desc);
-    return `<!DOCTYPE html><html><head><meta charset="UTF-8"/><title>${t}</title><meta name="description" content="${d}"/><meta property="og:title" content="${t}"/><meta property="og:description" content="${d}"/><meta property="og:image" content="${img}"/><meta property="og:image:width" content="1200"/><meta property="og:image:height" content="630"/><meta property="og:url" content="${url}"/><meta property="og:type" content="${type}"/><meta property="og:site_name" content="Asthawaani"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="${t}"/><meta name="twitter:description" content="${d}"/><meta name="twitter:image" content="${img}"/></head><body><h1>${t}</h1><p>${d}</p></body></html>`;
+    return `<title>${t}</title>
+    <meta name="description" content="${d}" />
+    <meta property="og:title" content="${t}" />
+    <meta property="og:description" content="${d}" />
+    <meta property="og:image" content="${img}" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:url" content="${url}" />
+    <meta property="og:type" content="${type}" />
+    <meta property="og:site_name" content="Asthawaani" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@asthawaani" />
+    <meta name="twitter:title" content="${t}" />
+    <meta name="twitter:description" content="${d}" />
+    <meta name="twitter:image" content="${img}" />
+    <link rel="canonical" href="${url}" />`;
   }
 
   try {
+    // Determine meta tags for this route
+    let title = 'Asthawaani – Online Satsang, Bhajan & Mantra Jaap from Vrindavan';
+    let description = 'Asthawaani is a spiritual platform from Mathura-Vrindavan offering daily satsang, bhajan kirtan, mantra jaap, and katha pravachan.';
+    let ogImage = defaultImage;
+    let ogType = 'website';
+    let canonicalUrl = `${baseUrl}${reqPath}`;
+
     // Blog post
     const blogMatch = reqPath.match(/^\/blog\/([^/]+)$/);
     if (blogMatch) {
       const slug = blogMatch[1];
-      const [post] = await db.select().from(posts).where(eq(posts.slug, slug));
-      if (post && post.status === 'published') {
-        const title = post.metaTitle || `${post.title} | Asthawaani`;
-        const desc = post.metaDescription || post.excerpt || post.title;
-        const img = post.featuredImage
-          ? (post.featuredImage.startsWith('http') ? post.featuredImage : `${baseUrl}${post.featuredImage}`)
-          : defaultImage;
-        return res.status(200).type('html').send(renderOg(title, desc, img, `${baseUrl}/blog/${slug}`, 'article'));
+      try {
+        const [post] = await db.select().from(posts).where(eq(posts.slug, slug));
+        if (post && post.status === 'published') {
+          title = post.metaTitle || `${post.title} | Asthawaani`;
+          description = post.metaDescription || post.excerpt || post.title;
+          ogImage = post.featuredImage
+            ? (post.featuredImage.startsWith('http') ? post.featuredImage : `${baseUrl}${post.featuredImage}`)
+            : defaultImage;
+          ogType = 'article';
+          canonicalUrl = `${baseUrl}/blog/${slug}`;
+        }
+      } catch (e) { /* use defaults */ }
+    } else if (staticMeta[reqPath]) {
+      title = staticMeta[reqPath].title;
+      description = staticMeta[reqPath].description;
+    } else {
+      // Dynamic CMS page
+      const pageSlug = reqPath.replace(/^\//, '');
+      if (pageSlug && !pageSlug.includes('/')) {
+        try {
+          const [page] = await db.select().from(pages).where(eq(pages.slug, pageSlug));
+          if (page && page.isPublished) {
+            title = page.metaTitle || `${page.title} | Asthawaani`;
+            description = page.metaDescription || page.title;
+          }
+        } catch (e) { /* use defaults */ }
       }
     }
 
-    // Static pages
-    if (staticMeta[reqPath]) {
-      const m = staticMeta[reqPath];
-      return res.status(200).type('html').send(renderOg(m.title, m.description, defaultImage, `${baseUrl}${reqPath}`));
+    const metaTags = buildMetaTags(title, description, ogImage, canonicalUrl, ogType);
+
+    // Read the built index.html and inject meta tags
+    const fs = await import('fs');
+    const path = await import('path');
+    
+    // Try multiple possible locations for index.html
+    const possiblePaths = [
+      path.default.join(process.cwd(), 'dist', 'public', 'index.html'),
+      path.default.join(process.cwd(), '.output', 'static', 'index.html'),
+      path.default.join(process.cwd(), 'index.html'),
+      path.default.join(__dirname, '..', 'dist', 'public', 'index.html'),
+      path.default.join(__dirname, '..', 'index.html'),
+    ];
+
+    let indexHtml = '';
+    for (const p of possiblePaths) {
+      try {
+        indexHtml = fs.default.readFileSync(p, 'utf-8');
+        break;
+      } catch { continue; }
     }
 
-    // Dynamic CMS page
-    const pageSlug = reqPath.replace(/^\//, '');
-    if (pageSlug && !pageSlug.includes('/')) {
-      const [page] = await db.select().from(pages).where(eq(pages.slug, pageSlug));
-      if (page && page.isPublished) {
-        const title = page.metaTitle || `${page.title} | Asthawaani`;
-        const desc = page.metaDescription || page.title;
-        return res.status(200).type('html').send(renderOg(title, desc, defaultImage, `${baseUrl}/${pageSlug}`));
-      }
+    if (indexHtml) {
+      // Replace the placeholder with actual meta tags
+      const finalHtml = indexHtml.replace('<!-- SEO_META_PLACEHOLDER -->', metaTags);
+      return res.status(200).type('html').send(finalHtml);
     }
 
-    // Fallback
-    return res.status(200).type('html').send(renderOg('Asthawaani', 'Spiritual platform from Mathura-Vrindavan.', defaultImage, `${baseUrl}${reqPath}`));
+    // If we can't find index.html, serve a minimal page with meta tags
+    // (this shouldn't happen in production but is a safety net)
+    return res.status(200).type('html').send(`<!DOCTYPE html><html><head><meta charset="UTF-8"/>${metaTags}</head><body><div id="root"></div><script>window.location.reload();</script></body></html>`);
   } catch (err) {
-    console.error('Crawler catch-all error:', err);
-    return res.status(200).type('html').send(renderOg('Asthawaani', 'Spiritual platform from Mathura-Vrindavan.', defaultImage, `${baseUrl}${reqPath}`));
+    console.error('Page serve error:', err);
+    return res.status(200).type('html').send(`<!DOCTYPE html><html><head><title>Asthawaani</title></head><body><div id="root"></div></body></html>`);
   }
 });
 

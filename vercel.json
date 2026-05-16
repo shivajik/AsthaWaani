@@ -3,7 +3,6 @@
   "buildCommand": "npm run build",
   "installCommand": "npm install",
   "outputDirectory": "dist/public",
-  "framework": "vite",
   "redirects": [
     { "source": "/:path*", "has": [{ "type": "host", "value": "asthawaani.com" }], "destination": "https://www.asthawaani.com/:path*", "permanent": true }
   ],
@@ -11,17 +10,7 @@
     { "source": "/api/:path*", "destination": "/api/index.ts" },
     { "source": "/robots.txt", "destination": "/api/index.ts" },
     { "source": "/sitemap.xml", "destination": "/api/index.ts" },
-    {
-      "source": "/blog/:slug",
-      "has": [{ "type": "header", "key": "user-agent", "value": ".*(facebookexternalhit|WhatsApp|Twitterbot|LinkedInBot|TelegramBot|Discordbot|Googlebot|Bingbot|Slurp|DuckDuckBot|GPTBot|ClaudeBot|PerplexityBot).*" }],
-      "destination": "/api/index.ts"
-    },
-    {
-      "source": "/:path*",
-      "has": [{ "type": "header", "key": "user-agent", "value": ".*(facebookexternalhit|WhatsApp|Twitterbot|LinkedInBot|TelegramBot|Discordbot|Googlebot|Bingbot|Slurp|DuckDuckBot|GPTBot|ClaudeBot|PerplexityBot).*" }],
-      "destination": "/api/index.ts"
-    },
-    { "source": "/(.*)", "destination": "/index.html" }
+    { "source": "/((?!assets/|attached_assets/|favicon|opengraph|ads/).*)", "destination": "/api/index.ts" }
   ],
   "headers": [
     {
