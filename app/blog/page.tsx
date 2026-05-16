@@ -25,7 +25,7 @@ const posts = pgTable("posts", {
   titleHi: text("title_hi"),
   excerpt: text("excerpt"),
   featuredImage: text("featured_image"),
-  category: text("category"),
+  categoryId: varchar("category_id"),
   status: text("status").notNull(),
   publishedAt: timestamp("published_at"),
 });
