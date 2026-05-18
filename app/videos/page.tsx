@@ -33,6 +33,8 @@ const fallbackVideos = [
   { videoId: 'wRAHgryads0', title: 'पंडित अखिलेश गौड़ जी की चेतावनी! आज नहीं संभले तो देर हो जाएगी।', duration: '13:53' },
   { videoId: 'WkuCencbA9g', title: 'Sankat Mochan Hanuman Ashtak – Asthavaani Version', duration: '5:16' },
   { videoId: '7CHJ-56pf7s', title: 'अंजनी के लाल सालासर वाले | जय बजरंगबली | Salasar ji Balaji', duration: '2:12' },
+  { videoId: '_R77olhRj74', title: 'Spiritual Wisdom Session 2', duration: '4:32' },
+  { videoId: '8cAb1LM_cfo', title: 'Spiritual Wisdom Session 1', duration: '6:37' },
 ];
 
 export default async function VideosPage() {
@@ -61,7 +63,7 @@ export default async function VideosPage() {
           <div className="mb-12">
             <a href={`https://www.youtube.com/watch?v=${displayVideos[0].videoId}`} target="_blank" rel="noopener noreferrer" className="block group">
               <div className="relative aspect-video max-w-4xl mx-auto rounded-xl overflow-hidden shadow-xl">
-                <img src={`https://i.ytimg.com/vi/${displayVideos[0].videoId}/maxresdefault.jpg`} alt={displayVideos[0].title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                <img src={`https://i.ytimg.com/vi/${displayVideos[0].videoId}/sddefault.jpg`} alt={displayVideos[0].title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                 <div className="absolute inset-0 bg-black/30 group-hover:bg-black/40 transition-colors flex items-center justify-center">
                   <div className="w-20 h-20 bg-red-600 rounded-full flex items-center justify-center text-white shadow-2xl">
                     <svg className="w-10 h-10 fill-current ml-1" viewBox="0 0 24 24"><path d="M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z"/></svg>

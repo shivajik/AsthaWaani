@@ -80,9 +80,9 @@ export default function ServicesPage() {
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {services.map((service) => (
-              <div key={service.title} className="bg-white rounded-lg border border-gray-200 p-8 hover:shadow-lg transition-shadow">
+              <div key={service.title} className="bg-white rounded-lg border border-gray-200 p-8 hover:shadow-lg transition-shadow border-t-4 border-t-amber-400">
                 <h3 className="text-xl font-serif font-bold text-[hsl(225,55%,35%)] mb-2">{service.title}</h3>
-                <p className="text-amber-600 text-sm font-medium mb-4">{service.subtitle}</p>
+                <p className="text-amber-600 text-sm font-medium italic mb-4">{service.subtitle}</p>
                 <p className="text-gray-600 text-sm leading-relaxed">{service.description}</p>
               </div>
             ))}
