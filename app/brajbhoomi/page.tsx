@@ -16,11 +16,11 @@ export const metadata: Metadata = {
 };
 
 const sacredPlaces = [
-  { name: 'Vrindavan', description: 'The Land of Divine Love and Bhakti' },
-  { name: 'Gokul', description: 'The Sacred Childhood Abode of Shri Krishna' },
-  { name: 'Govardhan', description: 'The Sacred Hill of Protection' },
-  { name: 'Mahavan', description: 'The Forest of Divine Protection' },
-  { name: 'Barsana', description: 'The Divine Land of Radha Rani' },
+  { name: 'Vrindavan', description: 'The Land of Divine Love and Bhakti', image: '/attached_assets/Temple/Prem_mandir.png' },
+  { name: 'Gokul', description: 'The Sacred Childhood Abode of Shri Krishna', image: '/attached_assets/Temple/Raman_reti.png' },
+  { name: 'Govardhan', description: 'The Sacred Hill of Protection', image: '/attached_assets/Temple/Daan_Ghati.png' },
+  { name: 'Mahavan', description: 'The Forest of Divine Protection', image: '/attached_assets/Temple/mahaban_Chaurasi.png' },
+  { name: 'Barsana', description: 'The Divine Land of Radha Rani', image: '/attached_assets/Temple/Barsana_Radha_Rani.png' },
 ];
 
 export default function BrajbhoomiPage() {
@@ -33,7 +33,7 @@ export default function BrajbhoomiPage() {
             {/* Image */}
             <div className="relative h-[400px] lg:h-[500px] rounded-2xl overflow-hidden shadow-xl">
               <Image
-                src="/attached_assets/generated_images/vrindavan_sunrise_temple_landscape.png"
+                src="/attached_assets/Temple/Srikrishna_Janmabhoomi.png"
                 alt="Mathura Temple - The Divine Birthplace of Lord Krishna"
                 fill
                 className="object-cover"
@@ -75,7 +75,7 @@ export default function BrajbhoomiPage() {
             {sacredPlaces.map((place) => (
               <div key={place.name} className="relative group rounded-xl overflow-hidden shadow-md h-64">
                 <Image
-                  src="/attached_assets/generated_images/vrindavan_sunrise_temple_landscape.png"
+                  src={place.image}
                   alt={place.name}
                   fill
                   className="object-cover group-hover:scale-105 transition-transform duration-300"
