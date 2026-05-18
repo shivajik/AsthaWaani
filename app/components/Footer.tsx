@@ -1,15 +1,46 @@
 import Link from 'next/link';
+import { db } from '../lib/db';
+import { eq, and } from 'drizzle-orm';
+import { pgTable, text, varchar, integer, boolean } from 'drizzle-orm/pg-core';
+import { sql } from 'drizzle-orm';
 
-export function Footer() {
+const ads = pgTable("ads", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  titleEn: text("title_en").notNull(),
+  imageUrl: text("image_url").notNull(),
+  imageWidth: integer("image_width"),
+  imageHeight: integer("image_height"),
+  link: text("link"),
+  isActive: boolean("is_active").notNull(),
+  placement: text("placement").notNull(),
+  position: integer("position").notNull(),
+});
+
+export async function Footer() {
+  // Fetch above-footer and footer ads from database
+  let aboveFooterAds: any[] = [];
+  let footerAds: any[] = [];
+  try {
+    aboveFooterAds = await db.select().from(ads).where(and(eq(ads.isActive, true), eq(ads.placement, 'above_footer')));
+    footerAds = await db.select().from(ads).where(and(eq(ads.isActive, true), eq(ads.placement, 'footer')));
+  } catch (e) { /* ignore - use fallback images */ }
   return (
     <>
-      {/* Follow Asthawaani Banner */}
-      <div className="w-full">
-        <img
-          src="/attached_assets/channels4_banner_1765890087938.jpg"
-          alt="Follow Asthawaani - For Bhajan, Pravachan, Gyaan, Healing"
-          className="w-full h-auto object-cover"
-        />
+      {/* Follow Asthawaani Banner / Above Footer Ad */}
+      <div className="w-full flex justify-center py-8">
+        {aboveFooterAds.length > 0 ? (
+          aboveFooterAds.map((ad: any) => (
+            <a key={ad.id} href={ad.link || '#'} target="_blank" rel="noopener noreferrer" className="block max-w-3xl mx-auto">
+              <img src={ad.imageUrl} alt={ad.titleEn} className="w-full h-auto rounded-lg" />
+            </a>
+          ))
+        ) : (
+          <img
+            src="/attached_assets/channels4_banner_1765890087938.jpg"
+            alt="Follow Asthawaani - For Bhajan, Pravachan, Gyaan, Healing"
+            className="max-w-3xl w-full h-auto rounded-lg mx-auto"
+          />
+        )}
       </div>
 
       {/* Footer */}
@@ -63,11 +94,13 @@ export function Footer() {
             <div>
               <h4 className="font-bold mb-4 text-amber-400 text-sm uppercase tracking-wider">Sponsored</h4>
               <div className="rounded-lg overflow-hidden border border-white/10">
-                <img
-                  src="/attached_assets/image_1765904066290.png"
-                  alt="Join as a Creator"
-                  className="w-full h-auto"
-                />
+                {footerAds.length > 0 ? (
+                  <a href={footerAds[0].link || '#'} target="_blank" rel="noopener noreferrer">
+                    <img src={footerAds[0].imageUrl} alt={footerAds[0].titleEn} className="w-full h-auto" />
+                  </a>
+                ) : (
+                  <img src="/attached_assets/image_1765904066290.png" alt="Join as a Creator" className="w-full h-auto" />
+                )}
               </div>
             </div>
 

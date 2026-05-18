@@ -40,10 +40,13 @@ export default async function VideosPage() {
   try {
     dbVideos = await db.select().from(videos).orderBy(desc(videos.publishedAt));
   } catch (e) {
-    console.error('Failed to fetch videos from DB:', e);
+    // Database might not be available locally - use fallback
   }
 
-  const displayVideos = dbVideos.length > 0 ? dbVideos : fallbackVideos;
+  // Combine DB videos with fallback (always show something)
+  const displayVideos = dbVideos.length > 0 
+    ? dbVideos.map((v: any) => ({ videoId: v.videoId, title: v.title, duration: v.duration }))
+    : fallbackVideos;
 
   return (
     <main className="min-h-screen pt-24 pb-16">
