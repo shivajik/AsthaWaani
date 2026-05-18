@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { db } from '../lib/db';
-import { eq, desc } from 'drizzle-orm';
-import { pgTable, text, varchar, timestamp } from 'drizzle-orm/pg-core';
+import { eq, desc, and } from 'drizzle-orm';
+import { pgTable, text, varchar, integer, boolean, timestamp } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import Link from 'next/link';
 
@@ -30,10 +30,40 @@ const posts = pgTable("posts", {
   publishedAt: timestamp("published_at"),
 });
 
-const categories = ['All', 'Devotion', 'Meditation', 'Spirituality'];
+const ads = pgTable("ads", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  titleEn: text("title_en").notNull(),
+  imageUrl: text("image_url").notNull(),
+  link: text("link"),
+  isActive: boolean("is_active").notNull(),
+  placement: text("placement").notNull(),
+  position: integer("position").notNull(),
+});
+
+const categoriesTable = pgTable("categories", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  slug: text("slug").notNull(),
+  name: text("name").notNull(),
+});
 
 export default async function BlogPage() {
   const allPosts = await db.select().from(posts).where(eq(posts.status, 'published')).orderBy(desc(posts.publishedAt));
+  
+  // Fetch sidebar ads
+  let sidebarAds: any[] = [];
+  try {
+    sidebarAds = await db.select().from(ads).where(and(eq(ads.isActive, true), eq(ads.placement, 'blog_listing')));
+  } catch (e) { /* ignore */ }
+
+  // Fetch categories
+  let dbCategories: any[] = [];
+  try {
+    dbCategories = await db.select().from(categoriesTable);
+  } catch (e) { /* ignore */ }
+
+  const categoryNames = dbCategories.length > 0 
+    ? ['All', ...dbCategories.map((c: any) => c.name)]
+    : ['All', 'Devotion', 'Meditation', 'Spirituality'];
 
   return (
     <main className="min-h-screen pt-24 pb-16">
@@ -51,7 +81,7 @@ export default async function BlogPage() {
               <div className="mb-8">
                 <h3 className="font-bold text-gray-800 mb-3">Categories</h3>
                 <div className="flex flex-wrap lg:flex-col gap-2">
-                  {categories.map((cat) => (
+                  {categoryNames.map((cat) => (
                     <button
                       key={cat}
                       className="px-4 py-2 text-sm rounded-lg border border-gray-200 hover:border-amber-400 hover:text-amber-600 transition-colors text-left bg-white"
@@ -64,14 +94,23 @@ export default async function BlogPage() {
 
               {/* Ad placeholder */}
               <div className="hidden lg:block">
-                <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 text-center">
-                  <p className="text-xs text-amber-600 font-medium mb-2">Sponsored</p>
-                  <img
-                    src="/attached_assets/channels4_banner_1765890087938.jpg"
-                    alt="Asthawaani Banner"
-                    className="w-full rounded"
-                  />
-                </div>
+                {sidebarAds.length > 0 ? (
+                  sidebarAds.map((ad: any) => (
+                    <div key={ad.id} className="mb-4">
+                      <a href={ad.link || '#'} target="_blank" rel="noopener noreferrer">
+                        <div className="relative rounded-lg overflow-hidden border border-amber-200">
+                          <span className="absolute top-2 right-2 bg-amber-500 text-white text-xs font-semibold px-2 py-0.5 rounded z-10">Sponsored</span>
+                          <img src={ad.imageUrl} alt={ad.titleEn} className="w-full h-auto" />
+                        </div>
+                      </a>
+                    </div>
+                  ))
+                ) : (
+                  <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 text-center">
+                    <p className="text-xs text-amber-600 font-medium mb-2">Sponsored</p>
+                    <p className="text-gray-400 text-sm">Asthawaani Banner</p>
+                  </div>
+                )}
               </div>
             </div>
           </aside>

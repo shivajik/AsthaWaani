@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { db } from '../../lib/db';
-import { eq } from 'drizzle-orm';
-import { pgTable, text, varchar, timestamp } from 'drizzle-orm/pg-core';
+import { eq, and } from 'drizzle-orm';
+import { pgTable, text, varchar, integer, boolean, timestamp } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
@@ -19,15 +19,33 @@ const posts = pgTable("posts", {
   metaTitle: text("meta_title"),
   metaDescription: text("meta_description"),
   status: text("status").notNull(),
+  categoryId: varchar("category_id"),
   publishedAt: timestamp("published_at"),
   updatedAt: timestamp("updated_at"),
+});
+
+const ads = pgTable("ads", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  titleEn: text("title_en").notNull(),
+  imageUrl: text("image_url").notNull(),
+  imageWidth: integer("image_width"),
+  imageHeight: integer("image_height"),
+  link: text("link"),
+  isActive: boolean("is_active").notNull(),
+  placement: text("placement").notNull(),
+  position: integer("position").notNull(),
+});
+
+const categoriesTable = pgTable("categories", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  slug: text("slug").notNull(),
+  name: text("name").notNull(),
 });
 
 type Props = {
   params: Promise<{ slug: string }>;
 };
 
-// Generate metadata dynamically from the database
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const [post] = await db.select().from(posts).where(eq(posts.slug, slug));
@@ -71,55 +89,138 @@ export default async function BlogPostPage({ params }: Props) {
     notFound();
   }
 
+  // Fetch ads for blog post
+  let topAds: any[] = [];
+  let sidebarAds: any[] = [];
+  let bottomAds: any[] = [];
+  try {
+    topAds = await db.select().from(ads).where(and(eq(ads.isActive, true), eq(ads.placement, 'blog_post_top')));
+    sidebarAds = await db.select().from(ads).where(and(eq(ads.isActive, true), eq(ads.placement, 'blog_post_sidebar')));
+    bottomAds = await db.select().from(ads).where(and(eq(ads.isActive, true), eq(ads.placement, 'blog_post_bottom')));
+  } catch (e) { /* ignore */ }
+
+  // Fetch categories
+  let categories: any[] = [];
+  try {
+    categories = await db.select().from(categoriesTable);
+  } catch (e) { /* ignore */ }
+
   return (
     <main className="min-h-screen pt-24 pb-16">
-      <div className="container mx-auto px-4 max-w-4xl">
-        <Link href="/blog" className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-[hsl(225,55%,35%)] mb-8">
-          ← Back to Blog
-        </Link>
+      <div className="max-w-7xl mx-auto px-4">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+          {/* Sidebar */}
+          <aside className="md:col-span-1">
+            <div className="sticky top-28 space-y-8">
+              {/* Categories */}
+              <div>
+                <h2 className="text-lg font-serif font-bold mb-4">Categories</h2>
+                <div className="flex flex-col gap-2">
+                  <Link href="/blog" className="px-4 py-2 text-sm rounded-lg border border-gray-200 hover:border-amber-400 hover:text-amber-600 transition-colors bg-white">
+                    All
+                  </Link>
+                  {categories.map((cat: any) => (
+                    <Link key={cat.id} href={`/blog?category=${cat.id}`} className="px-4 py-2 text-sm rounded-lg border border-gray-200 hover:border-amber-400 hover:text-amber-600 transition-colors bg-white">
+                      {cat.name}
+                    </Link>
+                  ))}
+                </div>
+              </div>
 
-        <article>
-          {post.featuredImage && (
-            <div className="w-full h-80 md:h-96 overflow-hidden rounded-xl mb-8">
-              <img src={post.featuredImage} alt={post.title} className="w-full h-full object-cover" />
+              {/* Sidebar Ads */}
+              {sidebarAds.length > 0 && (
+                <div className="space-y-4">
+                  {sidebarAds.map((ad: any) => (
+                    <a key={ad.id} href={ad.link || '#'} target="_blank" rel="noopener noreferrer" className="block">
+                      <div className="relative rounded-md overflow-hidden">
+                        <span className="absolute top-2 right-2 bg-blue-500 text-white text-xs font-semibold px-2 py-0.5 rounded z-10">Ad</span>
+                        <img src={ad.imageUrl} alt={ad.titleEn} className="w-full h-auto" style={{ maxWidth: ad.imageWidth ? `${ad.imageWidth}px` : '100%' }} />
+                      </div>
+                    </a>
+                  ))}
+                </div>
+              )}
             </div>
-          )}
+          </aside>
 
-          <h1 className="text-3xl md:text-5xl font-serif font-bold text-[hsl(225,55%,35%)] mb-4">{post.title}</h1>
-
-          {post.publishedAt && (
-            <p className="text-sm text-gray-400 mb-8">
-              {new Date(post.publishedAt).toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' })}
-            </p>
-          )}
-
-          {post.excerpt && (
-            <p className="text-lg text-gray-600 italic mb-8 border-l-4 border-amber-400 pl-4">{post.excerpt}</p>
-          )}
-
-          {post.content && (
-            <div
-              className="prose prose-lg max-w-none prose-headings:font-serif prose-headings:text-[hsl(225,55%,35%)] prose-a:text-amber-600"
-              dangerouslySetInnerHTML={{ __html: post.content }}
-            />
-          )}
-        </article>
-
-        {/* CTA */}
-        <div className="mt-16 rounded-xl bg-amber-50 py-10 px-6 text-center">
-          <h2 className="text-2xl font-serif font-bold text-[hsl(225,55%,35%)] mb-4">Ready to begin your spiritual journey?</h2>
-          <div className="flex items-center justify-center gap-4 flex-wrap">
-            <a href="https://www.youtube.com/@asthawaani?sub_confirmation=1" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white font-semibold px-5 py-2.5 rounded-full transition-colors text-sm">
-              Subscribe on YouTube
-            </a>
-            <Link href="/contact" className="inline-flex items-center gap-2 border border-[hsl(225,55%,35%)] text-[hsl(225,55%,35%)] hover:bg-[hsl(225,55%,35%)] hover:text-white font-semibold px-5 py-2.5 rounded-full transition-colors text-sm">
-              Contact Us
+          {/* Main Content */}
+          <div className="md:col-span-3">
+            <Link href="/blog" className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-[hsl(225,55%,35%)] mb-8">
+              ← Back to Blog
             </Link>
+
+            {/* Top Ads */}
+            {topAds.length > 0 && (
+              <div className="mb-6 space-y-3">
+                {topAds.map((ad: any) => (
+                  <a key={ad.id} href={ad.link || '#'} target="_blank" rel="noopener noreferrer" className="block">
+                    <div className="relative rounded-md overflow-hidden inline-block">
+                      <span className="absolute top-2 right-2 bg-blue-500 text-white text-xs font-semibold px-2 py-1 rounded z-10">Advertisement</span>
+                      <img src={ad.imageUrl} alt={ad.titleEn} className="w-full h-auto" style={{ maxWidth: ad.imageWidth ? `${ad.imageWidth}px` : '100%' }} />
+                    </div>
+                  </a>
+                ))}
+              </div>
+            )}
+
+            <article>
+              {post.featuredImage && (
+                <div className="w-full h-80 md:h-96 overflow-hidden rounded-xl mb-8">
+                  <img src={post.featuredImage} alt={post.title} className="w-full h-full object-cover" />
+                </div>
+              )}
+
+              <h1 className="text-3xl md:text-5xl font-serif font-bold text-[hsl(225,55%,35%)] mb-4">{post.title}</h1>
+
+              {post.publishedAt && (
+                <p className="text-sm text-gray-400 mb-8">
+                  {new Date(post.publishedAt).toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' })}
+                </p>
+              )}
+
+              {post.excerpt && (
+                <p className="text-lg text-gray-600 italic mb-8">{post.excerpt}</p>
+              )}
+
+              {post.content && (
+                <div
+                  className="prose prose-lg max-w-none prose-headings:font-serif prose-headings:text-[hsl(225,55%,35%)] prose-a:text-amber-600 prose-strong:text-gray-800 prose-ul:list-disc prose-ol:list-decimal"
+                  dangerouslySetInnerHTML={{ __html: post.content }}
+                />
+              )}
+            </article>
+
+            {/* Bottom Ads */}
+            {bottomAds.length > 0 && (
+              <div className="mt-8 space-y-3">
+                {bottomAds.map((ad: any) => (
+                  <a key={ad.id} href={ad.link || '#'} target="_blank" rel="noopener noreferrer" className="block">
+                    <div className="relative rounded-md overflow-hidden inline-block">
+                      <span className="absolute top-2 right-2 bg-blue-500 text-white text-xs font-semibold px-2 py-1 rounded z-10">Advertisement</span>
+                      <img src={ad.imageUrl} alt={ad.titleEn} className="w-full h-auto" style={{ maxWidth: ad.imageWidth ? `${ad.imageWidth}px` : '100%' }} />
+                    </div>
+                  </a>
+                ))}
+              </div>
+            )}
+
+            {/* CTA */}
+            <div className="mt-16 rounded-xl bg-amber-50 py-10 px-6 text-center">
+              <h2 className="text-2xl font-serif font-bold text-[hsl(225,55%,35%)] mb-4">Ready to begin your spiritual journey?</h2>
+              <div className="flex items-center justify-center gap-4 flex-wrap">
+                <a href="https://www.youtube.com/@asthawaani?sub_confirmation=1" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white font-semibold px-5 py-2.5 rounded-full transition-colors text-sm">
+                  Subscribe on YouTube
+                </a>
+                <Link href="/contact" className="inline-flex items-center gap-2 border border-[hsl(225,55%,35%)] text-[hsl(225,55%,35%)] hover:bg-[hsl(225,55%,35%)] hover:text-white font-semibold px-5 py-2.5 rounded-full transition-colors text-sm">
+                  Contact Us
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* JSON-LD for blog post */}
+      {/* JSON-LD */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
