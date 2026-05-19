@@ -22,7 +22,6 @@
         "name": "next"
       }
     ],
-    "baseUrl": ".",
     "paths": {
       "@/*": [
         "./client/src/*"
@@ -39,6 +38,9 @@
     "next-env.d.ts",
     "app/**/*.ts",
     "app/**/*.tsx",
+    "pages/**/*.ts",
+    "pages/**/*.tsx",
+    "api/**/*.ts",
     "shared/**/*.ts",
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts"
@@ -49,7 +51,6 @@
     "build",
     "client",
     "server",
-    "script",
-    "api"
+    "script"
   ]
 }

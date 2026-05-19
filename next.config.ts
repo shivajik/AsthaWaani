@@ -1,17 +1,10 @@
 import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
-  // Use the existing Express API as an external backend
-  async rewrites() {
-    return [
-      {
-        source: '/api/:path*',
-        destination: process.env.NODE_ENV === 'development' 
-          ? 'http://localhost:5001/api/:path*'  // Dev: proxy to Express server
-          : '/api/:path*',  // Prod: Vercel serverless functions handle it
-      },
-    ];
-  },
+  // All /api/* requests are handled inside the Next.js app:
+  // - app/api/*    -> dedicated route handlers (blog, contact, ...)
+  // - pages/api/*  -> catch-all that mounts the legacy Express CMS app
+  //   (admin auth, pages CMS, contact-info, ads, news-tickers, ...)
   images: {
     remotePatterns: [
       { protocol: 'https', hostname: 'res.cloudinary.com' },

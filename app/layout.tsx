@@ -4,6 +4,7 @@ import './globals.css';
 import Script from 'next/script';
 import { Header } from './components/Header';
 import { Footer } from './components/Footer';
+import { Providers } from './components/Providers';
 
 const playfair = Playfair_Display({
   subsets: ['latin'],
@@ -102,11 +103,13 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-screen flex flex-col bg-white dark:bg-black overflow-x-hidden">
-        <Header />
-        <main className="flex-1 w-full relative">
-          {children}
-        </main>
-        <Footer />
+        <Providers>
+          <Header />
+          <main className="flex-1 w-full relative">
+            {children}
+          </main>
+          <Footer />
+        </Providers>
 
         {/* Google Analytics - deferred */}
         <Script
