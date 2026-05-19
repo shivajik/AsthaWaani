@@ -71,7 +71,7 @@ export default function ServicesClient() {
               <div key={service.slug || service.title} className="bg-white rounded-lg border border-gray-200 p-8 hover:shadow-lg transition-shadow border-t-4 border-t-amber-400">
                 <h3 className="text-xl font-serif font-bold text-[hsl(225,55%,35%)] mb-2">{pick(language, service.title, service.titleHi)}</h3>
                 <p className="text-amber-600 text-sm font-medium italic mb-4">{pick(language, service.subtitle, service.subtitleHi)}</p>
-                <p className="text-gray-600 text-sm leading-relaxed">{pick(language, service.description, service.descriptionHi)}</p>
+                <div className="text-gray-600 text-sm leading-relaxed prose prose-sm max-w-none prose-p:my-0 prose-p:text-gray-600" dangerouslySetInnerHTML={{ __html: pick(language, service.description, service.descriptionHi) }} />
               </div>
             ))}
           </div>
