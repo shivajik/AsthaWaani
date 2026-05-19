@@ -47,7 +47,10 @@ const categoriesTable = pgTable("categories", {
 });
 
 export default async function BlogPage() {
-  const allPosts = await db.select().from(posts).where(eq(posts.status, 'published')).orderBy(desc(posts.publishedAt));
+  let allPosts: any[] = [];
+  try {
+    allPosts = await db.select().from(posts).where(eq(posts.status, 'published')).orderBy(desc(posts.publishedAt));
+  } catch (e) { /* db unavailable */ }
   
   // Fetch sidebar ads
   let sidebarAds: any[] = [];

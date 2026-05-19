@@ -765,6 +765,7 @@ app.use(express.json());
 
 const sessionSecret = process.env.SESSION_SECRET || "fallback-secret-for-dev";
 const PgSession = connectPgSimple(session);
+const isProduction = process.env.NODE_ENV === "production";
 
 app.use(session({
   store: new PgSession({
@@ -777,10 +778,10 @@ app.use(session({
   saveUninitialized: false,
   name: 'asthawaani.sid',
   cookie: {
-    secure: true,
+    secure: isProduction,
     httpOnly: true,
     maxAge: 24 * 60 * 60 * 1000,
-    sameSite: "none",
+    sameSite: isProduction ? "none" : "lax",
     path: "/",
   },
 }));
