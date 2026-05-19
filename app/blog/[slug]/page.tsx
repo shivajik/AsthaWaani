@@ -40,7 +40,11 @@ const categoriesTable = pgTable("categories", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   slug: text("slug").notNull(),
   name: text("name").notNull(),
+  nameHi: text("name_hi"),
 });
+
+import { BlogPostClient } from './BlogPostClient';
+
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -105,122 +109,29 @@ export default async function BlogPostPage({ params }: Props) {
     categories = await db.select().from(categoriesTable);
   } catch (e) { /* ignore */ }
 
+  const sanitizeAd = (a: any) => ({ id: a.id, titleEn: a.titleEn, imageUrl: a.imageUrl, link: a.link ?? null, imageWidth: a.imageWidth ?? null });
+  const sPost = {
+    slug: post.slug,
+    title: post.title,
+    titleHi: post.titleHi ?? null,
+    excerpt: post.excerpt ?? null,
+    excerptHi: post.excerptHi ?? null,
+    content: post.content ?? null,
+    contentHi: post.contentHi ?? null,
+    featuredImage: post.featuredImage ?? null,
+    publishedAt: post.publishedAt ? new Date(post.publishedAt).toISOString() : null,
+  };
+  const sCats = categories.map((c: any) => ({ id: c.id, name: c.name, nameHi: c.nameHi ?? null }));
+
   return (
-    <main className="min-h-screen pt-24 pb-16">
-      <div className="max-w-7xl mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-          {/* Sidebar */}
-          <aside className="md:col-span-1">
-            <div className="sticky top-28 space-y-8">
-              {/* Categories */}
-              <div>
-                <h2 className="text-lg font-serif font-bold mb-4">Categories</h2>
-                <div className="flex flex-col gap-2">
-                  <Link href="/blog" className="px-4 py-2 text-sm rounded-lg border border-gray-200 hover:border-amber-400 hover:text-amber-600 transition-colors bg-white">
-                    All
-                  </Link>
-                  {categories.map((cat: any) => (
-                    <Link key={cat.id} href={`/blog?category=${cat.id}`} className="px-4 py-2 text-sm rounded-lg border border-gray-200 hover:border-amber-400 hover:text-amber-600 transition-colors bg-white">
-                      {cat.name}
-                    </Link>
-                  ))}
-                </div>
-              </div>
-
-              {/* Sidebar Ads */}
-              {sidebarAds.length > 0 && (
-                <div className="space-y-4">
-                  {sidebarAds.map((ad: any) => (
-                    <a key={ad.id} href={ad.link || '#'} target="_blank" rel="noopener noreferrer" className="block">
-                      <div className="relative rounded-md overflow-hidden">
-                        <span className="absolute top-2 right-2 bg-blue-500 text-white text-xs font-semibold px-2 py-0.5 rounded z-10">Ad</span>
-                        <img src={ad.imageUrl} alt={ad.titleEn} className="w-full h-auto" style={{ maxWidth: ad.imageWidth ? `${ad.imageWidth}px` : '100%' }} />
-                      </div>
-                    </a>
-                  ))}
-                </div>
-              )}
-            </div>
-          </aside>
-
-          {/* Main Content */}
-          <div className="md:col-span-3">
-            <Link href="/blog" className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-[hsl(225,55%,35%)] mb-8">
-              ← Back to Blog
-            </Link>
-
-            {/* Top Ads */}
-            {topAds.length > 0 && (
-              <div className="mb-6 space-y-3">
-                {topAds.map((ad: any) => (
-                  <a key={ad.id} href={ad.link || '#'} target="_blank" rel="noopener noreferrer" className="block">
-                    <div className="relative rounded-md overflow-hidden inline-block">
-                      <span className="absolute top-2 right-2 bg-blue-500 text-white text-xs font-semibold px-2 py-1 rounded z-10">Advertisement</span>
-                      <img src={ad.imageUrl} alt={ad.titleEn} className="w-full h-auto" style={{ maxWidth: ad.imageWidth ? `${ad.imageWidth}px` : '100%' }} />
-                    </div>
-                  </a>
-                ))}
-              </div>
-            )}
-
-            <article>
-              {post.featuredImage && (
-                <div className="w-full h-80 md:h-96 overflow-hidden rounded-xl mb-8">
-                  <img src={post.featuredImage} alt={post.title} className="w-full h-full object-cover" />
-                </div>
-              )}
-
-              <h1 className="text-3xl md:text-5xl font-serif font-bold text-[hsl(225,55%,35%)] mb-4">{post.title}</h1>
-
-              {post.publishedAt && (
-                <p className="text-sm text-gray-400 mb-8">
-                  {new Date(post.publishedAt).toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' })}
-                </p>
-              )}
-
-              {post.excerpt && (
-                <p className="text-lg text-gray-600 italic mb-8">{post.excerpt}</p>
-              )}
-
-              {post.content && (
-                <div
-                  className="prose prose-lg max-w-none prose-headings:font-serif prose-headings:text-[hsl(225,55%,35%)] prose-a:text-amber-600 prose-strong:text-gray-800 prose-ul:list-disc prose-ol:list-decimal"
-                  dangerouslySetInnerHTML={{ __html: post.content }}
-                />
-              )}
-            </article>
-
-            {/* Bottom Ads */}
-            {bottomAds.length > 0 && (
-              <div className="mt-8 space-y-3">
-                {bottomAds.map((ad: any) => (
-                  <a key={ad.id} href={ad.link || '#'} target="_blank" rel="noopener noreferrer" className="block">
-                    <div className="relative rounded-md overflow-hidden inline-block">
-                      <span className="absolute top-2 right-2 bg-blue-500 text-white text-xs font-semibold px-2 py-1 rounded z-10">Advertisement</span>
-                      <img src={ad.imageUrl} alt={ad.titleEn} className="w-full h-auto" style={{ maxWidth: ad.imageWidth ? `${ad.imageWidth}px` : '100%' }} />
-                    </div>
-                  </a>
-                ))}
-              </div>
-            )}
-
-            {/* CTA */}
-            <div className="mt-16 rounded-xl bg-amber-50 py-10 px-6 text-center">
-              <h2 className="text-2xl font-serif font-bold text-[hsl(225,55%,35%)] mb-4">Ready to begin your spiritual journey?</h2>
-              <div className="flex items-center justify-center gap-4 flex-wrap">
-                <a href="https://www.youtube.com/@asthawaani?sub_confirmation=1" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white font-semibold px-5 py-2.5 rounded-full transition-colors text-sm">
-                  Subscribe on YouTube
-                </a>
-                <Link href="/contact" className="inline-flex items-center gap-2 border border-[hsl(225,55%,35%)] text-[hsl(225,55%,35%)] hover:bg-[hsl(225,55%,35%)] hover:text-white font-semibold px-5 py-2.5 rounded-full transition-colors text-sm">
-                  Contact Us
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* JSON-LD */}
+    <>
+      <BlogPostClient
+        post={sPost}
+        topAds={topAds.map(sanitizeAd)}
+        sidebarAds={sidebarAds.map(sanitizeAd)}
+        bottomAds={bottomAds.map(sanitizeAd)}
+        categories={sCats}
+      />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -238,6 +149,7 @@ export default async function BlogPostPage({ params }: Props) {
           }),
         }}
       />
-    </main>
+    </>
   );
 }
+
