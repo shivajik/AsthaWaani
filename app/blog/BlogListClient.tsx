@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { useState, useMemo } from 'react';
 import { useLanguage } from '../lib/language-context';
 
 type Post = {
@@ -8,6 +9,7 @@ type Post = {
   slug: string;
   title: string;
   titleHi: string | null;
+  categoryId: string | null;
   excerpt: string | null;
   excerptHi: string | null;
   featuredImage: string | null;
@@ -30,6 +32,13 @@ export function BlogListClient({ posts, ads, categories }: { posts: Post[]; ads:
   const isHi = language === 'hi';
   const pick = (en: string, hi: string | null) => (isHi && hi && hi.trim() ? hi : en);
   const locale = isHi ? 'hi-IN' : 'en-IN';
+  const [activeCat, setActiveCat] = useState<string | null>(null);
+  const catMap = useMemo(() => {
+    const m: Record<string, Category> = {};
+    categories.forEach((c) => { m[c.id] = c; });
+    return m;
+  }, [categories]);
+  const filtered = activeCat ? posts.filter((p) => p.categoryId === activeCat) : posts;
 
   return (
     <main className="min-h-screen pt-24 pb-16">
@@ -44,11 +53,18 @@ export function BlogListClient({ posts, ads, categories }: { posts: Post[]; ads:
               <div className="mb-8">
                 <h3 className="font-bold text-gray-800 mb-3">{isHi ? t.categories.hi : t.categories.en}</h3>
                 <div className="flex flex-wrap lg:flex-col gap-2">
-                  <button className="px-4 py-2 text-sm rounded-lg border border-gray-200 hover:border-amber-400 hover:text-amber-600 transition-colors text-left bg-white">
+                  <button
+                    onClick={() => setActiveCat(null)}
+                    className={`px-4 py-2 text-sm rounded-lg border transition-colors text-left ${activeCat === null ? 'bg-[hsl(225,55%,35%)] text-white border-[hsl(225,55%,35%)]' : 'bg-white border-gray-200 hover:border-amber-400 hover:text-amber-600'}`}
+                  >
                     {isHi ? t.all.hi : t.all.en}
                   </button>
                   {categories.map((cat) => (
-                    <button key={cat.id} className="px-4 py-2 text-sm rounded-lg border border-gray-200 hover:border-amber-400 hover:text-amber-600 transition-colors text-left bg-white">
+                    <button
+                      key={cat.id}
+                      onClick={() => setActiveCat(cat.id)}
+                      className={`px-4 py-2 text-sm rounded-lg border transition-colors text-left ${activeCat === cat.id ? 'bg-[hsl(225,55%,35%)] text-white border-[hsl(225,55%,35%)]' : 'bg-white border-gray-200 hover:border-amber-400 hover:text-amber-600'}`}
+                    >
                       {pick(cat.name, cat.nameHi)}
                     </button>
                   ))}
@@ -78,15 +94,16 @@ export function BlogListClient({ posts, ads, categories }: { posts: Post[]; ads:
           </aside>
 
           <div className="flex-1">
-            {posts.length === 0 ? (
+            {filtered.length === 0 ? (
               <div className="text-center py-16">
                 <p className="text-gray-500 text-lg">{isHi ? t.noPosts.hi : t.noPosts.en}</p>
               </div>
             ) : (
               <div className="grid sm:grid-cols-2 gap-6">
-                {posts.map((post) => {
+                {filtered.map((post) => {
                   const title = pick(post.title, post.titleHi);
                   const excerpt = pick(post.excerpt || '', post.excerptHi);
+                  const cat = post.categoryId ? catMap[post.categoryId] : undefined;
                   return (
                     <Link key={post.id} href={`/blog/${post.slug}`} className="group">
                       <article className="rounded-xl border bg-white shadow-sm overflow-hidden hover:shadow-lg transition-shadow h-full flex flex-col">
@@ -96,6 +113,11 @@ export function BlogListClient({ posts, ads, categories }: { posts: Post[]; ads:
                           </div>
                         )}
                         <div className="p-5 flex-1 flex flex-col">
+                          {cat && (
+                            <span className="inline-block self-start text-xs font-semibold uppercase tracking-wider text-amber-700 bg-amber-100 px-2 py-1 rounded mb-2">
+                              {pick(cat.name, cat.nameHi)}
+                            </span>
+                          )}
                           <h2 className="font-serif font-bold text-lg text-[hsl(225,55%,35%)] mb-2 group-hover:text-amber-600 transition-colors line-clamp-2">{title}</h2>
                           {excerpt && <p className="text-gray-500 text-sm line-clamp-3 flex-1">{excerpt}</p>}
                           {post.publishedAt && (

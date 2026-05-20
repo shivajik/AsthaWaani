@@ -64,6 +64,7 @@ export default async function BlogPage() {
 
   const sPosts = allPosts.map((p: any) => ({
     id: p.id, slug: p.slug, title: p.title, titleHi: p.titleHi ?? null,
+    categoryId: p.categoryId ?? null,
     excerpt: p.excerpt ?? null, excerptHi: p.excerptHi ?? null,
     featuredImage: p.featuredImage ?? null,
     publishedAt: p.publishedAt ? new Date(p.publishedAt).toISOString() : null,

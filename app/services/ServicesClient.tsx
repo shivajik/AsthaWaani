@@ -56,9 +56,12 @@ export default function ServicesClient() {
 
   return (
     <main className="min-h-screen">
-      <section className="bg-amber-500 py-16 pt-28">
-        <div className="container mx-auto px-4 text-center">
-          <h1 className="text-4xl md:text-5xl font-serif font-bold text-white mb-4">{title || (language === 'hi' ? 'हमारी सेवाएँ' : 'Our Services')}</h1>
+      <section
+        className="relative py-24 pt-32 bg-cover bg-center"
+        style={{ backgroundImage: "linear-gradient(rgba(40,20,5,0.55), rgba(40,20,5,0.65)), url('/attached_assets/Temple/Prem_mandir.png')" }}
+      >
+        <div className="container mx-auto px-4 text-center relative">
+          <h1 className="text-4xl md:text-6xl font-serif font-bold text-white mb-4 drop-shadow-lg">{title || (language === 'hi' ? 'हमारी सेवाएँ' : 'Our Services')}</h1>
           <p className="text-white/90 text-lg max-w-2xl mx-auto">
             {content ? textOnly(content) : language === 'hi' ? 'वृंदावन से हमारी पवित्र आध्यात्मिक सेवाओं के माध्यम से दिव्यता का अनुभव करें' : 'Experience the divine through our sacred spiritual services from Vrindavan'}
           </p>
@@ -68,11 +71,16 @@ export default function ServicesClient() {
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {services.map((service) => (
-              <div key={service.slug || service.title} className="bg-white rounded-lg border border-gray-200 p-8 hover:shadow-lg transition-shadow border-t-4 border-t-amber-400">
-                <h3 className="text-xl font-serif font-bold text-[hsl(225,55%,35%)] mb-2">{pick(language, service.title, service.titleHi)}</h3>
+              <Link
+                key={service.slug || service.title}
+                href={`/services/${service.slug}`}
+                className="block bg-white rounded-lg border border-gray-200 p-8 hover:shadow-lg transition-shadow border-t-4 border-t-amber-400 group"
+              >
+                <h3 className="text-xl font-serif font-bold text-[hsl(225,55%,35%)] mb-2 group-hover:text-amber-600 transition-colors">{pick(language, service.title, service.titleHi)}</h3>
                 <p className="text-amber-600 text-sm font-medium italic mb-4">{pick(language, service.subtitle, service.subtitleHi)}</p>
-                <div className="text-gray-600 text-sm leading-relaxed prose prose-sm max-w-none prose-p:my-0 prose-p:text-gray-600" dangerouslySetInnerHTML={{ __html: pick(language, service.description, service.descriptionHi) }} />
-              </div>
+                <div className="text-gray-600 text-sm leading-relaxed prose prose-sm max-w-none prose-p:my-0 prose-p:text-gray-600 line-clamp-4" dangerouslySetInnerHTML={{ __html: pick(language, service.description, service.descriptionHi) }} />
+                <span className="inline-block mt-4 text-amber-600 font-semibold text-sm">{language === 'hi' ? 'और जानें →' : 'Learn more →'}</span>
+              </Link>
             ))}
           </div>
         </div>

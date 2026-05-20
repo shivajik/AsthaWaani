@@ -119,6 +119,7 @@ export default async function BlogPostPage({ params }: Props) {
     content: post.content ?? null,
     contentHi: post.contentHi ?? null,
     featuredImage: post.featuredImage ?? null,
+    categoryId: post.categoryId ?? null,
     publishedAt: post.publishedAt ? new Date(post.publishedAt).toISOString() : null,
   };
   const sCats = categories.map((c: any) => ({ id: c.id, name: c.name, nameHi: c.nameHi ?? null }));

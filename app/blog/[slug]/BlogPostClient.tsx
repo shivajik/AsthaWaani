@@ -12,6 +12,7 @@ type Post = {
   content: string | null;
   contentHi: string | null;
   featuredImage: string | null;
+  categoryId: string | null;
   publishedAt: string | null;
 };
 type Ad = { id: string; titleEn: string; imageUrl: string; link?: string | null; imageWidth?: number | null };
@@ -39,6 +40,7 @@ export function BlogPostClient({ post, topAds, sidebarAds, bottomAds, categories
   const title = pick(post.title, post.titleHi);
   const excerpt = pick(post.excerpt, post.excerptHi);
   const content = pick(post.content, post.contentHi);
+  const postCategory = post.categoryId ? categories.find((c) => c.id === post.categoryId) : undefined;
 
   return (
     <main className="min-h-screen pt-24 pb-16">
@@ -101,6 +103,15 @@ export function BlogPostClient({ post, topAds, sidebarAds, bottomAds, categories
               )}
 
               <h1 className="text-3xl md:text-5xl font-serif font-bold text-[hsl(225,55%,35%)] mb-4">{title}</h1>
+
+              {postCategory && (
+                <Link
+                  href={`/blog?category=${postCategory.id}`}
+                  className="inline-block text-xs font-semibold uppercase tracking-wider text-amber-700 bg-amber-100 hover:bg-amber-200 px-3 py-1 rounded-full mb-4 transition-colors"
+                >
+                  {isHi && postCategory.nameHi ? postCategory.nameHi : postCategory.name}
+                </Link>
+              )}
 
               {post.publishedAt && (
                 <p className="text-sm text-gray-400 mb-8">
