@@ -52,11 +52,20 @@ type Props = {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const [post] = await db.select().from(posts).where(eq(posts.slug, slug));
+  let post: any;
+  try {
+    [post] = await db.select().from(posts).where(eq(posts.slug, slug));
+  } catch {
+    try {
+      const rows = await db.execute(sql`select slug, title, excerpt, content, featured_image as "featuredImage", meta_title as "metaTitle", meta_description as "metaDescription", status, published_at as "publishedAt", updated_at as "updatedAt" from posts where slug = ${slug} limit 1`);
+      post = (rows as any).rows?.[0] ?? (Array.isArray(rows) ? rows[0] : undefined);
+    } catch {}
+  }
 
   if (!post || post.status !== 'published') {
     return { title: 'Post Not Found | Asthawaani' };
   }
+
 
   const title = post.metaTitle || `${post.title} | Asthawaani`;
   const description = post.metaDescription || post.excerpt || post.title;
@@ -72,8 +81,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       url: `https://www.asthawaani.com/blog/${slug}`,
       type: 'article',
       images: [{ url: ogImage, width: 1200, height: 630 }],
-      publishedTime: post.publishedAt?.toISOString(),
-      modifiedTime: post.updatedAt?.toISOString(),
+      publishedTime: post.publishedAt ? new Date(post.publishedAt).toISOString() : undefined,
+      modifiedTime: post.updatedAt ? new Date(post.updatedAt).toISOString() : undefined,
     },
     twitter: {
       card: 'summary_large_image',
@@ -87,7 +96,18 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function BlogPostPage({ params }: Props) {
   const { slug } = await params;
-  const [post] = await db.select().from(posts).where(eq(posts.slug, slug));
+  let post: any;
+  try {
+    [post] = await db.select().from(posts).where(eq(posts.slug, slug));
+  } catch (e) {
+    // Fallback if *_hi columns don't exist on this DB
+    try {
+      const rows = await db.execute(sql`select id, slug, title, excerpt, content, featured_image as "featuredImage", meta_title as "metaTitle", meta_description as "metaDescription", status, category_id as "categoryId", published_at as "publishedAt", updated_at as "updatedAt" from posts where slug = ${slug} limit 1`);
+      post = (rows as any).rows?.[0] ?? (Array.isArray(rows) ? rows[0] : undefined);
+    } catch (err) {
+      console.error('Blog post fetch failed', err);
+    }
+  }
 
   if (!post || post.status !== 'published') {
     notFound();
@@ -142,8 +162,8 @@ export default async function BlogPostPage({ params }: Props) {
             "headline": post.title,
             "description": post.excerpt || post.title,
             ...(post.featuredImage && { "image": post.featuredImage.startsWith('http') ? post.featuredImage : `https://www.asthawaani.com${post.featuredImage}` }),
-            ...(post.publishedAt && { "datePublished": post.publishedAt.toISOString() }),
-            ...(post.updatedAt && { "dateModified": post.updatedAt.toISOString() }),
+            ...(post.publishedAt && { "datePublished": new Date(post.publishedAt).toISOString() }),
+            ...(post.updatedAt && { "dateModified": new Date(post.updatedAt).toISOString() }),
             "author": { "@type": "Organization", "name": "Asthawaani" },
             "publisher": { "@type": "Organization", "name": "Asthawaani", "logo": { "@type": "ImageObject", "url": "https://www.asthawaani.com/logo.png" } },
             "mainEntityOfPage": { "@type": "WebPage", "@id": `https://www.asthawaani.com/blog/${slug}` },

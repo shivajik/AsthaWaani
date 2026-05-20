@@ -19,7 +19,7 @@ export default function VideosClient() {
   const { language } = useLanguage();
   const hi = language === 'hi';
   return (
-    <main className="min-h-screen pt-24 pb-16">
+    <main className="min-h-screen pt-32 md:pt-36 pb-16">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-5xl font-serif font-bold text-[hsl(225,55%,35%)] mb-4">{hi ? 'आध्यात्मिक वीडियो' : 'Spiritual Videos'}</h1>

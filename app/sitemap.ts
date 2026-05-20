@@ -33,7 +33,32 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${baseUrl}/gallery`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.6 },
     { url: `${baseUrl}/contact`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.6 },
     { url: `${baseUrl}/community`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.6 },
+    { url: `${baseUrl}/apply-vakta`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.5 },
+    { url: `${baseUrl}/join-partners`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.5 },
+    { url: `${baseUrl}/privacy-policy`, lastModified: new Date(), changeFrequency: 'yearly', priority: 0.3 },
+    { url: `${baseUrl}/terms-of-service`, lastModified: new Date(), changeFrequency: 'yearly', priority: 0.3 },
   ];
+
+  // Brajbhoomi sub-pages (static slugs)
+  const { placeSlugs } = await import('./brajbhoomi/[slug]/content');
+  const brajPages: MetadataRoute.Sitemap = placeSlugs.map((slug) => ({
+    url: `${baseUrl}/brajbhoomi/${slug}`,
+    lastModified: new Date(),
+    changeFrequency: 'monthly' as const,
+    priority: 0.7,
+  }));
+
+  // Services sub-pages (static slugs)
+  let servicePages: MetadataRoute.Sitemap = [];
+  try {
+    const { serviceSlugs } = await import('./services/[slug]/content');
+    servicePages = serviceSlugs.map((slug: string) => ({
+      url: `${baseUrl}/services/${slug}`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly' as const,
+      priority: 0.7,
+    }));
+  } catch {}
 
   // Blog posts from database
   let blogPosts: MetadataRoute.Sitemap = [];
@@ -49,5 +74,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     console.error('Sitemap: failed to fetch posts', e);
   }
 
-  return [...staticPages, ...blogPosts];
+  return [...staticPages, ...brajPages, ...servicePages, ...blogPosts];
 }

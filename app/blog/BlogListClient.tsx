@@ -41,7 +41,7 @@ export function BlogListClient({ posts, ads, categories }: { posts: Post[]; ads:
   const filtered = activeCat ? posts.filter((p) => p.categoryId === activeCat) : posts;
 
   return (
-    <main className="min-h-screen pt-24 pb-16">
+    <main className="min-h-screen pt-32 md:pt-36 pb-16">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-5xl font-serif font-bold text-[hsl(225,55%,35%)] mb-4">{isHi ? t.blog.hi : t.blog.en}</h1>
