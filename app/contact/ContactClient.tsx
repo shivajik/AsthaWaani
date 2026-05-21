@@ -18,9 +18,9 @@ export function ContactClient() {
   const isHi = language === 'hi';
   return (
     <main className="min-h-screen">
-      <section className="bg-[hsl(45,90%,50%)] pt-28 pb-16">
-        <div className="container mx-auto px-4 text-center">
-          <h1 className="text-4xl md:text-5xl font-serif font-bold text-white">{isHi ? titleHi : 'Contact'}</h1>
+      <section className="bg-[hsl(45,90%,50%)] min-h-[300px] flex items-center justify-center">
+        <div className="container mx-auto px-4 text-center h-full flex items-center justify-center">
+          <h1 className="m-0 text-4xl md:text-5xl font-serif font-bold text-white">{isHi ? titleHi : 'Contact'}</h1>
         </div>
       </section>
 

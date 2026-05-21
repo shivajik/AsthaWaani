@@ -206,7 +206,8 @@ export default function ApplyVaktaPage() {
           <div className="order-1 lg:order-2 lg:sticky lg:top-28">
             <div className="bg-white rounded-2xl shadow-xl border border-orange-200/50 overflow-hidden">
               <div className="aspect-video relative bg-black">
-                <video src="https://www.asthawaani.com/Asthawani_Video_.mp4" controls playsInline className="w-full h-full" />
+                <video src="/Asthawani_Video_.mp4" autoPlay loop playsInline controls className="w-full h-full object-cover"
+/>
               </div>
               <div className="p-6">
                 <h3 className="text-xl font-bold text-gray-800 mb-3">{pick('sideTitle')}</h3>
