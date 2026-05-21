@@ -41,6 +41,37 @@ export default function VideosClient() {
           </a>
         </div>
 
+        <section className="mb-16">
+          <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3 mb-6 max-w-5xl mx-auto">
+            <div>
+              <h2 className="text-2xl md:text-3xl font-serif font-bold text-[hsl(225,55%,35%)]">
+                {hi ? 'आस्थावाणी प्लेलिस्ट' : 'Asthawaani Playlist'}
+              </h2>
+              <p className="text-gray-600 text-sm mt-1">
+                {hi ? 'हमारी क्यूरेटेड यूट्यूब प्लेलिस्ट देखें' : 'Watch our curated YouTube playlist'}
+              </p>
+            </div>
+            <a
+              href="https://www.youtube.com/playlist?list=PLegEhEFSX6VqQ8DapSEgpZF22FRHeUPpa"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 text-red-600 hover:text-red-700 font-semibold text-sm"
+            >
+              {hi ? 'यूट्यूब पर खोलें' : 'Open on YouTube'} →
+            </a>
+          </div>
+          <div className="relative aspect-video max-w-5xl mx-auto rounded-xl overflow-hidden shadow-xl bg-black">
+            <iframe
+              src="https://www.youtube.com/embed/videoseries?list=PLegEhEFSX6VqQ8DapSEgpZF22FRHeUPpa"
+              title={hi ? 'आस्थावाणी प्लेलिस्ट' : 'Asthawaani Playlist'}
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+              loading="lazy"
+              className="absolute inset-0 w-full h-full"
+            />
+          </div>
+        </section>
+
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {displayVideos.slice(1).map((video) => (
             <a key={video.videoId} href={`https://www.youtube.com/watch?v=${video.videoId}`} target="_blank" rel="noopener noreferrer" className="group bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all border">
