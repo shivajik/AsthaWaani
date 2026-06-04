@@ -1,14 +1,14 @@
-// Fixes Vercel ERR_REQUIRE_ESM for Next.js when the root package.json has
-// "type": "module". The Vercel Node launcher uses require() on the built
-// page.js files. Each page.js inherits the ESM type from the nearest
-// parent package.json — which is the root one unless we override it.
+// Defense-in-depth for Vercel/Next serverless output. The project package
+// scope is CommonJS because Vercel's Node launcher require()s built page.js
+// files. If any generated subdirectory adds its own package.json, this script
+// forces that nearest package scope back to CommonJS too.
 //
 // Next.js itself writes package.json files into some output directories
 // (e.g. .next/server/app/*) declaring "type": "module" for app router
 // pages, which re-breaks require() even if we only override .next/server.
 //
-// The robust fix: walk every directory under .next/server (and the
-// standalone variant) and write/overwrite a package.json with
+// Walk every directory under .next/server (and the standalone variant) and
+// write/overwrite a package.json with
 // { "type": "commonjs" }. This forces all emitted .js files to be
 // treated as CommonJS so the Vercel launcher's require() works.
 //
