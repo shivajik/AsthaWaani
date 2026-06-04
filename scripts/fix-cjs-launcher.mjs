@@ -21,6 +21,29 @@ import { resolve, join, dirname, relative, sep } from "node:path";
 
 const roots = [".next/server", ".next/standalone/.next/server"];
 const writtenPackageFiles = [];
+const shouldPatchRootPackage =
+  process.env.PATCH_NEXT_RUNTIME_PACKAGE === "1" ||
+  process.env.VERCEL === "1" ||
+  Boolean(process.env.VERCEL_ENV);
+
+function patchRootPackageForRuntime() {
+  if (!shouldPatchRootPackage) return;
+
+  const pkgPath = resolve(process.cwd(), "package.json");
+  let pkg;
+  try {
+    pkg = JSON.parse(readFileSync(pkgPath, "utf8"));
+  } catch (error) {
+    console.warn("[fix-cjs-launcher] could not read root package.json", error);
+    return;
+  }
+
+  if (pkg.type !== "commonjs") {
+    pkg.type = "commonjs";
+    writeFileSync(pkgPath, JSON.stringify(pkg, null, 2) + "\n");
+    console.log("[fix-cjs-launcher] changed deployed package.json type to commonjs after build");
+  }
+}
 
 function walk(dir) {
   // Write package.json in this directory
@@ -91,3 +114,5 @@ for (const dir of roots) {
   addPackagesToTraces(full);
   console.log("[fix-cjs-launcher] wrote package.json tree under", full);
 }
+
+patchRootPackageForRuntime();

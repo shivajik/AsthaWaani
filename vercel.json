@@ -1,6 +1,6 @@
 {
   "framework": "nextjs",
-  "buildCommand": "next build && node scripts/fix-cjs-launcher.mjs",
+  "buildCommand": "next build --webpack && node scripts/fix-cjs-launcher.mjs",
   "outputDirectory": ".next",
   "redirects": [
     { "source": "/:path*", "has": [{ "type": "host", "value": "asthawaani.com" }], "destination": "https://www.asthawaani.com/:path*", "permanent": true }
