@@ -1,7 +1,8 @@
-// Defense-in-depth for Vercel/Next serverless output. The project package
-// scope is CommonJS because Vercel's Node launcher require()s built page.js
-// files. If any generated subdirectory adds its own package.json, this script
-// forces that nearest package scope back to CommonJS too.
+// Defense-in-depth for Vercel/Next serverless output. Keep the source project
+// as ESM for Next/TypeScript, then patch only the built server output because
+// Vercel's Node launcher require()s built page.js files. If any generated
+// subdirectory adds its own package.json, this script forces that nearest
+// package scope back to CommonJS too.
 //
 // Next.js itself writes package.json files into some output directories
 // (e.g. .next/server/app/*) declaring "type": "module" for app router
