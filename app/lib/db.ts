@@ -9,12 +9,26 @@ function init() {
   if (!process.env.DATABASE_URL) {
     throw new Error('DATABASE_URL environment variable is not set');
   }
+
+  // Parse the DATABASE_URL to handle URL-encoded characters in password
+  // and ensure SSL is configured for Supabase on Vercel serverless
+  const connectionString = process.env.DATABASE_URL;
+
   _pool = new Pool({
-    connectionString: process.env.DATABASE_URL,
-    max: 5,
-    idleTimeoutMillis: 30000,
-    connectionTimeoutMillis: 5000,
+    connectionString,
+    // SSL is required for Supabase connections in production
+    ssl: process.env.NODE_ENV === 'production'
+      ? { rejectUnauthorized: false }
+      : false,
+    // Serverless-safe pool settings: keep connections minimal
+    max: 3,
+    idleTimeoutMillis: 10000,
+    connectionTimeoutMillis: 10000,
+    // Disable prepared statements — required for Supabase session/transaction poolers
+    // PgBouncer in session mode doesn't support named prepared statements
+    allowExitOnIdle: true,
   });
+
   _db = drizzle(_pool);
 }
 

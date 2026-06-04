@@ -18,6 +18,7 @@ const nextConfig: NextConfig = {
     'connect-pg-simple',
     'multer',
     'pg',
+    'drizzle-orm',
     'cloudinary',
     'nodemailer',
     'bcryptjs',
