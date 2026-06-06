@@ -31,10 +31,10 @@ export default function ServiceDetailClient({ service }: { service: ServiceDetai
       <section className="py-16 bg-white">
         <div className="container mx-auto px-4">
           <div className="flex flex-col lg:flex-row gap-10 max-w-6xl mx-auto">
-            <div className="lg:w-64 flex-shrink-0 order-2 lg:order-1">
+            <div className="lg:w-64 flex-shrink-0 order-1 lg:order-1">
               <ServiceSidebar />
             </div>
-            <div className="flex-1 min-w-0 order-1 lg:order-2">
+            <div className="flex-1 min-w-0 order-2 lg:order-2">
               <p className="text-lg text-gray-700 leading-relaxed mb-12">{hi ? service.introHi : service.intro}</p>
 
               {service.sections.map((s, i) => (
