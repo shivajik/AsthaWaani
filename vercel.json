@@ -8,6 +8,7 @@
     { "source": "/services/navgrah-shanti-path", "destination": "/services/navgrah-shanti", "permanent": true },
     { "source": "/services/spiritual-emotional-healing", "destination": "/services/healing", "permanent": true },
     { "source": "/services/spiritual-healing", "destination": "/services/healing", "permanent": true },
-    { "source": "/services/emotional-healing", "destination": "/services/healing", "permanent": true }
+    { "source": "/services/emotional-healing", "destination": "/services/healing", "permanent": true },
+    { "source": "/services/motivational-life-guidance", "destination": "/services/life-guidance", "permanent": true }
   ]
 }
