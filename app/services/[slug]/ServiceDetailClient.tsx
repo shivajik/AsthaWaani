@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { useLanguage } from '../../lib/language-context';
 import type { ServiceDetail } from './content';
+import ServiceSidebar from './ServiceSidebar';
 
 export default function ServiceDetailClient({ service }: { service: ServiceDetail }) {
   const { language } = useLanguage();
@@ -28,17 +29,24 @@ export default function ServiceDetailClient({ service }: { service: ServiceDetai
       </section>
 
       <section className="py-16 bg-white">
-        <div className="container mx-auto px-4 max-w-3xl">
-          <p className="text-lg text-gray-700 leading-relaxed mb-12">{hi ? service.introHi : service.intro}</p>
-
-          {service.sections.map((s, i) => (
-            <div key={i} className="mb-10">
-              <h2 className="text-2xl font-serif font-bold text-[hsl(225,55%,35%)] mb-3">
-                {hi ? s.headingHi : s.heading}
-              </h2>
-              <p className="text-gray-700 leading-relaxed">{hi ? s.bodyHi : s.body}</p>
+        <div className="container mx-auto px-4">
+          <div className="flex flex-col lg:flex-row gap-10 max-w-6xl mx-auto">
+            <div className="lg:w-64 flex-shrink-0 order-2 lg:order-1">
+              <ServiceSidebar />
             </div>
-          ))}
+            <div className="flex-1 min-w-0 order-1 lg:order-2">
+              <p className="text-lg text-gray-700 leading-relaxed mb-12">{hi ? service.introHi : service.intro}</p>
+
+              {service.sections.map((s, i) => (
+                <div key={i} className="mb-10">
+                  <h2 className="text-2xl font-serif font-bold text-[hsl(225,55%,35%)] mb-3">
+                    {hi ? s.headingHi : s.heading}
+                  </h2>
+                  <p className="text-gray-700 leading-relaxed">{hi ? s.bodyHi : s.body}</p>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </section>
 
