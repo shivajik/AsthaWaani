@@ -3,6 +3,11 @@
   "buildCommand": "next build --webpack && node scripts/fix-cjs-launcher.mjs",
   "outputDirectory": ".next",
   "redirects": [
-    { "source": "/:path*", "has": [{ "type": "host", "value": "asthawaani.com" }], "destination": "https://www.asthawaani.com/:path*", "permanent": true }
+    { "source": "/:path*", "has": [{ "type": "host", "value": "asthawaani.com" }], "destination": "https://www.asthawaani.com/:path*", "permanent": true },
+    { "source": "/services/jaap-mantra", "destination": "/services/jaap-mantras", "permanent": true },
+    { "source": "/services/navgrah-shanti-path", "destination": "/services/navgrah-shanti", "permanent": true },
+    { "source": "/services/spiritual-emotional-healing", "destination": "/services/healing", "permanent": true },
+    { "source": "/services/spiritual-healing", "destination": "/services/healing", "permanent": true },
+    { "source": "/services/emotional-healing", "destination": "/services/healing", "permanent": true }
   ]
 }
