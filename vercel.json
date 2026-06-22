@@ -4,6 +4,8 @@
   "outputDirectory": ".next",
   "redirects": [
     { "source": "/:path*", "has": [{ "type": "host", "value": "asthawaani.com" }], "destination": "https://www.asthawaani.com/:path*", "permanent": true },
+    { "source": "/lander", "destination": "/", "permanent": true },
+    { "source": "/home", "destination": "/", "permanent": true },
     { "source": "/services/jaap-mantra", "destination": "/services/jaap-mantras", "permanent": true },
     { "source": "/services/navgrah-shanti-path", "destination": "/services/navgrah-shanti", "permanent": true },
     { "source": "/services/spiritual-emotional-healing", "destination": "/services/healing", "permanent": true },
