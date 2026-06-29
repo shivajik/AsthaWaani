@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build --webpack && node scripts/fix-cjs-launcher.mjs",
+    "build:dev": "next build --webpack && node scripts/fix-cjs-launcher.mjs",
     "start": "next start",
     "dev:api": "cross-env NODE_ENV=development tsx server/index.ts",
     "build:old": "tsx script/build.ts",

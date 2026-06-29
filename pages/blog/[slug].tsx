@@ -20,8 +20,14 @@ const posts = pgTable('posts', {
   metaDescription: text('meta_description'),
   status: text('status').notNull(),
   categoryId: varchar('category_id'),
+  authorId: varchar('author_id'),
   publishedAt: timestamp('published_at'),
   updatedAt: timestamp('updated_at'),
+});
+
+const adminsTable = pgTable('admins', {
+  id: varchar('id').primaryKey(),
+  name: text('name').notNull(),
 });
 
 const ads = pgTable('ads', {
@@ -59,6 +65,7 @@ type BlogPostProps = {
     updatedAt: string | null;
     metaTitle: string | null;
     metaDescription: string | null;
+    authorName: string | null;
   };
   topAds: Array<{ id: string; titleEn: string; imageUrl: string; link: string | null; imageWidth: number | null }>;
   sidebarAds: Array<{ id: string; titleEn: string; imageUrl: string; link: string | null; imageWidth: number | null }>;
@@ -111,6 +118,19 @@ export const getServerSideProps: GetServerSideProps<BlogPostProps> = async ({ pa
     } catch {}
   }
 
+  let authorName: string | null = null;
+  if (post.authorId) {
+    try {
+      const [a] = await db.select().from(adminsTable).where(eq(adminsTable.id, post.authorId));
+      authorName = a?.name ?? null;
+    } catch {
+      try {
+        const rows: any = await db.execute(sql`select name from admins where id = ${post.authorId} limit 1`);
+        authorName = rows.rows?.[0]?.name ?? rows?.[0]?.name ?? null;
+      } catch {}
+    }
+  }
+
   return {
     props: {
       slug,
@@ -128,6 +148,7 @@ export const getServerSideProps: GetServerSideProps<BlogPostProps> = async ({ pa
         updatedAt: post.updatedAt ? new Date(post.updatedAt).toISOString() : null,
         metaTitle: post.metaTitle ?? null,
         metaDescription: post.metaDescription ?? null,
+        authorName,
       },
       topAds: topAds.map(sanitizeAd),
       sidebarAds: sidebarAds.map(sanitizeAd),
@@ -173,7 +194,7 @@ export default function BlogPostPage({ slug, post, topAds, sidebarAds, bottomAds
               ...(post.updatedAt && { dateModified: post.updatedAt }),
               author: {
                 '@type': 'Person',
-                name: 'Asthawaani Editorial',
+                name: post.authorName || 'Asthawaani Editorial',
                 url: 'https://www.asthawaani.com/author',
               },
               publisher: { '@type': 'Organization', name: 'Asthawaani', logo: { '@type': 'ImageObject', url: 'https://www.asthawaani.com/logo.png' } },

@@ -74,31 +74,54 @@ Daily morning devotional worship dedicated to Bhagwan Shri Krishna and the deiti
 
 # Braj Bhoomi
 
-Asthawaani provides educational information about important pilgrimage destinations associated with the life of Bhagwan Shri Krishna.
+Asthawaani provides editorially-reviewed pilgrimage guides for the six core dhams of Braj. Each entry below is maintained by the Asthawaani Editorial / Braj-Bhoomi Research Desk and was last reviewed on 2026-06-29.
 
 ## Mathura
-Birthplace of Bhagwan Shri Krishna.
-https://www.asthawaani.com/brajbhoomi/mathura
+- **Deity:** Bhagwan Shri Krishna
+- **Known for:** Krishna Janmabhoomi, Dwarkadhish Temple, Vishram Ghat, Yamuna Aarti, 25-kosi Parikrama
+- **Major festivals:** Janmashtami, Holi, Kartik Purnima, Radhashtami, Govardhan Puja
+- **Geo:** 27.4924°N, 77.6737°E
+- **URL:** https://www.asthawaani.com/brajbhoomi/mathura
 
 ## Vrindavan
-Sacred land associated with Krishna's childhood pastimes and devotional traditions.
-https://www.asthawaani.com/brajbhoomi/vrindavan
+- **Deity:** Shri Radha-Krishna
+- **Known for:** Banke Bihari, Prem Mandir, ISKCON Krishna-Balaram, Nidhivan, Radha Raman, Chandrodaya Mandir
+- **Major festivals:** Janmashtami, Radhashtami, Jhulan Yatra, Holi, Kartik Deep Daan, Govardhan Puja
+- **Distance from Mathura:** 14 km
+- **Geo:** 27.5806°N, 77.7006°E
+- **URL:** https://www.asthawaani.com/brajbhoomi/vrindavan
 
 ## Gokul
-Village associated with Krishna's early childhood.
-https://www.asthawaani.com/brajbhoomi/gokul
+- **Deity:** Bal Gopal (Infant Krishna), Yashoda Maiya, Nand Baba
+- **Known for:** Raman Reti, Nand Bhavan, Brahmand Ghat, Chaurasi Khamba, Damodar Pillar
+- **Major festivals:** Janmashtami, Nand Mahotsav, Annakut, Govardhan Puja
+- **Distance from Mathura:** 15 km
+- **Geo:** 27.4488°N, 77.7180°E
+- **URL:** https://www.asthawaani.com/brajbhoomi/gokul
 
 ## Govardhan
-Known for Govardhan Hill and the sacred Govardhan Parikrama.
-https://www.asthawaani.com/brajbhoomi/govardhan
+- **Deity:** Giriraj Govardhan (Shri Krishna)
+- **Known for:** Daan Ghati, Mukharvind, Manasi Ganga, Radha Kund, Shyam Kund, 21 km Parikrama
+- **Major festivals:** Govardhan Puja, Annakut, Ahoi Ashtami, Guru Purnima parikrama
+- **Distance from Mathura:** 22 km
+- **Geo:** 27.4985°N, 77.4673°E
+- **URL:** https://www.asthawaani.com/brajbhoomi/govardhan
 
 ## Mahavan
-One of the ancient forests of Braj with deep spiritual significance.
-https://www.asthawaani.com/brajbhoomi/mahavan
+- **Deity:** Damodar (Bal Krishna), Yogmaya
+- **Known for:** Chaurasi Khamba (84 pillars), Damodar Pillar, Putana-Vadh Sthal, Yogmaya Temple
+- **Major festivals:** Janmashtami, Damodar Maas (Kartik), Annakut, Govardhan Puja
+- **Distance from Mathura:** 17 km
+- **Geo:** 27.4392°N, 77.7456°E
+- **URL:** https://www.asthawaani.com/brajbhoomi/mahavan
 
 ## Barsana
-Birthplace of Shri Radha Rani and an important pilgrimage destination.
-https://www.asthawaani.com/brajbhoomi/barsana
+- **Deity:** Shri Radha Rani (Ladli Ji)
+- **Known for:** Shriji Temple, Maan Mandir, Mor Kutir, Sankari Khor, Lathmar Holi
+- **Major festivals:** Radhashtami, Lathmar Holi, Holi, Janmashtami
+- **Distance from Mathura:** 50 km
+- **Geo:** 27.6444°N, 77.3786°E
+- **URL:** https://www.asthawaani.com/brajbhoomi/barsana
 
 ---
 

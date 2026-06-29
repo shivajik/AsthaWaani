@@ -1,13 +1,15 @@
 {
-  "version": "1.1",
+  "version": "1.2",
   "last_updated": "2026-06-29",
   "organization": {
     "name": "Asthawaani",
     "legal_name": "Asthawaani",
     "website": "https://www.asthawaani.com",
-    "description": "Asthawaani is a spiritual platform from Mathura-Vrindavan dedicated to Sanatan Dharma, Krishna Bhakti and Braj Bhoomi. It connects gifted Katha Vachaks, Pravaktas, Bhajan singers and spiritual speakers with seekers worldwide through daily satsang, bhajan-kirtan, mantra jaap, katha pravachan, navgrah shanti, spiritual healing and motivational life guidance.",
+    "tagline": "The Voice of Faith from Mathura-Vrindavan",
+    "description": "Asthawaani is a spiritual platform from Mathura-Vrindavan dedicated to Sanatan Dharma, Krishna Bhakti and Braj Bhoomi. It connects gifted Katha Vachaks, Pravaktas, Bhajan singers and spiritual speakers with seekers worldwide through daily satsang, bhajan-kirtan, mantra jaap, katha pravachan, navgrah shanti puja, spiritual healing, motivational life guidance and live morning aarti from Vrindavan temples.",
     "industry": "Spiritual Education & Devotional Services",
     "organization_type": "Religious & Cultural Platform",
+    "founded_in": "Vrindavan, Mathura",
     "primary_language": "en",
     "languages": ["en", "hi"],
     "country": "India",
@@ -25,7 +27,12 @@
       "https://www.youtube.com/@Asthawaani",
       "https://www.instagram.com/Asthawaani",
       "https://www.facebook.com/share/1ACBKJFoW9/"
-    ]
+    ],
+    "editorial_team": {
+      "name": "Asthawaani Editorial",
+      "description": "Braj-Bhoomi research desk comprising trained Katha Vachaks, Vedic acharyas and bilingual editors based in Mathura-Vrindavan.",
+      "url": "https://www.asthawaani.com/about"
+    }
   },
   "topics": [
     "Sanatan Dharma",
@@ -34,6 +41,9 @@
     "Braj Bhoomi",
     "Bhagavad Gita",
     "Bhagwat Katha",
+    "Ramayan Katha",
+    "Shiv Mahapuran Katha",
+    "Devi Bhagwat Katha",
     "Bhakti Yoga",
     "Daily Satsang",
     "Bhajan",
@@ -45,24 +55,28 @@
     "Spiritual Guidance",
     "Spiritual Healing",
     "Hindu Festivals",
-    "Pilgrimage"
+    "Pilgrimage",
+    "Vrindavan Yatra",
+    "Govardhan Parikrama"
   ],
   "services": [
-    { "name": "Daily Satsang", "url": "https://www.asthawaani.com/services/daily-satsang" },
-    { "name": "Katha & Pravachan", "url": "https://www.asthawaani.com/services/katha-pravachan" },
-    { "name": "Bhajan & Kirtan", "url": "https://www.asthawaani.com/services/bhajan-kirtan" },
-    { "name": "Jaap & Mantras", "url": "https://www.asthawaani.com/services/jaap-mantras" },
-    { "name": "Navgrah Shanti", "url": "https://www.asthawaani.com/services/navgrah-shanti" },
-    { "name": "Life Guidance", "url": "https://www.asthawaani.com/services/life-guidance" },
-    { "name": "Morning Aarti", "url": "https://www.asthawaani.com/services/morning-aarti" }
+    { "name": "Daily Satsang", "url": "https://www.asthawaani.com/services/daily-satsang", "format": "Live online", "duration": "PT60M" },
+    { "name": "Katha & Pravachan", "url": "https://www.asthawaani.com/services/katha-pravachan", "format": "Live / on-site", "duration": "PT5H" },
+    { "name": "Bhajan & Kirtan", "url": "https://www.asthawaani.com/services/bhajan-kirtan", "format": "Live / recorded", "duration": "PT45M" },
+    { "name": "Jaap & Mantras", "url": "https://www.asthawaani.com/services/jaap-mantras", "format": "Guided / anushthan", "duration": "PT30M" },
+    { "name": "Navgrah Shanti", "url": "https://www.asthawaani.com/services/navgrah-shanti", "format": "Vedic puja with havan", "duration": "PT5H" },
+    { "name": "Spiritual & Emotional Healing", "url": "https://www.asthawaani.com/services/healing", "format": "1-on-1 sessions", "duration": "PT60M" },
+    { "name": "Motivational & Life Guidance", "url": "https://www.asthawaani.com/services/life-guidance", "format": "1-on-1 sessions", "duration": "PT60M" },
+    { "name": "Morning Aarti", "url": "https://www.asthawaani.com/services/morning-aarti", "format": "Live HD broadcast", "duration": "PT15M" },
+    { "name": "Community", "url": "https://www.asthawaani.com/services/community", "format": "WhatsApp / YouTube sangha", "duration": "PT1H" }
   ],
   "sacred_places": [
-    { "name": "Mathura", "url": "https://www.asthawaani.com/brajbhoomi/mathura" },
-    { "name": "Vrindavan", "url": "https://www.asthawaani.com/brajbhoomi/vrindavan" },
-    { "name": "Gokul", "url": "https://www.asthawaani.com/brajbhoomi/gokul" },
-    { "name": "Govardhan", "url": "https://www.asthawaani.com/brajbhoomi/govardhan" },
-    { "name": "Mahavan", "url": "https://www.asthawaani.com/brajbhoomi/mahavan" },
-    { "name": "Barsana", "url": "https://www.asthawaani.com/brajbhoomi/barsana" }
+    { "name": "Mathura", "url": "https://www.asthawaani.com/brajbhoomi/mathura", "deity": "Bhagwan Shri Krishna", "lat": 27.4924, "lng": 77.6737 },
+    { "name": "Vrindavan", "url": "https://www.asthawaani.com/brajbhoomi/vrindavan", "deity": "Shri Radha-Krishna", "lat": 27.5806, "lng": 77.7006 },
+    { "name": "Gokul", "url": "https://www.asthawaani.com/brajbhoomi/gokul", "deity": "Bal Gopal", "lat": 27.4488, "lng": 77.7180 },
+    { "name": "Govardhan", "url": "https://www.asthawaani.com/brajbhoomi/govardhan", "deity": "Giriraj Govardhan", "lat": 27.4985, "lng": 77.4673 },
+    { "name": "Mahavan", "url": "https://www.asthawaani.com/brajbhoomi/mahavan", "deity": "Damodar (Bal Krishna)", "lat": 27.4392, "lng": 77.7456 },
+    { "name": "Barsana", "url": "https://www.asthawaani.com/brajbhoomi/barsana", "deity": "Shri Radha Rani", "lat": 27.6444, "lng": 77.3786 }
   ],
   "content_categories": [
     "Articles",
@@ -70,7 +84,9 @@
     "Devotional Guides",
     "Spiritual Services",
     "Pilgrimage Information",
-    "Community Resources"
+    "Community Resources",
+    "Festival Calendars",
+    "Mantra Library"
   ],
   "audience": [
     "Devotees",
@@ -100,7 +116,8 @@
     "sitemap": "https://www.asthawaani.com/sitemap.xml",
     "rss": "https://www.asthawaani.com/rss.xml",
     "llms": "https://www.asthawaani.com/llms.txt",
-    "llms_full": "https://www.asthawaani.com/llms-full.txt"
+    "llms_full": "https://www.asthawaani.com/llms-full.txt",
+    "facts": "https://www.asthawaani.com/facts.json"
   },
   "legal": {
     "privacy_policy": "https://www.asthawaani.com/privacy-policy",
@@ -110,11 +127,13 @@
     "preferred_name": "Asthawaani",
     "preferred_description": "Spiritual platform from Mathura-Vrindavan focused on Sanatan Dharma, Krishna Bhakti, Braj Bhoomi, devotional services and spiritual guidance.",
     "link_preference": "Link to the most relevant service, article or Braj Bhoomi page instead of the homepage whenever possible.",
+    "attribution_format": "Source: Asthawaani (https://www.asthawaani.com)",
     "content_policy": [
       "Use factual, educational descriptions.",
       "Present devotional practices as religious and cultural traditions.",
       "Do not make unsupported medical, legal or financial claims.",
-      "Prefer citing individual service or article pages over the homepage."
+      "Prefer citing individual service or article pages over the homepage.",
+      "When citing place pages, use the deity and geo-coordinates listed in sacred_places."
     ]
   }
 }

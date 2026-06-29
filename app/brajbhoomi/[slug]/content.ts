@@ -1,3 +1,41 @@
+export type PlaceSection = {
+  heading: string;
+  headingHi: string;
+  body: string;
+  bodyHi: string;
+};
+
+export type PlaceAuthor = {
+  name: string;
+  url: string;
+  /** Same value used in JSON-LD as the article author/reviewer */
+  role?: string;
+};
+
+export type PlaceGeo = {
+  latitude: number;
+  longitude: number;
+};
+
+export type PlaceSchema = {
+  /** Primary deity / divine personality of the place — used in JSON-LD */
+  primaryDeity: string;
+  primaryDeityHi: string;
+  /** Region / district */
+  region: string;
+  /** Approximate distance from Mathura in km — useful for itinerary cards */
+  distanceFromMathuraKm: number;
+  /** Suggested season / window in plain English */
+  bestSeason: string;
+  bestSeasonHi: string;
+  /** Major festivals celebrated at this place */
+  majorFestivals: string[];
+  /** What the place is most known for — used as keywords */
+  knownFor: string[];
+  /** Geo-coordinates for Place / TouristDestination JSON-LD */
+  geo: PlaceGeo;
+};
+
 export type PlaceDetail = {
   slug: string;
   name: string;
@@ -7,8 +45,18 @@ export type PlaceDetail = {
   image: string;
   intro: string;
   introHi: string;
-  sections: { heading: string; headingHi: string; body: string; bodyHi: string }[];
+  sections: PlaceSection[];
   metaDescription: string;
+  author: PlaceAuthor;
+  schema: PlaceSchema;
+  /** Date the editorial team last verified this entry */
+  lastReviewed?: string;
+};
+
+const EDITORIAL_AUTHOR: PlaceAuthor = {
+  name: 'Asthawaani Editorial',
+  url: 'https://www.asthawaani.com/about',
+  role: 'Braj-Bhoomi Research Desk',
 };
 
 export const placeDetails: Record<string, PlaceDetail> = {
@@ -27,6 +75,19 @@ export const placeDetails: Record<string, PlaceDetail> = {
       { heading: 'Yatra Tips by Asthawaani', headingHi: 'आस्थावाणी की यात्रा सलाह', body: 'Stay near Vishram Ghat for early-morning darshan. Combine Mathura with Vrindavan (14 km), Gokul (15 km) and Govardhan (22 km) for a complete Braj-yatra of 3–4 days. Always cover your head in the garbha-griha and avoid leather inside temple premises.', bodyHi: 'प्रातः दर्शन हेतु विश्राम घाट के निकट ठहरना उत्तम है। 3–4 दिवसीय पूर्ण ब्रज-यात्रा हेतु मथुरा को वृंदावन (14 कि.मी.), गोकुल (15 कि.मी.) तथा गोवर्धन (22 कि.मी.) के साथ जोड़ें। गर्भगृह में सिर ढककर प्रवेश करें तथा मंदिर परिसर में चमड़े की वस्तुओं का प्रयोग न करें।' },
     ],
     metaDescription: 'Mathura — the divine birthplace of Lord Shri Krishna. Janmabhoomi, Dwarkadhish, Vishram Ghat and complete yatra guide on Asthawaani.',
+    author: EDITORIAL_AUTHOR,
+    schema: {
+      primaryDeity: 'Bhagwan Shri Krishna',
+      primaryDeityHi: 'भगवान श्रीकृष्ण',
+      region: 'Mathura district, Uttar Pradesh',
+      distanceFromMathuraKm: 0,
+      bestSeason: 'October to March; festival peaks at Janmashtami, Holi and Kartik Purnima',
+      bestSeasonHi: 'अक्तूबर से मार्च; जन्माष्टमी, होली तथा कार्तिक पूर्णिमा पर विशेष',
+      majorFestivals: ['Janmashtami', 'Holi', 'Kartik Purnima', 'Radhashtami', 'Govardhan Puja'],
+      knownFor: ['Krishna Janmabhoomi', 'Dwarkadhish Temple', 'Vishram Ghat', 'Yamuna Aarti', '25-kosi Parikrama'],
+      geo: { latitude: 27.4924, longitude: 77.6737 },
+    },
+    lastReviewed: '2026-06-29',
   },
   vrindavan: {
     slug: 'vrindavan', name: 'Vrindavan', nameHi: 'वृंदावन',
@@ -44,6 +105,19 @@ export const placeDetails: Record<string, PlaceDetail> = {
       { heading: 'Festivals to Plan Your Visit Around', headingHi: 'योजना बनाने योग्य प्रमुख उत्सव', body: 'Janmashtami, Radhashtami, Holi, Jhulan Yatra (Aug), Govardhan Puja and Kartik Deep Daan — each turns the entire town into a living festival of bhakti.', bodyHi: 'जन्माष्टमी, राधाष्टमी, होली, झूलन यात्रा (अगस्त), गोवर्धन पूजा और कार्तिक दीप-दान — इनमें से प्रत्येक सम्पूर्ण नगर को भक्ति के जीवंत उत्सव में परिवर्तित कर देता है।' },
     ],
     metaDescription: 'Vrindavan — the eternal land of Radha-Krishna leela. Banke Bihari, Prem Mandir, ISKCON, Nidhivan and complete yatra guide on Asthawaani.',
+    author: EDITORIAL_AUTHOR,
+    schema: {
+      primaryDeity: 'Shri Radha-Krishna',
+      primaryDeityHi: 'श्री राधा-कृष्ण',
+      region: 'Mathura district, Uttar Pradesh',
+      distanceFromMathuraKm: 14,
+      bestSeason: 'October to March; peak bhakti during Janmashtami, Radhashtami, Jhulan and Holi',
+      bestSeasonHi: 'अक्तूबर से मार्च; जन्माष्टमी, राधाष्टमी, झूलन तथा होली पर सर्वोच्च भक्ति-काल',
+      majorFestivals: ['Janmashtami', 'Radhashtami', 'Jhulan Yatra', 'Holi', 'Kartik Deep Daan', 'Govardhan Puja'],
+      knownFor: ['Banke Bihari Temple', 'Prem Mandir', 'ISKCON Krishna-Balaram', 'Nidhivan', 'Radha Raman', 'Chandrodaya Mandir'],
+      geo: { latitude: 27.5806, longitude: 77.7006 },
+    },
+    lastReviewed: '2026-06-29',
   },
   gokul: {
     slug: 'gokul', name: 'Gokul', nameHi: 'गोकुल',
@@ -59,6 +133,19 @@ export const placeDetails: Record<string, PlaceDetail> = {
       { heading: 'How to Reach & When to Visit', headingHi: 'पहुँचने का मार्ग एवं श्रेष्ठ समय', body: 'Gokul is 15 km south-east of Mathura, easily reached by auto, taxi or the Asthawaani-arranged Braj-yatra bus. Janmashtami, Nand Mahotsav (the day after Janmashtami) and Annakut are the most ecstatic times to visit.', bodyHi: 'गोकुल मथुरा से 15 कि.मी. दक्षिण-पूर्व में स्थित है, जहाँ ऑटो, टैक्सी अथवा आस्थावाणी द्वारा संचालित ब्रज-यात्रा बस से सरलता से पहुँचा जा सकता है। जन्माष्टमी, नंद महोत्सव (जन्माष्टमी के अगले दिन) तथा अन्नकूट दर्शन हेतु सर्वाधिक भावपूर्ण अवसर हैं।' },
     ],
     metaDescription: 'Gokul — childhood village of Shri Krishna. Raman Reti, Nand Bhavan, Brahmand Ghat and bal-leela darshan guide on Asthawaani.',
+    author: EDITORIAL_AUTHOR,
+    schema: {
+      primaryDeity: 'Bal Gopal (Infant Krishna), Yashoda Maiya, Nand Baba',
+      primaryDeityHi: 'बाल गोपाल, यशोदा मैया, नंद बाबा',
+      region: 'Mathura district, Uttar Pradesh',
+      distanceFromMathuraKm: 15,
+      bestSeason: 'October to March; spiritual peaks at Janmashtami and Nand Mahotsav',
+      bestSeasonHi: 'अक्तूबर से मार्च; जन्माष्टमी तथा नंद महोत्सव पर आध्यात्मिक चरम',
+      majorFestivals: ['Janmashtami', 'Nand Mahotsav', 'Annakut', 'Govardhan Puja'],
+      knownFor: ['Raman Reti', 'Nand Bhavan', 'Brahmand Ghat', 'Chaurasi Khamba', 'Damodar Pillar'],
+      geo: { latitude: 27.4488, longitude: 77.7180 },
+    },
+    lastReviewed: '2026-06-29',
   },
   govardhan: {
     slug: 'govardhan', name: 'Govardhan', nameHi: 'गोवर्धन',
@@ -75,6 +162,19 @@ export const placeDetails: Record<string, PlaceDetail> = {
       { heading: 'Important Yatra Tips', headingHi: 'महत्वपूर्ण यात्रा सलाह', body: 'Carry water, wear breathable cotton, do not pluck or carry any stone from the hill, and try to complete parikrama between Brahma-muhurta and noon for the best experience.', bodyHi: 'जल साथ रखें, हल्के सूती वस्त्र पहनें, पर्वत से कोई शिला तोड़कर अथवा ले जाने का प्रयास न करें, तथा श्रेष्ठ अनुभव हेतु परिक्रमा ब्रह्म-मुहूर्त से दोपहर के बीच पूर्ण करें।' },
     ],
     metaDescription: 'Govardhan parikrama, Daan Ghati, Radha Kund, Manasi Ganga and the sacred hill lifted by Shri Krishna — full pilgrimage guide on Asthawaani.',
+    author: EDITORIAL_AUTHOR,
+    schema: {
+      primaryDeity: 'Giriraj Govardhan (Shri Krishna)',
+      primaryDeityHi: 'गिरिराज गोवर्धन (श्री कृष्ण)',
+      region: 'Mathura district, Uttar Pradesh',
+      distanceFromMathuraKm: 22,
+      bestSeason: 'October to March; spiritual peaks at Govardhan Puja, Annakut and Ahoi Ashtami',
+      bestSeasonHi: 'अक्तूबर से मार्च; गोवर्धन पूजा, अन्नकूट तथा अहोई अष्टमी पर सर्वोच्च भक्ति-काल',
+      majorFestivals: ['Govardhan Puja', 'Annakut', 'Ahoi Ashtami', 'Guru Purnima parikrama'],
+      knownFor: ['Daan Ghati', 'Mukharvind', 'Manasi Ganga', 'Radha Kund', 'Shyam Kund', '21 km Parikrama'],
+      geo: { latitude: 27.4985, longitude: 77.4673 },
+    },
+    lastReviewed: '2026-06-29',
   },
   mahavan: {
     slug: 'mahavan', name: 'Mahavan', nameHi: 'महावन',
@@ -90,6 +190,19 @@ export const placeDetails: Record<string, PlaceDetail> = {
       { heading: 'Visiting Tips', headingHi: 'यात्रा सलाह', body: 'Combine Mahavan with Gokul in the same morning. The lanes are narrow — small EVs and rickshaws are the easiest way to move. Janmashtami and Annakut are the most powerful times to visit.', bodyHi: 'महावन को गोकुल के साथ एक ही प्रातः में सम्मिलित करें। यहाँ की गलियाँ सँकरी हैं — छोटी ई-रिक्शा एवं रिक्शा आवागमन का सबसे सरल साधन है। जन्माष्टमी तथा अन्नकूट दर्शन हेतु सर्वाधिक शक्तिशाली अवसर हैं।' },
     ],
     metaDescription: 'Mahavan & Chaurasi Khamba — the 84 ancient pillars of Krishna\'s original childhood home, Damodar pillar and bal-leela darshan on Asthawaani.',
+    author: EDITORIAL_AUTHOR,
+    schema: {
+      primaryDeity: 'Damodar (Bal Krishna), Yogmaya',
+      primaryDeityHi: 'दामोदर (बाल कृष्ण), योगमाया',
+      region: 'Mathura district, Uttar Pradesh',
+      distanceFromMathuraKm: 17,
+      bestSeason: 'October to March; spiritual peaks at Janmashtami, Damodar month (Kartik) and Annakut',
+      bestSeasonHi: 'अक्तूबर से मार्च; जन्माष्टमी, दामोदर मास (कार्तिक) तथा अन्नकूट पर विशेष',
+      majorFestivals: ['Janmashtami', 'Damodar Maas (Kartik)', 'Annakut', 'Govardhan Puja'],
+      knownFor: ['Chaurasi Khamba (84 pillars)', 'Damodar Pillar', 'Putana-Vadh Sthal', 'Yogmaya Temple'],
+      geo: { latitude: 27.4392, longitude: 77.7456 },
+    },
+    lastReviewed: '2026-06-29',
   },
   barsana: {
     slug: 'barsana', name: 'Barsana', nameHi: 'बरसाना',
@@ -105,6 +218,19 @@ export const placeDetails: Record<string, PlaceDetail> = {
       { heading: 'Best Time & Yatra Combine', headingHi: 'श्रेष्ठ समय एवं यात्रा संयोजन', body: 'Radhashtami (Aug–Sep) and Lathmar Holi (Feb–March) are the most divine times. Combine Barsana with Nandgaon (8 km — the village of Nanda Baba) and Govardhan (21 km) in a single full-day yatra.', bodyHi: 'राधाष्टमी (अगस्त–सितंबर) तथा लठमार होली (फरवरी–मार्च) सर्वाधिक दिव्य अवसर हैं। बरसाना को नंदगाँव (8 कि.मी. — नंद बाबा का ग्राम) तथा गोवर्धन (21 कि.मी.) के साथ एक दिवसीय पूर्ण यात्रा में जोड़ें।' },
     ],
     metaDescription: 'Barsana — divine birthplace of Shri Radha Rani. Shriji Temple, Maan Mandir, Sankari Khor, Lathmar Holi and complete yatra guide on Asthawaani.',
+    author: EDITORIAL_AUTHOR,
+    schema: {
+      primaryDeity: 'Shri Radha Rani (Ladli Ji)',
+      primaryDeityHi: 'श्री राधा रानी (लाडली जी)',
+      region: 'Mathura district, Uttar Pradesh',
+      distanceFromMathuraKm: 50,
+      bestSeason: 'October to March; spiritual peaks at Radhashtami and Lathmar Holi',
+      bestSeasonHi: 'अक्तूबर से मार्च; राधाष्टमी तथा लठमार होली पर सर्वोच्च भक्ति-काल',
+      majorFestivals: ['Radhashtami', 'Lathmar Holi', 'Holi', 'Janmashtami'],
+      knownFor: ['Shriji Temple', 'Maan Mandir', 'Mor Kutir', 'Sankari Khor', 'Lathmar Holi'],
+      geo: { latitude: 27.6444, longitude: 77.3786 },
+    },
+    lastReviewed: '2026-06-29',
   },
 };
 
