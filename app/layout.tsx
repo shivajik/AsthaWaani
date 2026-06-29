@@ -69,6 +69,8 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${playfair.variable} ${inter.variable} ${merriweather.variable} ${notoDevanagari.variable}`}>
       <head>
+        {/* RSS feed discovery */}
+        <link rel="alternate" type="application/rss+xml" title="Asthawaani Blog" href="https://www.asthawaani.com/rss.xml" />
         {/* Schema.org JSON-LD - Organization */}
         <script
           type="application/ld+json"

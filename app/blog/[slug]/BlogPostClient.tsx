@@ -153,6 +153,38 @@ export function BlogPostClient({ post, topAds, sidebarAds, bottomAds, categories
                 </Link>
               </div>
             </div>
+
+            {/* Internal linking — Related Services / Braj Bhoomi / Videos */}
+            <section className="mt-12 grid gap-8 md:grid-cols-3 border-t border-amber-100 pt-10">
+              <div>
+                <h3 className="text-base font-serif font-bold text-[hsl(225,55%,35%)] mb-3">{isHi ? 'संबंधित सेवाएँ' : 'Related Services'}</h3>
+                <ul className="space-y-2 text-sm">
+                  <li><Link href="/services/daily-satsang" className="text-amber-700 hover:underline">{isHi ? 'दैनिक सत्संग' : 'Daily Satsang'}</Link></li>
+                  <li><Link href="/services/katha-pravachan" className="text-amber-700 hover:underline">{isHi ? 'कथा एवं प्रवचन' : 'Katha & Pravachan'}</Link></li>
+                  <li><Link href="/services/bhajan-kirtan" className="text-amber-700 hover:underline">{isHi ? 'भजन एवं कीर्तन' : 'Bhajan & Kirtan'}</Link></li>
+                  <li><Link href="/services/jaap-mantras" className="text-amber-700 hover:underline">{isHi ? 'जाप एवं मंत्र' : 'Jaap & Mantras'}</Link></li>
+                </ul>
+              </div>
+              <div>
+                <h3 className="text-base font-serif font-bold text-[hsl(225,55%,35%)] mb-3">{isHi ? 'ब्रज भूमि' : 'Explore Braj Bhoomi'}</h3>
+                <ul className="space-y-2 text-sm">
+                  <li><Link href="/brajbhoomi/vrindavan" className="text-amber-700 hover:underline">Vrindavan</Link></li>
+                  <li><Link href="/brajbhoomi/mathura" className="text-amber-700 hover:underline">Mathura</Link></li>
+                  <li><Link href="/brajbhoomi/govardhan" className="text-amber-700 hover:underline">Govardhan</Link></li>
+                  <li><Link href="/brajbhoomi/barsana" className="text-amber-700 hover:underline">Barsana</Link></li>
+                </ul>
+              </div>
+              <div>
+                <h3 className="text-base font-serif font-bold text-[hsl(225,55%,35%)] mb-3">{isHi ? 'देखें एवं जुड़ें' : 'Watch & Connect'}</h3>
+                <ul className="space-y-2 text-sm">
+                  <li><Link href="/videos" className="text-amber-700 hover:underline">{isHi ? 'सत्संग वीडियो' : 'Satsang Videos'}</Link></li>
+                  <li><Link href="/blog" className="text-amber-700 hover:underline">{isHi ? 'सभी लेख' : 'All Articles'}</Link></li>
+                  <li><Link href="/community" className="text-amber-700 hover:underline">{isHi ? 'समुदाय से जुड़ें' : 'Join Community'}</Link></li>
+                  <li><Link href="/contact" className="text-amber-700 hover:underline">{isHi ? 'संपर्क करें' : 'Contact Us'}</Link></li>
+                </ul>
+              </div>
+            </section>
+
           </div>
         </div>
       </div>

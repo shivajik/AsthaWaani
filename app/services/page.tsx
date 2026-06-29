@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import ServicesClient from './ServicesClient';
+import { serviceDetails, serviceSlugs } from './[slug]/content';
 
 export const metadata: Metadata = {
   title: 'Our Services – Satsang, Katha, Bhajan, Mantra Jaap | Asthawaani',
@@ -15,5 +16,33 @@ export const metadata: Metadata = {
 };
 
 export default function ServicesPage() {
-  return <ServicesClient />;
+  const itemList = {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: 'Asthawaani Spiritual Services',
+    itemListElement: serviceSlugs.map((slug, i) => {
+      const s: any = (serviceDetails as any)[slug];
+      return {
+        '@type': 'ListItem',
+        position: i + 1,
+        url: `https://www.asthawaani.com/services/${slug}`,
+        name: s?.title ?? slug,
+      };
+    }),
+  };
+  const breadcrumb = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://www.asthawaani.com/' },
+      { '@type': 'ListItem', position: 2, name: 'Services', item: 'https://www.asthawaani.com/services' },
+    ],
+  };
+  return (
+    <>
+      <ServicesClient />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(itemList) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumb) }} />
+    </>
+  );
 }
