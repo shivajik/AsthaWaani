@@ -171,7 +171,11 @@ export default function BlogPostPage({ slug, post, topAds, sidebarAds, bottomAds
               image: ogImage,
               ...(post.publishedAt && { datePublished: post.publishedAt }),
               ...(post.updatedAt && { dateModified: post.updatedAt }),
-              author: { '@type': 'Organization', name: 'Asthawaani' },
+              author: {
+                '@type': 'Person',
+                name: 'Asthawaani Editorial',
+                url: 'https://www.asthawaani.com/author',
+              },
               publisher: { '@type': 'Organization', name: 'Asthawaani', logo: { '@type': 'ImageObject', url: 'https://www.asthawaani.com/logo.png' } },
               mainEntityOfPage: { '@type': 'WebPage', '@id': `https://www.asthawaani.com/blog/${slug}` },
               inLanguage: ['en', 'hi'],

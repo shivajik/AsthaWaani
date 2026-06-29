@@ -19,6 +19,12 @@ const pages = pgTable("pages", {
   updatedAt: timestamp("updated_at"),
 });
 
+const categoriesTable = pgTable("categories", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  slug: text("slug").notNull(),
+  updatedAt: timestamp("updated_at"),
+});
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://www.asthawaani.com';
 
@@ -74,5 +80,19 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     console.error('Sitemap: failed to fetch posts', e);
   }
 
-  return [...staticPages, ...brajPages, ...servicePages, ...blogPosts];
+  // Blog categories from database
+  let categoryPages: MetadataRoute.Sitemap = [];
+  try {
+    const cats = await db.select().from(categoriesTable);
+    categoryPages = cats.map((c) => ({
+      url: `${baseUrl}/blog?category=${c.slug}`,
+      lastModified: c.updatedAt || new Date(),
+      changeFrequency: 'weekly' as const,
+      priority: 0.5,
+    }));
+  } catch (e) {
+    console.error('Sitemap: failed to fetch categories', e);
+  }
+
+  return [...staticPages, ...brajPages, ...servicePages, ...blogPosts, ...categoryPages];
 }

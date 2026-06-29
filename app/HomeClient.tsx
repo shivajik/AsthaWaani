@@ -11,11 +11,11 @@ const offerings = [
 ] as const;
 
 const locations = [
-  { id: 'mathura', tkey: 'loc.mathura', image: '/attached_assets/Temple/Srikrishna_Janmabhoomi.png' },
-  { id: 'vrindavan', tkey: 'loc.vrindavan', image: '/attached_assets/Temple/Prem_mandir.png' },
-  { id: 'gokul', tkey: 'loc.gokul', image: '/attached_assets/Temple/Raman_reti.png' },
-  { id: 'govardhan', tkey: 'loc.govardhan', image: '/attached_assets/Temple/Daan_Ghati.png' },
-  { id: 'mahavan', tkey: 'loc.mahavan', image: '/attached_assets/Temple/mahaban_Chaurasi.png' },
+  { id: 'mathura', tkey: 'loc.mathura', image: '/attached_assets/Temple/Srikrishna_Janmabhoomi.webp' },
+  { id: 'vrindavan', tkey: 'loc.vrindavan', image: '/attached_assets/Temple/Prem_mandir.webp' },
+  { id: 'gokul', tkey: 'loc.gokul', image: '/attached_assets/Temple/Raman_reti.webp' },
+  { id: 'govardhan', tkey: 'loc.govardhan', image: '/attached_assets/Temple/Daan_Ghati.webp' },
+  { id: 'mahavan', tkey: 'loc.mahavan', image: '/attached_assets/Temple/mahaban_Chaurasi.webp' },
 ];
 
 const videos = [
@@ -55,7 +55,7 @@ export function HomeClient() {
     <div className="flex flex-col w-full">
       {/* Hero */}
       <section className="relative h-screen w-full flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0 z-0 bg-cover bg-center scale-110" style={{ backgroundImage: 'url(/attached_assets/generated_images/vrindavan_sunrise_temple_landscape.png)' }}>
+        <div className="absolute inset-0 z-0 bg-cover bg-center scale-110" style={{ backgroundImage: 'url(/attached_assets/generated_images/vrindavan_sunrise_temple_landscape.webp)' }}>
           <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/30 to-black/70" />
         </div>
         <div className="relative z-10 container mx-auto px-4 text-center text-white">
@@ -81,7 +81,7 @@ export function HomeClient() {
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-2 gap-12 md:gap-16 items-start">
             <div className="relative rounded-2xl overflow-hidden shadow-2xl">
-              <img src="/attached_assets/generated_images/spiritual_guru_teaching.png" alt="Guru Speaking" className="w-full h-auto object-cover aspect-[4/3]" />
+              <img src="/attached_assets/generated_images/spiritual_guru_teaching.webp" alt="Guru Speaking" className="w-full h-auto object-cover aspect-[4/3]" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
             </div>
             <div className="flex flex-col gap-6">

@@ -5,12 +5,12 @@ import Link from 'next/link';
 import { useLanguage } from '../lib/language-context';
 
 const sacredPlaces = [
-  { slug: 'mathura', name: 'Mathura', nameHi: 'मथुरा', description: 'The Divine Birthplace of Lord Krishna', descriptionHi: 'भगवान श्रीकृष्ण की दिव्य जन्मभूमि', image: '/attached_assets/Temple/Srikrishna_Janmabhoomi.png' },
-  { slug: 'vrindavan', name: 'Vrindavan', nameHi: 'वृंदावन', description: 'The Eternal Land of Radha-Krishna Leela', descriptionHi: 'राधा-कृष्ण लीला की शाश्वत भूमि', image: '/attached_assets/Temple/Prem_mandir.png' },
-  { slug: 'gokul', name: 'Gokul', nameHi: 'गोकुल', description: 'The Sacred Childhood Abode of Shri Krishna', descriptionHi: 'श्रीकृष्ण की पवित्र बाल-लीला भूमि', image: '/attached_assets/Temple/Raman_reti.png' },
-  { slug: 'govardhan', name: 'Govardhan', nameHi: 'गोवर्धन', description: 'The Sacred Hill Lifted by Krishna', descriptionHi: 'श्रीकृष्ण द्वारा उठाया गया पवित्र पर्वत', image: '/attached_assets/Temple/Daan_Ghati.png' },
-  { slug: 'mahavan', name: 'Mahavan', nameHi: 'महावन', description: 'The Forest of Krishna’s Bal-Leelas', descriptionHi: 'श्रीकृष्ण की बाल-लीलाओं का वन', image: '/attached_assets/Temple/mahaban_Chaurasi.png' },
-  { slug: 'barsana', name: 'Barsana', nameHi: 'बरसाना', description: 'The Divine Birthplace of Radha Rani', descriptionHi: 'श्री राधा रानी की दिव्य जन्मस्थली', image: '/attached_assets/Temple/Barsana_Radha_Rani.png' },
+  { slug: 'mathura', name: 'Mathura', nameHi: 'मथुरा', description: 'The Divine Birthplace of Lord Krishna', descriptionHi: 'भगवान श्रीकृष्ण की दिव्य जन्मभूमि', image: '/attached_assets/Temple/Srikrishna_Janmabhoomi.webp' },
+  { slug: 'vrindavan', name: 'Vrindavan', nameHi: 'वृंदावन', description: 'The Eternal Land of Radha-Krishna Leela', descriptionHi: 'राधा-कृष्ण लीला की शाश्वत भूमि', image: '/attached_assets/Temple/Prem_mandir.webp' },
+  { slug: 'gokul', name: 'Gokul', nameHi: 'गोकुल', description: 'The Sacred Childhood Abode of Shri Krishna', descriptionHi: 'श्रीकृष्ण की पवित्र बाल-लीला भूमि', image: '/attached_assets/Temple/Raman_reti.webp' },
+  { slug: 'govardhan', name: 'Govardhan', nameHi: 'गोवर्धन', description: 'The Sacred Hill Lifted by Krishna', descriptionHi: 'श्रीकृष्ण द्वारा उठाया गया पवित्र पर्वत', image: '/attached_assets/Temple/Daan_Ghati.webp' },
+  { slug: 'mahavan', name: 'Mahavan', nameHi: 'महावन', description: 'The Forest of Krishna’s Bal-Leelas', descriptionHi: 'श्रीकृष्ण की बाल-लीलाओं का वन', image: '/attached_assets/Temple/mahaban_Chaurasi.webp' },
+  { slug: 'barsana', name: 'Barsana', nameHi: 'बरसाना', description: 'The Divine Birthplace of Radha Rani', descriptionHi: 'श्री राधा रानी की दिव्य जन्मस्थली', image: '/attached_assets/Temple/Barsana_Radha_Rani.webp' },
 ];
 
 const overview = [
@@ -34,7 +34,7 @@ export default function BrajbhoomiClient() {
         <div className="container mx-auto px-4">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div className="relative h-[400px] lg:h-[500px] rounded-2xl overflow-hidden shadow-xl">
-              <Image src="/attached_assets/Temple/Srikrishna_Janmabhoomi.png" alt={pick(language, 'Mathura Temple - The Divine Birthplace of Lord Krishna', 'मथुरा मंदिर - भगवान कृष्ण की जन्मभूमि')} fill className="object-cover" priority />
+              <Image src="/attached_assets/Temple/Srikrishna_Janmabhoomi.webp" alt={pick(language, 'Mathura Temple - The Divine Birthplace of Lord Krishna', 'मथुरा मंदिर - भगवान कृष्ण की जन्मभूमि')} fill className="object-cover" priority />
             </div>
             <div>
               <div className="flex flex-wrap gap-2 mb-4">

@@ -58,7 +58,7 @@ export default function ServicesClient() {
     <main className="min-h-screen">
       <section
         className="relative py-24 pt-32 bg-cover bg-center"
-        style={{ backgroundImage: "linear-gradient(rgba(40,20,5,0.55), rgba(40,20,5,0.65)), url('/attached_assets/Temple/Prem_mandir.png')" }}
+        style={{ backgroundImage: "linear-gradient(rgba(40,20,5,0.55), rgba(40,20,5,0.65)), url('/attached_assets/Temple/Prem_mandir.webp')" }}
       >
         <div className="container mx-auto px-4 text-center relative">
           <h1 className="text-4xl md:text-6xl font-serif font-bold text-white mb-4 drop-shadow-lg">{title || (language === 'hi' ? 'हमारी सेवाएँ' : 'Our Services')}</h1>

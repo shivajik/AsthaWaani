@@ -15,7 +15,7 @@ export default function ServiceDetailClient({ service }: { service: ServiceDetai
     <main className="min-h-screen">
       <section
         className="relative py-24 pt-32 bg-cover bg-center"
-        style={{ backgroundImage: "linear-gradient(rgba(40,20,5,0.6), rgba(40,20,5,0.7)), url('/attached_assets/Temple/Prem_mandir.png')" }}
+        style={{ backgroundImage: "linear-gradient(rgba(40,20,5,0.6), rgba(40,20,5,0.7)), url('/attached_assets/Temple/Prem_mandir.webp')" }}
       >
         <div className="container mx-auto px-4 text-center relative">
           <Link href="/services" className="inline-block text-amber-200 hover:text-white text-sm mb-4">

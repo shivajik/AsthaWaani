@@ -99,6 +99,30 @@ export const getServerSideProps: GetServerSideProps<BlogIndexProps> = async () =
 };
 
 export default function BlogIndexPage(props: BlogIndexProps) {
+  const itemList = {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: 'Asthawaani Spiritual Blog',
+    url: 'https://www.asthawaani.com/blog',
+    description: 'Articles on mantra jaap, satsang, bhakti, meditation and Vedic wisdom.',
+    mainEntity: {
+      '@type': 'ItemList',
+      itemListElement: props.posts.slice(0, 50).map((p, i) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        url: `https://www.asthawaani.com/blog/${p.slug}`,
+        name: p.title,
+      })),
+    },
+  };
+  const breadcrumb = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://www.asthawaani.com/' },
+      { '@type': 'ListItem', position: 2, name: 'Blog', item: 'https://www.asthawaani.com/blog' },
+    ],
+  };
   return (
     <>
       <Head>
@@ -110,6 +134,9 @@ export default function BlogIndexPage(props: BlogIndexProps) {
         <meta property="og:url" content="https://www.asthawaani.com/blog" />
         <meta property="og:type" content="website" />
         <meta property="og:image" content="https://www.asthawaani.com/opengraph.jpg" />
+        <link rel="alternate" type="application/rss+xml" title="Asthawaani Blog" href="https://www.asthawaani.com/rss.xml" />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(itemList) }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumb) }} />
       </Head>
       <BlogListClient posts={props.posts} ads={props.ads} categories={props.categories} />
     </>

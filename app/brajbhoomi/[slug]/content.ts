@@ -15,7 +15,7 @@ export const placeDetails: Record<string, PlaceDetail> = {
   mathura: {
     slug: 'mathura', name: 'Mathura', nameHi: 'मथुरा',
     tagline: 'The Divine Birthplace of Lord Shri Krishna', taglineHi: 'भगवान श्रीकृष्ण की दिव्य जन्मभूमि',
-    image: '/attached_assets/Temple/Srikrishna_Janmabhoomi.png',
+    image: '/attached_assets/Temple/Srikrishna_Janmabhoomi.webp',
     intro: 'Mathura is one of the seven sacred Moksha-puris of Sanatan Dharma and the eternal birthplace of Bhagwan Shri Krishna. Sitting on the western bank of the holy Yamuna, this ancient city has been a centre of devotion, learning and pilgrimage for more than five thousand years. Every gali, ghat and temple of Mathura carries the fragrance of Krishna leela — from the prison cell where Krishna was born to the ghats where Vasudev carried Him across the rising Yamuna.',
     introHi: 'मथुरा सनातन धर्म की सात मोक्षपुरियों में से एक है तथा भगवान श्रीकृष्ण की शाश्वत जन्मभूमि है। पवित्र यमुना के पश्चिमी तट पर बसी यह प्राचीन नगरी पाँच हजार वर्षों से अधिक समय से भक्ति, ज्ञान और तीर्थाटन का केंद्र रही है। मथुरा की प्रत्येक गली, घाट और मंदिर कृष्ण-लीला की सुगंध से भरा है — उस कारागार से लेकर, जहाँ कृष्ण का जन्म हुआ, उन घाटों तक जहाँ से वसुदेव ने उन्हें उफनती यमुना के पार पहुँचाया।',
     sections: [
@@ -31,7 +31,7 @@ export const placeDetails: Record<string, PlaceDetail> = {
   vrindavan: {
     slug: 'vrindavan', name: 'Vrindavan', nameHi: 'वृंदावन',
     tagline: 'The Eternal Land of Divine Love and Bhakti', taglineHi: 'दिव्य प्रेम और भक्ति की शाश्वत भूमि',
-    image: '/attached_assets/Temple/Prem_mandir.png',
+    image: '/attached_assets/Temple/Prem_mandir.webp',
     intro: 'Vrindavan is the eternal playground of Shri Radha and Shri Krishna. Set along the sacred Yamuna and surrounded by 12 forests of Braj, it is the land where the Lord\'s raas-leela, makhan-chori and divine flute still echo in every grove. For Vaishnavas, Vrindavan is not merely a place — it is the highest spiritual destination, a vibration of pure prem-bhakti where saints from Chaitanya Mahaprabhu to Hari Das Goswami immersed themselves in the names of Radha-Krishna.',
     introHi: 'वृंदावन श्री राधा और श्री कृष्ण की शाश्वत लीलाभूमि है। पवित्र यमुना के तट पर बसा और ब्रज के बारह वनों से घिरा यह वही स्थान है जहाँ आज भी प्रत्येक कुंज में भगवान की रास-लीला, माखन-चोरी और दिव्य वंशी-स्वर गूँजते हैं। वैष्णवों के लिए वृंदावन मात्र एक स्थान नहीं — यह सर्वोच्च आध्यात्मिक गंतव्य है, शुद्ध प्रेम-भक्ति का स्पंदन है, जहाँ चैतन्य महाप्रभु से लेकर हरिदास गोस्वामी तक संत राधा-कृष्ण के नामों में लीन हुए।',
     sections: [
@@ -48,7 +48,7 @@ export const placeDetails: Record<string, PlaceDetail> = {
   gokul: {
     slug: 'gokul', name: 'Gokul', nameHi: 'गोकुल',
     tagline: 'The Sacred Childhood Abode of Shri Krishna', taglineHi: 'श्रीकृष्ण की पवित्र बाल-लीला भूमि',
-    image: '/attached_assets/Temple/Raman_reti.png',
+    image: '/attached_assets/Temple/Raman_reti.webp',
     intro: 'Gokul is the gentle village on the eastern bank of the Yamuna where infant Krishna was secretly brought by Vasudev on the stormy night of His birth. Here, in the loving lap of Yashoda Maiya and under the watchful eyes of Nanda Baba, the Lord performed His sweetest bal-leelas — makhan chori, damodar leela, Putana-vadh and the lifting of the Shakatasura cart. Gokul is the place where the Supreme Brahman willingly became a child so His devotees could love Him as their own.',
     introHi: 'गोकुल यमुना के पूर्वी तट पर बसा वह स्नेहमय ग्राम है, जहाँ अपने जन्म की भयानक तूफानी रात्रि में वसुदेव गुप्त रूप से बाल कृष्ण को लाए थे। यहीं यशोदा मैया की वत्सल गोद में तथा नंद बाबा की सजग दृष्टि के नीचे भगवान ने अपनी सबसे मधुर बाल-लीलाएँ कीं — माखन चोरी, दामोदर लीला, पूतना-वध तथा शकटासुर के गाड़ी का उद्धार। गोकुल वह स्थान है जहाँ साक्षात् परब्रह्म स्वेच्छा से शिशु बने, ताकि भक्त उन्हें अपना समझकर प्रेम कर सकें।',
     sections: [
@@ -63,7 +63,7 @@ export const placeDetails: Record<string, PlaceDetail> = {
   govardhan: {
     slug: 'govardhan', name: 'Govardhan', nameHi: 'गोवर्धन',
     tagline: 'The Sacred Hill Lifted by Shri Krishna', taglineHi: 'श्रीकृष्ण द्वारा उठाया गया पवित्र पर्वत',
-    image: '/attached_assets/Temple/Daan_Ghati.png',
+    image: '/attached_assets/Temple/Daan_Ghati.webp',
     intro: 'Govardhan is the sacred hill that Shri Krishna lifted on the little finger of His left hand for seven days and nights to shelter the people of Braj from the wrath of Indra. By that single act, the Lord declared that Govardhan itself is non-different from Him — and so, for over five thousand years, devotees have worshipped the hill as Giriraj Maharaj. The 21-kilometre parikrama of Govardhan is one of the most powerful spiritual practices in all of Sanatan Dharma.',
     introHi: 'गोवर्धन वह पवित्र पर्वत है जिसे श्रीकृष्ण ने इंद्र के क्रोध से ब्रजवासियों की रक्षा हेतु अपनी बायीं हाथ की कनिष्ठा पर सात दिन-रात तक उठाए रखा। उस एक लीला से भगवान ने घोषित किया कि गोवर्धन स्वयं उनसे अभिन्न है — और इसीलिए पाँच हजार वर्षों से अधिक समय से भक्त इस पर्वत की गिरिराज महाराज के रूप में पूजा करते आ रहे हैं। गोवर्धन की 21 किलोमीटर की परिक्रमा समस्त सनातन धर्म की सबसे शक्तिशाली साधनाओं में से एक है।',
     sections: [
@@ -79,7 +79,7 @@ export const placeDetails: Record<string, PlaceDetail> = {
   mahavan: {
     slug: 'mahavan', name: 'Mahavan', nameHi: 'महावन',
     tagline: 'The Forest of Krishna\'s Bal-Leelas', taglineHi: 'श्रीकृष्ण की बाल-लीलाओं का वन',
-    image: '/attached_assets/Temple/mahaban_Chaurasi.png',
+    image: '/attached_assets/Temple/mahaban_Chaurasi.webp',
     intro: 'Mahavan — literally "the great forest" — is the ancient settlement just beside Gokul where Krishna actually spent the first phase of His earthly leela before the family shifted to Vrindavan. Today, its quiet lanes hold some of the most authentic and emotionally powerful spots of bal-leela: Chaurasi Khamba, the Damodar pillar where He was tied with the rope of Yashoda\'s love, the Putana-vadh sthal and Trinavarta-vadh sthal.',
     introHi: 'महावन — अर्थात् "महान वन" — गोकुल के ठीक निकट स्थित वह प्राचीन बस्ती है जहाँ श्रीकृष्ण ने वास्तव में अपनी पार्थिव लीला का प्रथम चरण व्यतीत किया, इससे पूर्व कि उनका परिवार वृंदावन चला जाए। आज इसकी शांत गलियाँ बाल-लीला के सबसे प्रामाणिक एवं भाव-प्रबल स्थलों को सहेजे हुए हैं: चौरासी खंभा, दामोदर स्तंभ (जहाँ यशोदा के स्नेह-बंधन से वे बाँधे गए थे), पूतना-वध स्थल तथा तृणावर्त-वध स्थल।',
     sections: [
@@ -94,7 +94,7 @@ export const placeDetails: Record<string, PlaceDetail> = {
   barsana: {
     slug: 'barsana', name: 'Barsana', nameHi: 'बरसाना',
     tagline: 'The Divine Birthplace of Shri Radha Rani', taglineHi: 'श्री राधा रानी की दिव्य जन्मस्थली',
-    image: '/attached_assets/Temple/Barsana_Radha_Rani.png',
+    image: '/attached_assets/Temple/Barsana_Radha_Rani.webp',
     intro: 'Barsana is the lush hill-town that gave the world Shri Radha Rani — the very embodiment of prem-bhakti, the source of Krishna\'s own joy. Set on the four sacred hills of Brahma Parvat, Vishnu Parvat, Shankar Parvat and Brahma Giri, Barsana shines with the unparalleled energy of Radha\'s leelas. Here Radha grew up in the palace of Vrishabhanu Maharaj and Kirtida Maiya, and here the most ecstatic festival of Braj — Lathmar Holi — comes alive every year.',
     introHi: 'बरसाना वह हरा-भरा पर्वतीय नगर है जिसने जगत् को श्री राधा रानी प्रदान कीं — प्रेम-भक्ति की साक्षात् मूर्ति, श्रीकृष्ण के आनंद का मूल स्रोत। ब्रह्म पर्वत, विष्णु पर्वत, शंकर पर्वत तथा ब्रह्म गिरि — चार पवित्र पर्वतों पर बसा बरसाना राधा-लीलाओं की अद्वितीय ऊर्जा से चमकता है। यहाँ राधा वृषभानु महाराज और कीर्तिदा मैया के राजभवन में पली-बढ़ीं, और यहीं ब्रज का सबसे उत्सवपूर्ण पर्व — लठमार होली — प्रतिवर्ष जीवंत हो उठता है।',
     sections: [

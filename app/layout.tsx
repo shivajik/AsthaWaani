@@ -71,6 +71,13 @@ export default function RootLayout({
       <head>
         {/* RSS feed discovery */}
         <link rel="alternate" type="application/rss+xml" title="Asthawaani Blog" href="https://www.asthawaani.com/rss.xml" />
+        {/* LCP preload — hero background image */}
+        <link
+          rel="preload"
+          as="image"
+          href="/attached_assets/generated_images/vrindavan_sunrise_temple_landscape.webp"
+          fetchPriority="high"
+        />
         {/* Schema.org JSON-LD - Organization */}
         <script
           type="application/ld+json"
