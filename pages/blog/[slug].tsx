@@ -174,9 +174,25 @@ export default function BlogPostPage({ slug, post, topAds, sidebarAds, bottomAds
               author: { '@type': 'Organization', name: 'Asthawaani' },
               publisher: { '@type': 'Organization', name: 'Asthawaani', logo: { '@type': 'ImageObject', url: 'https://www.asthawaani.com/logo.png' } },
               mainEntityOfPage: { '@type': 'WebPage', '@id': `https://www.asthawaani.com/blog/${slug}` },
+              inLanguage: ['en', 'hi'],
             }),
           }}
         />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'BreadcrumbList',
+              itemListElement: [
+                { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://www.asthawaani.com/' },
+                { '@type': 'ListItem', position: 2, name: 'Blog', item: 'https://www.asthawaani.com/blog' },
+                { '@type': 'ListItem', position: 3, name: post.title, item: `https://www.asthawaani.com/blog/${slug}` },
+              ],
+            }),
+          }}
+        />
+        <link rel="alternate" type="application/rss+xml" title="Asthawaani Blog" href="https://www.asthawaani.com/rss.xml" />
       </Head>
       <BlogPostClient post={post} topAds={topAds} sidebarAds={sidebarAds} bottomAds={bottomAds} categories={categories} />
     </>

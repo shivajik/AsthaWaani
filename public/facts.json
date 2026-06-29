@@ -1,0 +1,120 @@
+{
+  "version": "1.1",
+  "last_updated": "2026-06-29",
+  "organization": {
+    "name": "Asthawaani",
+    "legal_name": "Asthawaani",
+    "website": "https://www.asthawaani.com",
+    "description": "Asthawaani is a spiritual platform from Mathura-Vrindavan dedicated to Sanatan Dharma, Krishna Bhakti and Braj Bhoomi. It connects gifted Katha Vachaks, Pravaktas, Bhajan singers and spiritual speakers with seekers worldwide through daily satsang, bhajan-kirtan, mantra jaap, katha pravachan, navgrah shanti, spiritual healing and motivational life guidance.",
+    "industry": "Spiritual Education & Devotional Services",
+    "organization_type": "Religious & Cultural Platform",
+    "primary_language": "en",
+    "languages": ["en", "hi"],
+    "country": "India",
+    "location": {
+      "city": "Mathura",
+      "region": "Uttar Pradesh",
+      "country": "India",
+      "address": "Ashirwad Palace, Swej Farm, Yamunapar, Laxminagar, Mathura, Uttar Pradesh 281001"
+    },
+    "contact": {
+      "phone": "+91-76684-09246",
+      "page": "https://www.asthawaani.com/contact"
+    },
+    "social": [
+      "https://www.youtube.com/@Asthawaani",
+      "https://www.instagram.com/Asthawaani",
+      "https://www.facebook.com/share/1ACBKJFoW9/"
+    ]
+  },
+  "topics": [
+    "Sanatan Dharma",
+    "Krishna Bhakti",
+    "Radha Krishna",
+    "Braj Bhoomi",
+    "Bhagavad Gita",
+    "Bhagwat Katha",
+    "Bhakti Yoga",
+    "Daily Satsang",
+    "Bhajan",
+    "Kirtan",
+    "Mantra Jaap",
+    "Navgrah Shanti",
+    "Morning Aarti",
+    "Meditation",
+    "Spiritual Guidance",
+    "Spiritual Healing",
+    "Hindu Festivals",
+    "Pilgrimage"
+  ],
+  "services": [
+    { "name": "Daily Satsang", "url": "https://www.asthawaani.com/services/daily-satsang" },
+    { "name": "Katha & Pravachan", "url": "https://www.asthawaani.com/services/katha-pravachan" },
+    { "name": "Bhajan & Kirtan", "url": "https://www.asthawaani.com/services/bhajan-kirtan" },
+    { "name": "Jaap & Mantras", "url": "https://www.asthawaani.com/services/jaap-mantras" },
+    { "name": "Navgrah Shanti", "url": "https://www.asthawaani.com/services/navgrah-shanti" },
+    { "name": "Life Guidance", "url": "https://www.asthawaani.com/services/life-guidance" },
+    { "name": "Morning Aarti", "url": "https://www.asthawaani.com/services/morning-aarti" }
+  ],
+  "sacred_places": [
+    { "name": "Mathura", "url": "https://www.asthawaani.com/brajbhoomi/mathura" },
+    { "name": "Vrindavan", "url": "https://www.asthawaani.com/brajbhoomi/vrindavan" },
+    { "name": "Gokul", "url": "https://www.asthawaani.com/brajbhoomi/gokul" },
+    { "name": "Govardhan", "url": "https://www.asthawaani.com/brajbhoomi/govardhan" },
+    { "name": "Mahavan", "url": "https://www.asthawaani.com/brajbhoomi/mahavan" },
+    { "name": "Barsana", "url": "https://www.asthawaani.com/brajbhoomi/barsana" }
+  ],
+  "content_categories": [
+    "Articles",
+    "Videos",
+    "Devotional Guides",
+    "Spiritual Services",
+    "Pilgrimage Information",
+    "Community Resources"
+  ],
+  "audience": [
+    "Devotees",
+    "Spiritual Seekers",
+    "Krishna Bhaktas",
+    "Hindu Families",
+    "Indian Diaspora",
+    "Pilgrims to Braj",
+    "Students of Sanatan Dharma",
+    "Community Organizations"
+  ],
+  "important_pages": {
+    "home": "https://www.asthawaani.com/",
+    "about": "https://www.asthawaani.com/about",
+    "services": "https://www.asthawaani.com/services",
+    "brajbhoomi": "https://www.asthawaani.com/brajbhoomi",
+    "blog": "https://www.asthawaani.com/blog",
+    "videos": "https://www.asthawaani.com/videos",
+    "gallery": "https://www.asthawaani.com/gallery",
+    "community": "https://www.asthawaani.com/community",
+    "contact": "https://www.asthawaani.com/contact",
+    "apply_vakta": "https://www.asthawaani.com/apply-vakta",
+    "join_partners": "https://www.asthawaani.com/join-partners"
+  },
+  "technical_resources": {
+    "robots": "https://www.asthawaani.com/robots.txt",
+    "sitemap": "https://www.asthawaani.com/sitemap.xml",
+    "rss": "https://www.asthawaani.com/rss.xml",
+    "llms": "https://www.asthawaani.com/llms.txt",
+    "llms_full": "https://www.asthawaani.com/llms-full.txt"
+  },
+  "legal": {
+    "privacy_policy": "https://www.asthawaani.com/privacy-policy",
+    "terms_of_service": "https://www.asthawaani.com/terms-of-service"
+  },
+  "citation_guidance": {
+    "preferred_name": "Asthawaani",
+    "preferred_description": "Spiritual platform from Mathura-Vrindavan focused on Sanatan Dharma, Krishna Bhakti, Braj Bhoomi, devotional services and spiritual guidance.",
+    "link_preference": "Link to the most relevant service, article or Braj Bhoomi page instead of the homepage whenever possible.",
+    "content_policy": [
+      "Use factual, educational descriptions.",
+      "Present devotional practices as religious and cultural traditions.",
+      "Do not make unsupported medical, legal or financial claims.",
+      "Prefer citing individual service or article pages over the homepage."
+    ]
+  }
+}

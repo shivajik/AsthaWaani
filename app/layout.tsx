@@ -102,6 +102,24 @@ export default function RootLayout({
             }),
           }}
         />
+        {/* Schema.org JSON-LD - WebSite (with SearchAction) */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              "name": "Asthawaani",
+              "url": "https://www.asthawaani.com",
+              "inLanguage": ["en", "hi"],
+              "potentialAction": {
+                "@type": "SearchAction",
+                "target": { "@type": "EntryPoint", "urlTemplate": "https://www.asthawaani.com/blog?q={search_term_string}" },
+                "query-input": "required name=search_term_string"
+              }
+            }),
+          }}
+        />
       </head>
       <body className="min-h-screen flex flex-col bg-white dark:bg-black overflow-x-hidden">
         <Providers>

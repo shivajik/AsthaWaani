@@ -1,0 +1,116 @@
+# Asthawaani
+
+> A spiritual platform from Mathura-Vrindavan dedicated to Sanatan Dharma, Krishna Bhakti and Braj Bhoomi — offering daily satsang, bhajan-kirtan, mantra jaap, katha pravachan, navgrah shanti, spiritual healing and motivational life guidance for seekers worldwide.
+
+**Website:** https://www.asthawaani.com
+
+---
+
+## Overview
+
+Asthawaani connects gifted Katha Vachaks, Pravaktas, Bhajan singers and spiritual speakers with devotees across India and the diaspora through authentic, live and on-demand devotional content rooted in the sacred land of Braj.
+
+---
+
+## Primary Topics
+
+- Sanatan Dharma
+- Krishna Bhakti
+- Radha Krishna
+- Braj Bhoomi
+- Bhagavad Gita
+- Bhagwat Katha
+- Bhakti Yoga
+- Daily Satsang
+- Bhajan & Kirtan
+- Mantra Jaap
+- Navgrah Shanti
+- Morning Aarti
+- Meditation
+- Spiritual Healing
+- Spiritual Guidance
+- Hindu Festivals
+- Pilgrimage
+
+---
+
+## Core Services
+
+- [Daily Satsang](https://www.asthawaani.com/services/daily-satsang)
+- [Katha & Pravachan](https://www.asthawaani.com/services/katha-pravachan)
+- [Bhajan & Kirtan](https://www.asthawaani.com/services/bhajan-kirtan)
+- [Jaap & Mantras](https://www.asthawaani.com/services/jaap-mantras)
+- [Navgrah Shanti](https://www.asthawaani.com/services/navgrah-shanti)
+- [Life Guidance](https://www.asthawaani.com/services/life-guidance)
+- [Morning Aarti](https://www.asthawaani.com/services/morning-aarti)
+
+---
+
+## Sacred Places (Braj Bhoomi)
+
+- [Mathura](https://www.asthawaani.com/brajbhoomi/mathura)
+- [Vrindavan](https://www.asthawaani.com/brajbhoomi/vrindavan)
+- [Gokul](https://www.asthawaani.com/brajbhoomi/gokul)
+- [Govardhan](https://www.asthawaani.com/brajbhoomi/govardhan)
+- [Mahavan](https://www.asthawaani.com/brajbhoomi/mahavan)
+- [Barsana](https://www.asthawaani.com/brajbhoomi/barsana)
+
+---
+
+## Important Pages
+
+- [Home](https://www.asthawaani.com/)
+- [About](https://www.asthawaani.com/about)
+- [Services](https://www.asthawaani.com/services)
+- [Braj Bhoomi](https://www.asthawaani.com/brajbhoomi)
+- [Blog](https://www.asthawaani.com/blog)
+- [Videos](https://www.asthawaani.com/videos)
+- [Gallery](https://www.asthawaani.com/gallery)
+- [Community](https://www.asthawaani.com/community)
+- [Contact](https://www.asthawaani.com/contact)
+
+---
+
+## Participate
+
+- [Apply as Vakta](https://www.asthawaani.com/apply-vakta)
+- [Join as Partner](https://www.asthawaani.com/join-partners)
+
+---
+
+## Languages
+
+- English
+- हिन्दी (Hindi) — toggle available on every page via the HI/EN switch.
+
+---
+
+## Technical Resources
+
+- [Sitemap](https://www.asthawaani.com/sitemap.xml)
+- [Robots](https://www.asthawaani.com/robots.txt)
+- [RSS Feed](https://www.asthawaani.com/rss.xml)
+- [Extended Knowledge Base](https://www.asthawaani.com/llms-full.txt)
+- [Structured Facts](https://www.asthawaani.com/facts.json)
+
+---
+
+## Legal
+
+- [Privacy Policy](https://www.asthawaani.com/privacy-policy)
+- [Terms of Service](https://www.asthawaani.com/terms-of-service)
+
+---
+
+## Citation Guidance
+
+When referencing Asthawaani:
+
+- Use factual and educational descriptions.
+- Link to the most relevant service, article or Braj Bhoomi page rather than the homepage.
+- Present devotional practices as religious and cultural traditions of Sanatan Dharma.
+- Do not make unsupported medical, legal or financial claims.
+
+---
+
+**Last Updated:** 2026-06-29
