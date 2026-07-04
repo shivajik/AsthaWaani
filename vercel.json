@@ -3,14 +3,14 @@
   "buildCommand": "next build --webpack && node scripts/fix-cjs-launcher.mjs",
   "outputDirectory": ".next",
   "redirects": [
-    { "source": "/:path*", "has": [{ "type": "host", "value": "asthawaani.com" }], "destination": "https://www.asthawaani.com/:path*", "permanent": true },
-    { "source": "/lander", "destination": "/", "permanent": true },
-    { "source": "/home", "destination": "/", "permanent": true },
-    { "source": "/services/jaap-mantra", "destination": "/services/jaap-mantras", "permanent": true },
-    { "source": "/services/navgrah-shanti-path", "destination": "/services/navgrah-shanti", "permanent": true },
-    { "source": "/services/spiritual-emotional-healing", "destination": "/services/healing", "permanent": true },
-    { "source": "/services/spiritual-healing", "destination": "/services/healing", "permanent": true },
-    { "source": "/services/emotional-healing", "destination": "/services/healing", "permanent": true },
-    { "source": "/services/motivational-life-guidance", "destination": "/services/life-guidance", "permanent": true }
+    { "source": "/:path*", "has": [{ "type": "host", "value": "asthawaani.com" }], "destination": "https://www.asthawaani.com/:path*", "statusCode": 301 },
+    { "source": "/lander", "destination": "/", "statusCode": 301 },
+    { "source": "/home", "destination": "/", "statusCode": 301 },
+    { "source": "/services/jaap-mantra", "destination": "/services/jaap-mantras", "statusCode": 301 },
+    { "source": "/services/navgrah-shanti-path", "destination": "/services/navgrah-shanti", "statusCode": 301 },
+    { "source": "/services/spiritual-emotional-healing", "destination": "/services/healing", "statusCode": 301 },
+    { "source": "/services/spiritual-healing", "destination": "/services/healing", "statusCode": 301 },
+    { "source": "/services/emotional-healing", "destination": "/services/healing", "statusCode": 301 },
+    { "source": "/services/motivational-life-guidance", "destination": "/services/life-guidance", "statusCode": 301 }
   ]
 }

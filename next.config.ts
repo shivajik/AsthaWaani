@@ -1,6 +1,9 @@
 import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
+  // Force single canonical URL shape (no trailing slash) so Google does
+  // not see /page and /page/ as two different URLs (duplicate-canonical fix).
+  trailingSlash: false,
   // All /api/* requests are handled inside the Next.js app:
   // - app/api/*    -> dedicated route handlers (blog, contact, ...)
   // - pages/api/*  -> catch-all that mounts the legacy Express CMS app
