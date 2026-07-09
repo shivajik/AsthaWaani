@@ -36,6 +36,13 @@ export type PlaceSchema = {
   geo: PlaceGeo;
 };
 
+export type PlaceFaq = {
+  q: string;
+  qHi: string;
+  a: string;
+  aHi: string;
+};
+
 export type PlaceDetail = {
   slug: string;
   name: string;
@@ -49,6 +56,8 @@ export type PlaceDetail = {
   metaDescription: string;
   author: PlaceAuthor;
   schema: PlaceSchema;
+  /** Frequently asked questions — rendered as FAQ section + FAQPage JSON-LD */
+  faqs?: PlaceFaq[];
   /** Date the editorial team last verified this entry */
   lastReviewed?: string;
 };
@@ -74,7 +83,7 @@ export const placeDetails: Record<string, PlaceDetail> = {
       { heading: 'Best Time to Visit', headingHi: 'दर्शन का श्रेष्ठ समय', body: 'October to March is the most pleasant season. Janmashtami (Aug–Sep), Holi (March) and Kartik Purnima (Nov) bring the city to its most divine and crowded best.', bodyHi: 'अक्तूबर से मार्च तक का समय दर्शन के लिए सर्वाधिक सुखद है। जन्माष्टमी (अगस्त–सितंबर), होली (मार्च) और कार्तिक पूर्णिमा (नवंबर) के अवसर पर नगरी अपनी सर्वोच्च दिव्यता और जनसमूह में दिखाई देती है।' },
       { heading: 'Yatra Tips by Asthawaani', headingHi: 'आस्थावाणी की यात्रा सलाह', body: 'Stay near Vishram Ghat for early-morning darshan. Combine Mathura with Vrindavan (14 km), Gokul (15 km) and Govardhan (22 km) for a complete Braj-yatra of 3–4 days. Always cover your head in the garbha-griha and avoid leather inside temple premises.', bodyHi: 'प्रातः दर्शन हेतु विश्राम घाट के निकट ठहरना उत्तम है। 3–4 दिवसीय पूर्ण ब्रज-यात्रा हेतु मथुरा को वृंदावन (14 कि.मी.), गोकुल (15 कि.मी.) तथा गोवर्धन (22 कि.मी.) के साथ जोड़ें। गर्भगृह में सिर ढककर प्रवेश करें तथा मंदिर परिसर में चमड़े की वस्तुओं का प्रयोग न करें।' },
     ],
-    metaDescription: 'Mathura — the divine birthplace of Lord Shri Krishna. Janmabhoomi, Dwarkadhish, Vishram Ghat and complete yatra guide on Asthawaani.',
+    metaDescription: 'Braj Bhumi Mathura – complete Krishna Janmabhoomi yatra guide. Dwarkadhish, Vishram Ghat Aarti, Potara Kund & how to reach Mathura from Delhi & Agra.',
     author: EDITORIAL_AUTHOR,
     schema: {
       primaryDeity: 'Bhagwan Shri Krishna',
@@ -87,6 +96,12 @@ export const placeDetails: Record<string, PlaceDetail> = {
       knownFor: ['Krishna Janmabhoomi', 'Dwarkadhish Temple', 'Vishram Ghat', 'Yamuna Aarti', '25-kosi Parikrama'],
       geo: { latitude: 27.4924, longitude: 77.6737 },
     },
+    faqs: [
+      { q: 'How do I reach Mathura from Delhi or Agra?', qHi: 'दिल्ली या आगरा से मथुरा कैसे पहुँचें?', a: 'Mathura is 150 km south of Delhi and 55 km north of Agra on the Yamuna Expressway. Fastest by car (2.5–3 hrs from Delhi, 1 hr from Agra). Regular trains from Nizamuddin, New Delhi and Agra Cantt stop at Mathura Junction. Nearest airport is Delhi (IGI); Agra airport is closer but has fewer flights.', aHi: 'मथुरा दिल्ली से 150 कि.मी. दक्षिण और आगरा से 55 कि.मी. उत्तर में यमुना एक्सप्रेसवे पर स्थित है। कार से सबसे तेज़ (दिल्ली से 2.5–3 घंटे, आगरा से 1 घंटा)। निज़ामुद्दीन, नई दिल्ली और आगरा कैंट से नियमित रेलगाड़ियाँ मथुरा जंक्शन पर रुकती हैं।' },
+      { q: 'What is the best time to visit Krishna Janmabhoomi?', qHi: 'कृष्ण जन्मभूमि दर्शन का श्रेष्ठ समय क्या है?', a: 'October to March offers the most comfortable weather. Janmashtami (Aug–Sep) is the most divine time — the entire complex glows with midnight abhishek and lakhs of devotees. Early morning (5–8 AM) has the shortest darshan queues.', aHi: 'अक्तूबर से मार्च तक मौसम सर्वाधिक सुखद रहता है। जन्माष्टमी (अगस्त–सितंबर) सर्वोच्च दिव्य समय है। प्रातः 5–8 बजे दर्शन की सबसे छोटी पंक्तियाँ मिलती हैं।' },
+      { q: 'How far is Mathura from Vrindavan, Gokul and Barsana?', qHi: 'मथुरा से वृंदावन, गोकुल और बरसाना कितनी दूर हैं?', a: 'Vrindavan is 14 km, Gokul is 15 km, Govardhan is 22 km, Mahavan is 17 km and Barsana is 50 km from Mathura. All can be covered comfortably in a 3–4 day Braj-yatra by taxi or Asthawaani guided bus.', aHi: 'मथुरा से वृंदावन 14 कि.मी., गोकुल 15 कि.मी., गोवर्धन 22 कि.मी., महावन 17 कि.मी. तथा बरसाना 50 कि.मी. दूर है। सम्पूर्ण ब्रज-यात्रा 3–4 दिनों में सुगमता से पूरी की जा सकती है।' },
+      { q: 'Are mobile phones and cameras allowed inside Janmabhoomi?', qHi: 'क्या जन्मभूमि परिसर में मोबाइल और कैमरा अनुमत हैं?', a: 'No. Due to security, mobile phones, cameras, bags and leather items are strictly prohibited inside the Shri Krishna Janmabhoomi complex. Free cloak rooms are available at each entry gate.', aHi: 'नहीं। सुरक्षा कारणों से श्री कृष्ण जन्मभूमि परिसर में मोबाइल, कैमरा, बैग तथा चमड़े की वस्तुएँ पूर्णतः निषिद्ध हैं। प्रत्येक प्रवेश-द्वार पर निःशुल्क क्लोक रूम उपलब्ध हैं।' },
+    ],
     lastReviewed: '2026-06-29',
   },
   vrindavan: {
@@ -104,7 +119,7 @@ export const placeDetails: Record<string, PlaceDetail> = {
       { heading: 'Spiritual Significance', headingHi: 'आध्यात्मिक महत्व', body: 'It is said that the very dust (raj) of Vrindavan is liberating. Saints have declared that one moment of pure remembrance in Vrindavan equals years of sadhana elsewhere. Even a single yatra deepens bhakti for lifetimes.', bodyHi: 'कहा जाता है कि वृंदावन की रज स्वयं मुक्ति प्रदान करने वाली है। संतों ने घोषित किया है कि वृंदावन में शुद्ध स्मरण का एक क्षण अन्यत्र वर्षों की साधना के समान है। एक भी यात्रा भक्ति को जन्म-जन्मांतर तक गहरा कर देती है।' },
       { heading: 'Festivals to Plan Your Visit Around', headingHi: 'योजना बनाने योग्य प्रमुख उत्सव', body: 'Janmashtami, Radhashtami, Holi, Jhulan Yatra (Aug), Govardhan Puja and Kartik Deep Daan — each turns the entire town into a living festival of bhakti.', bodyHi: 'जन्माष्टमी, राधाष्टमी, होली, झूलन यात्रा (अगस्त), गोवर्धन पूजा और कार्तिक दीप-दान — इनमें से प्रत्येक सम्पूर्ण नगर को भक्ति के जीवंत उत्सव में परिवर्तित कर देता है।' },
     ],
-    metaDescription: 'Vrindavan — the eternal land of Radha-Krishna leela. Banke Bihari, Prem Mandir, ISKCON, Nidhivan and complete yatra guide on Asthawaani.',
+    metaDescription: 'Vrindavan yatra guide – Banke Bihari darshan timings, Prem Mandir, ISKCON, Nidhivan mystery & how to reach Vrindavan from Mathura & Delhi.',
     author: EDITORIAL_AUTHOR,
     schema: {
       primaryDeity: 'Shri Radha-Krishna',
@@ -117,6 +132,12 @@ export const placeDetails: Record<string, PlaceDetail> = {
       knownFor: ['Banke Bihari Temple', 'Prem Mandir', 'ISKCON Krishna-Balaram', 'Nidhivan', 'Radha Raman', 'Chandrodaya Mandir'],
       geo: { latitude: 27.5806, longitude: 77.7006 },
     },
+    faqs: [
+      { q: 'What are Banke Bihari temple darshan timings?', qHi: 'बांके बिहारी मंदिर के दर्शन समय क्या हैं?', a: 'Summer: 7:45 AM–12:00 PM and 5:30–9:30 PM. Winter: 8:45 AM–1:00 PM and 4:30–8:30 PM. The pat (curtain) is drawn every few seconds — this is a unique tradition of Banke Bihari Ji. Mangla aarti happens only on Janmashtami.', aHi: 'ग्रीष्म: प्रातः 7:45–दोपहर 12:00 तथा सायं 5:30–9:30। शीत: प्रातः 8:45–दोपहर 1:00 तथा सायं 4:30–8:30। पट हर कुछ क्षणों में गिराए जाते हैं — यह बांके बिहारी जी की अनूठी परंपरा है।' },
+      { q: 'How to reach Vrindavan from Delhi?', qHi: 'दिल्ली से वृंदावन कैसे पहुँचें?', a: 'Vrindavan is 165 km from Delhi via Yamuna Expressway (3 hrs by car). Take a train to Mathura Junction (Nizamuddin–Mathura shatabdi is fastest), then a 20-minute taxi/e-rickshaw ride. Direct UPSRTC buses also run from Sarai Kale Khan.', aHi: 'वृंदावन दिल्ली से यमुना एक्सप्रेसवे द्वारा 165 कि.मी. (कार से 3 घंटे) दूर है। मथुरा जंक्शन तक रेल, फिर 20 मिनट टैक्सी/ई-रिक्शा। सराय काले खां से सीधी UPSRTC बसें भी चलती हैं।' },
+      { q: 'Why is Nidhivan locked at night?', qHi: 'निधिवन रात्रि में क्यों बंद रहता है?', a: 'Devotees believe Radha-Krishna still perform raas-leela in Nidhivan every night. After the evening aarti the grove is sealed — no human, animal or bird is allowed inside. Those who attempted to hide have famously never spoken again about what they saw.', aHi: 'भक्तों की मान्यता है कि आज भी प्रत्येक रात्रि निधिवन में राधा-कृष्ण रास-लीला करते हैं। संध्या आरती के पश्चात् कुंज सील कर दिया जाता है — कोई भी मनुष्य, पशु या पक्षी अंदर नहीं रह सकता।' },
+      { q: 'Best time to visit Vrindavan?', qHi: 'वृंदावन दर्शन का श्रेष्ठ समय?', a: 'October–March for weather. For bhakti, plan around Janmashtami, Radhashtami (Aug–Sep), Jhulan Yatra (Aug) or Holi (March). Weekdays are far less crowded than weekends.', aHi: 'मौसम की दृष्टि से अक्तूबर–मार्च। भक्ति की दृष्टि से जन्माष्टमी, राधाष्टमी (अगस्त–सितंबर), झूलन यात्रा (अगस्त) अथवा होली (मार्च)। सप्ताह के मध्य दिन कम भीड़-भरे रहते हैं।' },
+    ],
     lastReviewed: '2026-06-29',
   },
   gokul: {
@@ -132,7 +153,7 @@ export const placeDetails: Record<string, PlaceDetail> = {
       { heading: 'Chaurasi Khamba (Mahavan)', headingHi: 'चौरासी खंभा (महावन)', body: 'Just beside Gokul lies Mahavan with the 84 ancient pillars of Nanda\'s original palace. The thakurani-ghat, Damodar pillar (where Krishna was tied) and the Putana-vadh sthal are all here.', bodyHi: 'गोकुल के ठीक निकट महावन है जहाँ नंद के मूल भवन के 84 प्राचीन स्तंभ खड़े हैं। ठकुरानी-घाट, दामोदर स्तंभ (जहाँ कृष्ण बाँधे गए थे) तथा पूतना-वध स्थल — सभी यहीं हैं।' },
       { heading: 'How to Reach & When to Visit', headingHi: 'पहुँचने का मार्ग एवं श्रेष्ठ समय', body: 'Gokul is 15 km south-east of Mathura, easily reached by auto, taxi or the Asthawaani-arranged Braj-yatra bus. Janmashtami, Nand Mahotsav (the day after Janmashtami) and Annakut are the most ecstatic times to visit.', bodyHi: 'गोकुल मथुरा से 15 कि.मी. दक्षिण-पूर्व में स्थित है, जहाँ ऑटो, टैक्सी अथवा आस्थावाणी द्वारा संचालित ब्रज-यात्रा बस से सरलता से पहुँचा जा सकता है। जन्माष्टमी, नंद महोत्सव (जन्माष्टमी के अगले दिन) तथा अन्नकूट दर्शन हेतु सर्वाधिक भावपूर्ण अवसर हैं।' },
     ],
-    metaDescription: 'Gokul — childhood village of Shri Krishna. Raman Reti, Nand Bhavan, Brahmand Ghat and bal-leela darshan guide on Asthawaani.',
+    metaDescription: 'Gokul yatra guide – Raman Reti, Nand Bhavan, Brahmand Ghat & how to plan Krishna bal-leela darshan from Mathura. Best time, distance & tips.',
     author: EDITORIAL_AUTHOR,
     schema: {
       primaryDeity: 'Bal Gopal (Infant Krishna), Yashoda Maiya, Nand Baba',
@@ -145,6 +166,11 @@ export const placeDetails: Record<string, PlaceDetail> = {
       knownFor: ['Raman Reti', 'Nand Bhavan', 'Brahmand Ghat', 'Chaurasi Khamba', 'Damodar Pillar'],
       geo: { latitude: 27.4488, longitude: 77.7180 },
     },
+    faqs: [
+      { q: 'What is the distance from Mathura to Gokul?', qHi: 'मथुरा से गोकुल की दूरी कितनी है?', a: 'Gokul is 15 km south-east of Mathura on the eastern bank of the Yamuna. By auto or taxi it takes 30–40 minutes. Combine with Mahavan (2 km further) in the same trip.', aHi: 'गोकुल मथुरा से 15 कि.मी. दक्षिण-पूर्व में यमुना के पूर्वी तट पर है। ऑटो या टैक्सी से 30–40 मिनट लगते हैं। महावन (2 कि.मी. आगे) को भी उसी यात्रा में जोड़ें।' },
+      { q: 'What is special about Raman Reti in Gokul?', qHi: 'गोकुल की रमन रेती में क्या विशेष है?', a: 'Raman Reti is the golden sand where bal-Krishna and Balram played with their gopa-friends. Devotees traditionally roll (lot laganā) on this sand as an act of bhakti — it is said to carry the imprint of the Lord\'s tiny feet even today.', aHi: 'रमन रेती वह सुनहरी रेत है जहाँ बाल कृष्ण और बलराम अपने सखाओं के साथ खेले। भक्त परंपरागत रूप से इस रेत में लोट लगाते हैं — मान्यता है कि इसमें आज भी प्रभु के नन्हे चरणों का स्पर्श है।' },
+      { q: 'When is Nand Mahotsav celebrated?', qHi: 'नंद महोत्सव कब मनाया जाता है?', a: 'Nand Mahotsav is celebrated the day after Janmashtami (Aug–Sep) in Gokul and Nandgaon. It commemorates Nanda Baba\'s celebration of Krishna\'s birth — with rasa, dahi-lut and continuous kirtan.', aHi: 'नंद महोत्सव जन्माष्टमी के अगले दिन (अगस्त–सितंबर) गोकुल और नंदगाँव में मनाया जाता है। यह नंद बाबा द्वारा कृष्ण जन्म के उत्सव का स्मरण है — रास, दही-लूट और निरंतर कीर्तन के साथ।' },
+    ],
     lastReviewed: '2026-06-29',
   },
   govardhan: {
@@ -161,7 +187,7 @@ export const placeDetails: Record<string, PlaceDetail> = {
       { heading: 'Govardhan Puja & Annakut', headingHi: 'गोवर्धन पूजा एवं अन्नकूट', body: 'The day after Diwali, every home and temple in Braj prepares Annakut — a "mountain" of 56 (chappan) bhog dishes — and offers it to Giriraj Ji in remembrance of His protection.', bodyHi: 'दीपावली के अगले दिन ब्रज के प्रत्येक घर एवं मंदिर में अन्नकूट तैयार किया जाता है — 56 (छप्पन) भोग के व्यंजनों का "पर्वत" — और गिरिराज जी के संरक्षण के स्मरण में उन्हें अर्पित किया जाता है।' },
       { heading: 'Important Yatra Tips', headingHi: 'महत्वपूर्ण यात्रा सलाह', body: 'Carry water, wear breathable cotton, do not pluck or carry any stone from the hill, and try to complete parikrama between Brahma-muhurta and noon for the best experience.', bodyHi: 'जल साथ रखें, हल्के सूती वस्त्र पहनें, पर्वत से कोई शिला तोड़कर अथवा ले जाने का प्रयास न करें, तथा श्रेष्ठ अनुभव हेतु परिक्रमा ब्रह्म-मुहूर्त से दोपहर के बीच पूर्ण करें।' },
     ],
-    metaDescription: 'Govardhan parikrama, Daan Ghati, Radha Kund, Manasi Ganga and the sacred hill lifted by Shri Krishna — full pilgrimage guide on Asthawaani.',
+    metaDescription: 'Govardhan Parikrama guide – 21 km route, Daan Ghati, Mukharvind, Radha Kund, Manasi Ganga & how to plan the sacred Giriraj yatra from Mathura.',
     author: EDITORIAL_AUTHOR,
     schema: {
       primaryDeity: 'Giriraj Govardhan (Shri Krishna)',
@@ -174,6 +200,11 @@ export const placeDetails: Record<string, PlaceDetail> = {
       knownFor: ['Daan Ghati', 'Mukharvind', 'Manasi Ganga', 'Radha Kund', 'Shyam Kund', '21 km Parikrama'],
       geo: { latitude: 27.4985, longitude: 77.4673 },
     },
+    faqs: [
+      { q: 'How long is the Govardhan Parikrama?', qHi: 'गोवर्धन परिक्रमा कितनी लंबी है?', a: 'The traditional Govardhan Parikrama is 21 km, starting and ending at Daan Ghati. Walking barefoot takes 5–7 hours. Dandavat (full-prostration) parikrama can take several weeks to complete a single round.', aHi: 'पारंपरिक गोवर्धन परिक्रमा 21 कि.मी. की है, जो दान घाटी से प्रारंभ और समाप्त होती है। नंगे पाँव पूर्ण करने में 5–7 घंटे लगते हैं। दंडवत परिक्रमा में एक चक्र पूरा करने में कई सप्ताह लग सकते हैं।' },
+      { q: 'When should I do Govardhan Parikrama?', qHi: 'गोवर्धन परिक्रमा कब करनी चाहिए?', a: 'Start at Brahma-muhurta (4:30 AM) and complete before noon to avoid heat. Purnima (full moon), Guru Purnima and Govardhan Puja (day after Diwali) are the most auspicious days. Winter months are physically most comfortable.', aHi: 'ब्रह्म-मुहूर्त (प्रातः 4:30) में प्रारंभ करें और दोपहर से पूर्व पूर्ण करें। पूर्णिमा, गुरु पूर्णिमा एवं गोवर्धन पूजा सर्वाधिक शुभ दिन हैं। शीत ऋतु शारीरिक रूप से सर्वाधिक सुखद है।' },
+      { q: 'How to reach Govardhan from Mathura?', qHi: 'मथुरा से गोवर्धन कैसे पहुँचें?', a: 'Govardhan is 22 km west of Mathura, 26 km from Vrindavan. Regular taxis, autos and UPSRTC buses run all day. Asthawaani\'s guided parikrama coach includes rest-stops at Punchhari, Jatipura and Anyor.', aHi: 'गोवर्धन मथुरा से 22 कि.मी. पश्चिम, वृंदावन से 26 कि.मी. दूर है। नियमित टैक्सी, ऑटो एवं UPSRTC बसें दिनभर चलती हैं। आस्थावाणी की निर्देशित परिक्रमा बस पुंछरी, जतीपुरा और अनयोर में विश्राम-स्थलों के साथ चलती है।' },
+    ],
     lastReviewed: '2026-06-29',
   },
   mahavan: {
@@ -189,7 +220,7 @@ export const placeDetails: Record<string, PlaceDetail> = {
       { heading: 'Yogmaya Temple', headingHi: 'योगमाया मंदिर', body: 'Devoted to the divine sister of Krishna who was exchanged in the prison of Kansa. Worshipping Yogmaya before Janmabhoomi darshan is a traditional Braj practice.', bodyHi: 'श्रीकृष्ण की उन दिव्य भगिनी को समर्पित मंदिर, जिनका कंस के कारागार में परिवर्तन हुआ था। जन्मभूमि दर्शन से पूर्व योगमाया की पूजा ब्रज की पारंपरिक विधि है।' },
       { heading: 'Visiting Tips', headingHi: 'यात्रा सलाह', body: 'Combine Mahavan with Gokul in the same morning. The lanes are narrow — small EVs and rickshaws are the easiest way to move. Janmashtami and Annakut are the most powerful times to visit.', bodyHi: 'महावन को गोकुल के साथ एक ही प्रातः में सम्मिलित करें। यहाँ की गलियाँ सँकरी हैं — छोटी ई-रिक्शा एवं रिक्शा आवागमन का सबसे सरल साधन है। जन्माष्टमी तथा अन्नकूट दर्शन हेतु सर्वाधिक शक्तिशाली अवसर हैं।' },
     ],
-    metaDescription: 'Mahavan & Chaurasi Khamba — the 84 ancient pillars of Krishna\'s original childhood home, Damodar pillar and bal-leela darshan on Asthawaani.',
+    metaDescription: 'Mahavan yatra guide – Chaurasi Khamba (84 pillars of Nanda\'s palace), Damodar Ukhal-Bandhan sthal, Putana-vadh & bal-Krishna leelas near Gokul.',
     author: EDITORIAL_AUTHOR,
     schema: {
       primaryDeity: 'Damodar (Bal Krishna), Yogmaya',
@@ -202,6 +233,11 @@ export const placeDetails: Record<string, PlaceDetail> = {
       knownFor: ['Chaurasi Khamba (84 pillars)', 'Damodar Pillar', 'Putana-Vadh Sthal', 'Yogmaya Temple'],
       geo: { latitude: 27.4392, longitude: 77.7456 },
     },
+    faqs: [
+      { q: 'What is Chaurasi Khamba in Mahavan?', qHi: 'महावन में चौरासी खंभा क्या है?', a: 'Chaurasi Khamba literally means "84 pillars" — a single ancient hall held up by 84 stone pillars believed to be from Nanda Maharaj\'s original palace, where bal-Krishna actually lived. Each pillar is worshipped as a living witness of Krishna\'s childhood.', aHi: 'चौरासी खंभा का शाब्दिक अर्थ है "84 स्तंभ" — एक ही प्राचीन भवन जिसे 84 पत्थर के स्तंभ धारण किए हैं, जो नंद महाराज के मूल राजभवन के माने जाते हैं, जहाँ बाल कृष्ण वस्तुतः रहे थे।' },
+      { q: 'How far is Mahavan from Gokul?', qHi: 'महावन गोकुल से कितनी दूर है?', a: 'Mahavan is just 2 km from Gokul and 17 km from Mathura. Both should be visited in the same morning — most Braj-yatra plans club Gokul + Mahavan + Raman Reti together.', aHi: 'महावन गोकुल से मात्र 2 कि.मी. एवं मथुरा से 17 कि.मी. दूर है। दोनों को एक ही प्रातः में देखना चाहिए — अधिकांश ब्रज-यात्रा योजनाओं में गोकुल + महावन + रमन रेती साथ शामिल हैं।' },
+      { q: 'Why is Krishna called "Damodar"?', qHi: 'श्रीकृष्ण को "दामोदर" क्यों कहा जाता है?', a: '"Damodar" means "one bound at the waist (udar) by a rope (daam)". At Mahavan, Yashoda Maiya tied naughty bal-Krishna to a wooden ukhal (mortar) — but no rope could measure up to her love. This leela gave Him the eternal name Damodar, and the Damodar Pillar in Mahavan marks the exact spot.', aHi: '"दामोदर" का अर्थ है "जिनकी कमर (उदर) रस्सी (दाम) से बाँधी गई हो"। महावन में यशोदा मैया ने बाल-कृष्ण को काष्ठ-ऊखल से बाँधा — किन्तु कोई रस्सी उनके स्नेह के अनुरूप नहीं मिली। इसी लीला से उन्हें शाश्वत नाम दामोदर प्राप्त हुआ।' },
+    ],
     lastReviewed: '2026-06-29',
   },
   barsana: {
@@ -217,7 +253,7 @@ export const placeDetails: Record<string, PlaceDetail> = {
       { heading: 'Lathmar Holi', headingHi: 'लठमार होली', body: 'Eight days before Holi, the men of Nandgaon arrive in Barsana to play Holi — and the women of Barsana lovingly chase them away with long bamboo sticks. This unique, world-famous festival is the highest expression of the playful prem of Radha-Krishna.', bodyHi: 'होली से आठ दिन पूर्व नंदगाँव के पुरुष होली खेलने बरसाना आते हैं — और बरसाने की महिलाएँ उन्हें लम्बी बाँस की लाठियों से प्रेमपूर्वक खदेड़ती हैं। यह अद्वितीय, विश्व-विख्यात उत्सव राधा-कृष्ण के मनोहर प्रेम की सर्वोच्च अभिव्यक्ति है।' },
       { heading: 'Best Time & Yatra Combine', headingHi: 'श्रेष्ठ समय एवं यात्रा संयोजन', body: 'Radhashtami (Aug–Sep) and Lathmar Holi (Feb–March) are the most divine times. Combine Barsana with Nandgaon (8 km — the village of Nanda Baba) and Govardhan (21 km) in a single full-day yatra.', bodyHi: 'राधाष्टमी (अगस्त–सितंबर) तथा लठमार होली (फरवरी–मार्च) सर्वाधिक दिव्य अवसर हैं। बरसाना को नंदगाँव (8 कि.मी. — नंद बाबा का ग्राम) तथा गोवर्धन (21 कि.मी.) के साथ एक दिवसीय पूर्ण यात्रा में जोड़ें।' },
     ],
-    metaDescription: 'Barsana — divine birthplace of Shri Radha Rani. Shriji Temple, Maan Mandir, Sankari Khor, Lathmar Holi and complete yatra guide on Asthawaani.',
+    metaDescription: 'Barsana yatra guide – Shriji Radha Rani Mandir, Maan Mandir, Sankari Khor, Lathmar Holi dates & Radha Rani birthplace darshan from Mathura.',
     author: EDITORIAL_AUTHOR,
     schema: {
       primaryDeity: 'Shri Radha Rani (Ladli Ji)',
@@ -230,6 +266,11 @@ export const placeDetails: Record<string, PlaceDetail> = {
       knownFor: ['Shriji Temple', 'Maan Mandir', 'Mor Kutir', 'Sankari Khor', 'Lathmar Holi'],
       geo: { latitude: 27.6444, longitude: 77.3786 },
     },
+    faqs: [
+      { q: 'When is Lathmar Holi in Barsana in 2027?', qHi: '2027 में बरसाना की लठमार होली कब है?', a: 'Lathmar Holi is played eight days before Holi (phalguna shukla navami). In 2027 it falls in early March. The men of Nandgaon arrive in Barsana and the women lovingly chase them with long bamboo sticks — the world-famous celebration of Radha-Krishna\'s playful prem.', aHi: 'लठमार होली होली से आठ दिन पूर्व (फाल्गुन शुक्ल नवमी) खेली जाती है। 2027 में यह मार्च के प्रारंभ में पड़ती है। नंदगाँव के पुरुष बरसाना आते हैं और स्त्रियाँ लम्बी लाठियों से प्रेमपूर्वक उन्हें खदेड़ती हैं।' },
+      { q: 'How to reach Barsana from Mathura?', qHi: 'मथुरा से बरसाना कैसे पहुँचें?', a: 'Barsana is 50 km north-west of Mathura, roughly 1.5 hrs by car or shared taxi. Combine with Nandgaon (8 km further) and Govardhan (21 km) in a single full-day yatra. UPSRTC also runs regular buses to Barsana.', aHi: 'बरसाना मथुरा से 50 कि.मी. उत्तर-पश्चिम में है, कार से लगभग 1.5 घंटे। नंदगाँव (8 कि.मी. आगे) और गोवर्धन (21 कि.मी.) को एक दिवसीय पूर्ण यात्रा में जोड़ें। UPSRTC की नियमित बसें भी चलती हैं।' },
+      { q: 'Why is Barsana called the birthplace of Radha Rani?', qHi: 'बरसाना को राधा रानी की जन्मस्थली क्यों कहा जाता है?', a: 'Shri Radha Rani took birth in Barsana as the daughter of Vrishabhanu Maharaj and Kirtida Maiya on Bhadrapada shukla ashtami — the day celebrated as Radhashtami. Shriji Temple atop Brahma Parvat stands on the very site of Her palace.', aHi: 'श्री राधा रानी बरसाना में वृषभानु महाराज और कीर्तिदा मैया की पुत्री के रूप में भाद्रपद शुक्ल अष्टमी को अवतरित हुईं — यही दिन राधाष्टमी है। ब्रह्म पर्वत पर श्रीजी मंदिर उनके राजभवन के मूल स्थल पर स्थित है।' },
+    ],
     lastReviewed: '2026-06-29',
   },
 };

@@ -14,17 +14,21 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const p = placeDetails[slug];
   if (!p) return { title: 'Place Not Found | Asthawaani' };
-  const title = `${p.name} – ${p.tagline} | Asthawaani`;
+  // Include Braj Bhumi + place name so Google matches "braj bhumi mathura" type queries.
+  const title = `Braj Bhumi ${p.name} – ${p.tagline} | Asthawaani Yatra Guide`;
   const url = `https://www.asthawaani.com/brajbhoomi/${slug}`;
   return {
     title,
     description: p.metaDescription,
+    keywords: [
+      p.name, `Braj Bhoomi ${p.name}`, `Braj Bhumi ${p.name}`, `Brajbhoomi ${p.name}`,
+      ...p.schema.knownFor, ...p.schema.majorFestivals,
+    ].join(', '),
     openGraph: {
       title,
       description: p.metaDescription,
       url,
       type: 'article',
-      // opengraph-image.tsx in this folder auto-generates a per-place image.
     },
     twitter: {
       card: 'summary_large_image',
@@ -117,6 +121,18 @@ export default async function PlacePage({ params }: Props) {
       ],
     },
   ];
+
+  if (place.faqs && place.faqs.length > 0) {
+    schemas.push({
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: place.faqs.map((f) => ({
+        '@type': 'Question',
+        name: f.q,
+        acceptedAnswer: { '@type': 'Answer', text: f.a },
+      })),
+    });
+  }
 
   return (
     <>

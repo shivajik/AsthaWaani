@@ -3,11 +3,12 @@ import BrajbhoomiClient from './BrajbhoomiClient';
 import { placeDetails, placeSlugs } from './[slug]/content';
 
 export const metadata: Metadata = {
-  title: 'Braj Bhoomi – Sacred Places of Mathura, Vrindavan & Gokul | Asthawaani',
-  description: 'Explore the sacred Braj Bhoomi through Asthawaani. Spiritual presence in Mathura, Vrindavan, Gokul, Govardhan, Mahavan & Barsana with authentic satsang & wisdom.',
+  title: 'Braj Bhoomi Yatra Guide – Mathura, Vrindavan, Gokul, Barsana | Asthawaani',
+  description: 'Explore Braj Bhoomi — Mathura, Vrindavan, Gokul, Govardhan, Mahavan & Barsana. Plan your Brajbhoomi yatra with darshan timings, distances, festivals & Radha-Krishna leela guides.',
+  keywords: 'Braj Bhoomi, Brajbhoomi, Braj Bhumi, Braj Bhumi Mathura, Vrindavan yatra, Gokul, Govardhan Parikrama, Barsana, Radha Krishna, Yamuna, holy rivers of India, Krishna Janmabhoomi',
   openGraph: {
-    title: 'Braj Bhoomi – Sacred Places of Mathura, Vrindavan & Gokul | Asthawaani',
-    description: 'Explore the sacred Braj Bhoomi through Asthawaani. Mathura, Vrindavan, Gokul, Govardhan, Mahavan & Barsana.',
+    title: 'Braj Bhoomi Yatra Guide – Mathura, Vrindavan, Gokul, Barsana | Asthawaani',
+    description: 'Plan your Brajbhoomi yatra with Asthawaani — complete darshan guide to Mathura, Vrindavan, Gokul, Govardhan, Mahavan & Barsana.',
     url: 'https://www.asthawaani.com/brajbhoomi',
     type: 'website',
     images: [{ url: 'https://www.asthawaani.com/opengraph.jpg', width: 1200, height: 630 }],
