@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useLanguage } from '../lib/language-context';
 
-export function PartnershipForm() {
+export function PartnershipForm({ whatsappNumber = '917668409246' }: { whatsappNumber?: string }) {
   const { language } = useLanguage();
   const hi = language === 'hi';
   const [formData, setFormData] = useState({
@@ -17,7 +17,7 @@ export function PartnershipForm() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const message = `Partnership Inquiry:\nName: ${formData.fullName}\nEmail: ${formData.email}\nPhone: ${formData.phone}\nOrganization: ${formData.organization}\nDetails: ${formData.details}`;
-    window.open(`https://wa.me/917668409246?text=${encodeURIComponent(message)}`, '_blank');
+    window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`, '_blank');
   };
 
   return (

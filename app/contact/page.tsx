@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { ContactClient } from './ContactClient';
+import { getContactInfo } from '../lib/contact-info';
 
 export const metadata: Metadata = {
   title: 'Contact Asthawaani – Reach Us in Mathura, Uttar Pradesh',
@@ -14,7 +15,8 @@ export const metadata: Metadata = {
   alternates: { canonical: 'https://www.asthawaani.com/contact' },
 };
 
-export default function ContactPage() {
-  return <ContactClient />;
+export default async function ContactPage() {
+  const contact = await getContactInfo();
+  return <ContactClient contact={contact} />;
 }
 

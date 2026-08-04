@@ -3,6 +3,7 @@ import { eq, and } from 'drizzle-orm';
 import { pgTable, text, varchar, integer, boolean } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { FooterClient } from './FooterClient';
+import { getContactInfo } from '../lib/contact-info';
 
 const ads = pgTable("ads", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
@@ -24,5 +25,6 @@ export async function Footer() {
     footerAds = await db.select().from(ads).where(and(eq(ads.isActive, true), eq(ads.placement, 'footer')));
   } catch (e) { /* ignore */ }
   const sanitize = (a: any) => ({ id: a.id, titleEn: a.titleEn, imageUrl: a.imageUrl, link: a.link ?? null });
-  return <FooterClient aboveFooterAds={aboveFooterAds.map(sanitize)} footerAds={footerAds.map(sanitize)} />;
+  const contact = await getContactInfo();
+  return <FooterClient aboveFooterAds={aboveFooterAds.map(sanitize)} footerAds={footerAds.map(sanitize)} contact={contact} />;
 }

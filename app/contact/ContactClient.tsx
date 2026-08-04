@@ -2,6 +2,7 @@
 
 import { useLanguage } from '../lib/language-context';
 import { ContactForm } from './ContactForm';
+import { DEFAULT_CONTACT_INFO, type ContactInfo } from '../lib/contact-info-shared';
 
 const titleHi = 'संपर्क';
 const getInTouchEn = 'Get in Touch';
@@ -11,9 +12,7 @@ const introHi = 'चाहे आप मार्गदर्शन की त�
 const addressLabelHi = 'पता';
 const phoneLabelHi = 'फ़ोन';
 const emailLabelHi = 'ईमेल';
-const addressHi = 'आशीर्वाद पैलेस, स्वेज फार्म, यमुनापार, लक्ष्मीनगर, मथुरा, उत्तर प्रदेश 281001';
-
-export function ContactClient() {
+export function ContactClient({ contact = DEFAULT_CONTACT_INFO }: { contact?: ContactInfo }) {
   const { language } = useLanguage();
   const isHi = language === 'hi';
   return (
@@ -31,9 +30,9 @@ export function ContactClient() {
               <h2 className="text-3xl font-serif font-bold text-[hsl(45,90%,50%)] mb-6 italic">{isHi ? getInTouchHi : getInTouchEn}</h2>
               <p className="text-gray-600 mb-8 text-lg">{isHi ? introHi : introEn}</p>
               <div className="space-y-4">
-                <p className="text-gray-700"><strong>{isHi ? addressLabelHi : 'Address'}:</strong> {isHi ? addressHi : 'Ashirwad Palace, Swej Farm, Yamunapar, Laxminagar, Mathura, Uttar Pradesh 281001'}</p>
-                <p className="text-gray-700"><strong>{isHi ? phoneLabelHi : 'Phone'}:</strong> +91 76684 09246</p>
-                <p className="text-gray-700"><strong>{isHi ? emailLabelHi : 'Email'}:</strong> contact@asthawaani.com</p>
+                <p className="text-gray-700"><strong>{isHi ? addressLabelHi : 'Address'}:</strong> {isHi ? contact.addressHi : contact.address}</p>
+                <p className="text-gray-700"><strong>{isHi ? phoneLabelHi : 'Phone'}:</strong> <a href={`tel:${contact.phone.replace(/\s+/g, '')}`} className="hover:text-[hsl(45,90%,45%)]">{contact.phone}</a></p>
+                <p className="text-gray-700"><strong>{isHi ? emailLabelHi : 'Email'}:</strong> <a href={`mailto:${contact.email}`} className="hover:text-[hsl(45,90%,45%)] break-all">{contact.email}</a></p>
               </div>
             </div>
             <div>
